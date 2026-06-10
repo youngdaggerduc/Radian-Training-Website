@@ -1,0 +1,8 @@
+# AI assistant artifacts — never commit
+CLAUDE.md
+.claude/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
+*.log

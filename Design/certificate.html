@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Certificate Verification — Radian H.A. Limited Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3560;
+  --white: #f8faff; --orange: #e8890a; --orange-light: #ffb547;
+  --steel: #8aa4c8; --steel-dim: #3d5a80;
+  --green: #22c97a; --red: #f05252; --amber: #ffd060;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,22,40,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo .logo-mark { width: 36px; height: 36px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: var(--navy); clip-path: polygon(0 0,100% 0,100% 70%,85% 100%,0 100%); }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: rgba(248,250,255,0.7); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links a.active { color: var(--orange); }
+
+/* HERO */
+.page-hero {
+  padding: 150px 60px 60px;
+  background: linear-gradient(160deg, #0a1628 0%, #112240 60%, #0d1e3a 100%);
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.page-hero-bg {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg,rgba(255,255,255,0.022) 0px,rgba(255,255,255,0.022) 1px,transparent 1px,transparent 100px), repeating-linear-gradient(0deg,rgba(255,255,255,0.022) 0px,rgba(255,255,255,0.022) 1px,transparent 1px,transparent 100px);
+  pointer-events: none; animation: heroDrift 22s linear infinite;
+}
+@keyframes heroDrift { 0%{background-position:0 0;} 100%{background-position:100px 100px;} }
+
+/* Animated shield emblem */
+.hero-emblem {
+  width: 96px; height: 96px; margin: 0 auto 28px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  animation: emblemFloat 4s ease-in-out infinite;
+}
+@keyframes emblemFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+.hero-emblem svg { width: 64px; height: 64px; position: relative; z-index: 2; filter: drop-shadow(0 4px 16px rgba(232,137,10,0.4)); }
+.hero-emblem-ring { position: absolute; inset: 0; border: 2px solid rgba(232,137,10,0.3); border-radius: 50%; }
+.hero-emblem-ring::after { content: ''; position: absolute; inset: -8px; border: 1px solid rgba(232,137,10,0.18); border-radius: 50%; animation: emblemPulse 2.5s ease-out infinite; }
+@keyframes emblemPulse { 0%{transform:scale(0.85);opacity:1;} 100%{transform:scale(1.5);opacity:0;} }
+
+.page-hero-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 600; margin-bottom: 18px; }
+.page-hero-label::before, .page-hero-label::after { content: ''; display: block; width: 32px; height: 2px; background: var(--orange); }
+.page-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 6vw, 5.5rem); line-height: 0.95; letter-spacing: 0.04em; position: relative; }
+.page-hero h1 .dim { color: rgba(248,250,255,0.25); }
+.page-hero p { margin-top: 18px; font-size: 1rem; color: rgba(248,250,255,0.55); max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.7; position: relative; }
+
+.joint { position: absolute; width: 12px; height: 12px; border: 2px solid rgba(232,137,10,0.25); border-radius: 50%; }
+
+/* ── METHOD TOGGLE ── */
+.cert-page { max-width: 900px; margin: 0 auto; padding: 56px 40px 100px; }
+.method-toggle {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 6px; margin-bottom: 40px;
+  position: relative;
+}
+.method-tab {
+  padding: 18px 24px; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  background: transparent; border: none;
+  font-family: 'DM Sans', sans-serif; text-align: left;
+  transition: all 0.25s; position: relative; z-index: 2;
+}
+.method-tab-icon {
+  width: 42px; height: 42px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.25s;
+}
+.method-tab.active .method-tab-icon { background: rgba(232,137,10,0.15); border-color: rgba(232,137,10,0.4); }
+.method-tab-text { min-width: 0; }
+.method-tab-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.05em; color: rgba(248,250,255,0.55); transition: color 0.25s; line-height: 1.1; }
+.method-tab.active .method-tab-title { color: var(--white); }
+.method-tab-sub { font-size: 0.72rem; color: rgba(248,250,255,0.35); margin-top: 2px; }
+.method-slider {
+  position: absolute; top: 6px; bottom: 6px; left: 6px;
+  width: calc(50% - 6px);
+  background: rgba(232,137,10,0.1);
+  border: 1px solid rgba(232,137,10,0.3);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  z-index: 1;
+}
+.method-slider.right { transform: translateX(100%); }
+
+/* ── PANEL ── */
+.panel {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  position: relative; overflow: hidden;
+  animation: panelFade 0.35s ease;
+}
+@keyframes panelFade { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.panel-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--orange-light), var(--orange)); background-size: 200% 100%; animation: accentShift 3s linear infinite; }
+@keyframes accentShift { from{background-position:0 0;} to{background-position:200% 0;} }
+.panel-head { padding: 36px 40px 28px; }
+.panel-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.05em; line-height: 1; margin-bottom: 10px; }
+.panel-head p { font-size: 0.92rem; color: rgba(248,250,255,0.55); line-height: 1.6; max-width: 520px; }
+.panel-body { padding: 0 40px 40px; }
+
+/* ── FORM ── */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.form-group { margin-bottom: 22px; }
+.form-label { display: block; font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,250,255,0.5); font-weight: 600; margin-bottom: 8px; }
+.form-input {
+  width: 100%; padding: 15px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.98rem;
+  outline: none; transition: all 0.2s;
+}
+.form-input:focus { border-color: var(--orange); background: rgba(232,137,10,0.04); box-shadow: 0 0 0 3px rgba(232,137,10,0.08); }
+.form-input::placeholder { color: rgba(248,250,255,0.2); }
+.form-input.error { border-color: var(--red); }
+.form-hint { margin-top: 6px; font-size: 0.74rem; color: rgba(248,250,255,0.3); }
+.field-err { margin-top: 6px; font-size: 0.74rem; color: var(--red); }
+
+.btn-full {
+  width: 100%; padding: 17px;
+  background: var(--orange); color: var(--navy);
+  font-weight: 700; font-size: 0.9rem; letter-spacing: 0.1em;
+  text-transform: uppercase; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  clip-path: polygon(0 0,100% 0,100% 80%,97% 100%,0 100%);
+  position: relative; overflow: hidden;
+}
+.btn-full::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); transform: translateX(-100%); transition: transform 0.6s; }
+.btn-full:hover:not(:disabled)::before { transform: translateX(100%); }
+.btn-full:hover:not(:disabled) { background: var(--orange-light); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(232,137,10,0.35); }
+.btn-full:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-external { background: rgba(255,255,255,0.06); color: var(--white); border: 1px solid rgba(255,255,255,0.12); clip-path: none; }
+.btn-external:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+.link-btn { background: none; border: none; color: var(--orange); font-size: 0.85rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; transition: color 0.2s; }
+.link-btn:hover { color: var(--orange-light); }
+
+/* ── CISRS NOTICE ── */
+.notice {
+  background: rgba(232,137,10,0.06);
+  border: 1px solid rgba(232,137,10,0.18);
+  border-left: 3px solid var(--orange);
+  padding: 20px 24px; margin-bottom: 24px;
+  font-size: 0.88rem; color: rgba(248,250,255,0.65); line-height: 1.7;
+}
+.notice strong { color: var(--orange-light); display: block; margin-bottom: 6px; font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.redirect-box { margin-bottom: 24px; padding: 18px 22px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); }
+.redirect-box .label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,250,255,0.3); margin-bottom: 8px; }
+.redirect-box .url { font-size: 0.95rem; color: rgba(248,250,255,0.75); display: flex; align-items: center; gap: 8px; }
+.help-box { margin-top: 20px; padding: 14px 18px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; color: rgba(248,250,255,0.4); line-height: 1.6; }
+
+/* ── SCANNER (verifying) ── */
+.scanner { padding: 50px 40px 56px; text-align: center; }
+.scanner-card {
+  width: 280px; height: 180px; margin: 0 auto 32px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative; overflow: hidden;
+  border-radius: 4px;
+}
+.scanner-card .sk-line { position: absolute; height: 8px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+.scanner-beam {
+  position: absolute; left: 0; right: 0; height: 60px;
+  background: linear-gradient(180deg, transparent, rgba(232,137,10,0.35), transparent);
+  border-top: 2px solid var(--orange); border-bottom: 2px solid var(--orange);
+  box-shadow: 0 0 24px rgba(232,137,10,0.5);
+  animation: scanMove 1.6s ease-in-out infinite;
+}
+@keyframes scanMove { 0%{top:-60px;} 100%{top:180px;} }
+.scanner-status { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 8px; }
+.scanner-sub { font-size: 0.85rem; color: rgba(248,250,255,0.4); }
+.scan-dots span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); margin: 0 3px; animation: dotPulse 1.2s infinite; }
+.scan-dots span:nth-child(2){animation-delay:0.2s;} .scan-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes dotPulse { 0%,80%,100%{transform:scale(0.6);opacity:0.4;} 40%{transform:scale(1);opacity:1;} }
+
+/* ════════════════════════════ */
+/* DIGITAL CREDENTIAL CARD       */
+/* ════════════════════════════ */
+.credential {
+  background: linear-gradient(165deg, #0e2647 0%, #0a1a34 100%);
+  border: 1px solid rgba(232,137,10,0.25);
+  position: relative; overflow: hidden;
+  animation: credIn 0.6s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+@keyframes credIn { from{opacity:0;transform:translateY(24px) scale(0.97);} to{opacity:1;transform:translateY(0) scale(1);} }
+/* guilloché watermark */
+.credential::before {
+  content: ''; position: absolute; inset: 0; opacity: 0.5;
+  background-image: repeating-radial-gradient(circle at 80% 20%, transparent 0, transparent 18px, rgba(232,137,10,0.04) 19px, transparent 20px), repeating-radial-gradient(circle at 15% 90%, transparent 0, transparent 22px, rgba(138,164,200,0.03) 23px, transparent 24px);
+  pointer-events: none;
+}
+.cred-watermark {
+  position: absolute; top: 52%; left: 50%; transform: translate(-50%,-50%) rotate(-18deg);
+  font-family: 'Bebas Neue', sans-serif; font-size: 7rem; letter-spacing: 0.1em;
+  color: rgba(34,201,122,0.045); white-space: nowrap; pointer-events: none; user-select: none; z-index: 0;
+}
+
+.cred-topbar {
+  background: linear-gradient(90deg, var(--orange), #d97a06);
+  padding: 18px 32px; display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 2;
+}
+.cred-brand { display: flex; align-items: center; gap: 12px; }
+.cred-brand .mark { width: 34px; height: 34px; background: var(--navy); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--orange); clip-path: polygon(0 0,100% 0,100% 70%,82% 100%,0 100%); }
+.cred-brand .name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.1em; color: var(--navy); }
+.cred-verified-tag { display: flex; align-items: center; gap: 8px; background: rgba(10,22,40,0.85); padding: 6px 14px; }
+.cred-verified-tag .tick { width: 16px; height: 16px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--navy); font-weight: 900; }
+.cred-verified-tag span { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); font-weight: 700; }
+
+.cred-body { padding: 36px 40px 32px; position: relative; z-index: 2; }
+.cred-intro { font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-bottom: 6px; }
+.cred-cert-type { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: var(--orange-light); margin-bottom: 28px; }
+.cred-presented { font-size: 0.82rem; color: rgba(248,250,255,0.45); margin-bottom: 8px; }
+.cred-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 6vw, 3.6rem); letter-spacing: 0.04em; line-height: 0.95; margin-bottom: 18px; background: linear-gradient(120deg, #fff, var(--orange-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.cred-completed { font-size: 0.85rem; color: rgba(248,250,255,0.5); margin-bottom: 6px; }
+.cred-course { font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 32px; line-height: 1.4; }
+
+/* seal */
+.cred-seal {
+  position: absolute; top: 28px; right: 36px;
+  width: 96px; height: 96px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+}
+.cred-seal-ring {
+  position: absolute; inset: 0;
+  animation: sealSpin 16s linear infinite;
+}
+@keyframes sealSpin { to { transform: rotate(360deg); } }
+.cred-seal-core {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--green), #128a4f);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; color: var(--white);
+  box-shadow: 0 4px 16px rgba(34,201,122,0.4), inset 0 2px 4px rgba(255,255,255,0.3);
+  z-index: 2;
+}
+.cred-seal-text { font-size: 7.1px; fill: rgba(248,250,255,0.6); letter-spacing: 2px; font-weight: 700; }
+
+/* detail grid */
+.cred-details {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 28px;
+}
+.cred-detail { background: linear-gradient(165deg, #0e2647, #0a1a34); padding: 16px 18px; }
+.cred-detail-label { font-size: 0.64rem; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(248,250,255,0.35); margin-bottom: 5px; font-weight: 600; }
+.cred-detail-value { font-size: 0.92rem; color: var(--white); font-weight: 600; }
+.cred-detail-value.pass { color: var(--green); }
+.cred-detail-value.mono { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.05em; color: var(--orange-light); }
+
+/* validity timeline */
+.cred-validity { margin-bottom: 30px; }
+.cred-validity-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.cred-validity-title { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,250,255,0.4); font-weight: 600; }
+.cred-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; border-radius: 2px; }
+.cred-status-badge.valid { background: rgba(34,201,122,0.15); color: var(--green); border: 1px solid rgba(34,201,122,0.35); }
+.cred-status-badge.expired { background: rgba(240,82,82,0.15); color: var(--red); border: 1px solid rgba(240,82,82,0.35); }
+.cred-status-badge.soon { background: rgba(255,208,96,0.12); color: var(--amber); border: 1px solid rgba(255,208,96,0.3); }
+.timeline { position: relative; display: flex; justify-content: space-between; padding-top: 8px; }
+.timeline::before { content: ''; position: absolute; top: 14px; left: 8%; right: 8%; height: 2px; background: rgba(255,255,255,0.1); }
+.timeline-fill { content: ''; position: absolute; top: 14px; left: 8%; height: 2px; background: linear-gradient(90deg, var(--green), var(--orange)); transition: width 1s ease; }
+.timeline-node { position: relative; z-index: 2; text-align: center; flex: 1; }
+.timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--navy); border: 2px solid var(--steel-dim); margin: 0 auto 10px; transition: all 0.3s; }
+.timeline-node.done .timeline-dot { border-color: var(--green); background: var(--green); box-shadow: 0 0 8px rgba(34,201,122,0.5); }
+.timeline-node.end .timeline-dot { border-color: var(--orange); }
+.timeline-node.expiry .timeline-dot { border-color: var(--orange-light); }
+.timeline-label { font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-bottom: 3px; }
+.timeline-date { font-size: 0.8rem; color: var(--white); font-weight: 600; }
+
+.cred-footer {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 40px; display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 2; flex-wrap: wrap; gap: 16px;
+  background: rgba(0,0,0,0.15);
+}
+.cred-footer-item { }
+.cred-footer-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,250,255,0.3); margin-bottom: 3px; }
+.cred-footer-value { font-size: 0.85rem; color: rgba(248,250,255,0.7); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
+.cred-qr { width: 56px; height: 56px; background: repeating-conic-gradient(var(--white) 0% 25%, var(--navy) 0% 50%); background-size: 11px 11px; border: 3px solid var(--white); border-radius: 3px; flex-shrink: 0; }
+
+/* result actions */
+.result-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn-sm { padding: 12px 26px; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-sm-primary { background: var(--orange); color: var(--navy); }
+.btn-sm-primary:hover { background: var(--orange-light); transform: translateY(-2px); }
+.btn-sm-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.15); }
+.btn-sm-outline:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.04); }
+
+/* ── FAIL CARD ── */
+.fail-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(240,82,82,0.25);
+  overflow: hidden; animation: credIn 0.45s ease;
+}
+.fail-head { background: linear-gradient(135deg, rgba(240,82,82,0.18), rgba(240,82,82,0.05)); padding: 28px 32px; display: flex; align-items: center; gap: 18px; border-bottom: 1px solid rgba(240,82,82,0.2); }
+.fail-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(240,82,82,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; animation: failShake 0.5s ease; }
+@keyframes failShake { 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-6px);} 40%,80%{transform:translateX(6px);} }
+.fail-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.06em; color: var(--red); line-height: 1; }
+.fail-sub { font-size: 0.85rem; color: rgba(248,250,255,0.5); margin-top: 4px; }
+.fail-body { padding: 28px 32px; }
+.fail-body p { font-size: 0.9rem; color: rgba(248,250,255,0.6); margin-bottom: 14px; }
+.fail-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.fail-list-item { display: flex; gap: 12px; align-items: flex-start; font-size: 0.88rem; color: rgba(248,250,255,0.6); line-height: 1.5; }
+.fail-list-item::before { content: '!'; width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: rgba(240,82,82,0.15); color: var(--red); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; }
+
+/* ── DEMO HINT ── */
+.demo-hint { max-width: 900px; margin: 0 auto 90px; padding: 0 40px; }
+.demo-hint-inner { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid var(--orange); padding: 18px 24px; display: flex; align-items: center; gap: 16px; }
+.demo-chip { display: inline-block; padding: 3px 10px; background: rgba(232,137,10,0.12); border: 1px solid rgba(232,137,10,0.25); color: var(--orange-light); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin: 2px; }
+.demo-chip:hover { background: rgba(232,137,10,0.22); }
+
+/* ── REQUEST MODAL ── */
+.modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(5,12,24,0.88); display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; padding: 20px; }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.modal { width: min(580px, 96vw); background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.1); position: relative; animation: modalIn 0.25s ease; overflow: hidden; max-height: 92vh; overflow-y: auto; }
+@keyframes modalIn { from{transform:scale(0.94) translateY(10px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
+.modal-header { padding: 28px 36px 22px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--navy-mid); z-index: 3; }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.06em; }
+.modal-close { background: rgba(255,255,255,0.05); border: none; color: rgba(248,250,255,0.5); font-size: 1.1rem; cursor: pointer; transition: all 0.2s; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+.modal-body { padding: 26px 36px 36px; }
+.modal-section-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 16px; margin-top: 28px; display: flex; align-items: center; gap: 10px; }
+.modal-section-label:first-child { margin-top: 0; }
+.modal-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.file-drop { border: 1.5px dashed rgba(255,255,255,0.15); padding: 28px; text-align: center; cursor: pointer; transition: all 0.25s; background: rgba(255,255,255,0.02); }
+.file-drop:hover { border-color: var(--orange); background: rgba(232,137,10,0.04); }
+.file-drop-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+.file-drop-text { font-size: 0.85rem; color: rgba(248,250,255,0.4); }
+.file-drop-text strong { color: var(--orange-light); }
+.file-accepted { background: rgba(34,201,122,0.08); border: 1px solid rgba(34,201,122,0.2); padding: 14px 18px; display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.file-accepted-name { font-size: 0.85rem; color: var(--green); flex: 1; word-break: break-all; }
+.id-type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.id-type-btn { padding: 12px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(248,250,255,0.45); font-size: 0.78rem; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans',sans-serif; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.id-type-btn .ico { font-size: 1.3rem; }
+.id-type-btn.active { background: rgba(232,137,10,0.12); border-color: rgba(232,137,10,0.4); color: var(--white); }
+.modal-success { text-align: center; padding: 50px 36px; animation: credIn 0.5s ease; }
+.modal-success-icon { width: 88px; height: 88px; margin: 0 auto 24px; border-radius: 50%; background: rgba(34,201,122,0.12); border: 2px solid rgba(34,201,122,0.35); display: flex; align-items: center; justify-content: center; font-size: 2.4rem; animation: sealPop 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes sealPop { from{transform:scale(0.4);opacity:0;} to{transform:scale(1);opacity:1;} }
+.modal-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--green); letter-spacing: 0.06em; margin-bottom: 12px; }
+.modal-success p { font-size: 0.9rem; color: rgba(248,250,255,0.55); line-height: 1.7; max-width: 400px; margin: 0 auto; }
+
+.spinner { width: 18px; height: 18px; border: 2px solid rgba(10,22,40,0.25); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg);} }
+
+@media (max-width: 720px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .page-hero { padding: 120px 24px 50px; }
+  .cert-page { padding: 40px 20px 70px; }
+  .method-tab { padding: 14px 14px; gap: 10px; }
+  .method-tab-sub { display: none; }
+  .panel-head, .panel-body { padding-left: 24px; padding-right: 24px; }
+  .form-row { grid-template-columns: 1fr; }
+  .cred-body, .cred-footer { padding-left: 24px; padding-right: 24px; }
+  .cred-details { grid-template-columns: 1fr 1fr; }
+  .cred-seal { top: 16px; right: 18px; width: 72px; height: 72px; }
+  .cred-name { font-size: 2.2rem; }
+  .demo-hint { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="logo-mark">R</div>
+    RADIAN H.A. LIMITED
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cisrs.html">CISRS OTS</a></li>
+    <li><a href="getmie-safe.html">Getmie Safe</a></li>
+    <li><a href="index.html#calendar">Schedule</a></li>
+    <li><a href="certificate.html" class="active">Certificates</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="joint" style="top:80px;left:100px;"></div>
+  <div class="joint" style="top:80px;right:100px;"></div>
+  <div class="joint" style="bottom:40px;left:200px;"></div>
+  <div class="joint" style="bottom:40px;right:200px;"></div>
+  <div class="hero-emblem">
+    <div class="hero-emblem-ring"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#e8890a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2 L20 5 V11 C20 16 16.5 20 12 22 C7.5 20 4 16 4 11 V5 Z"/>
+      <path d="M8.5 12 L11 14.5 L16 9" stroke="#ffb547" stroke-width="2"/>
+    </svg>
+  </div>
+  <div class="page-hero-label">Certificate Portal</div>
+  <h1>VERIFY A<br/><span class="dim">CERTIFICATE</span></h1>
+  <p>Instantly confirm the authenticity of a Radian training certificate, or check a CISRS card through the official NOCN portal.</p>
+</div>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+/* ── MOCK CERTIFICATE DATABASE ── */
+const CERT_DB = {
+  'RDN-2024-00142': { cisrsStudentId:'CISRS-87342', firstName:'James', lastName:'Mitchell', courseName:'CISRS Scaffolding Operative — Level 2', certificateNo:'RDN-2024-00142', instructorName:'David Okafor', instructorNo:'INS-00021', results:'Pass — Distinction', venue:'Radian Training Centre, London', startDate:'14 Oct 2024', endDate:'18 Oct 2024', expiryDate:'17 Oct 2027', expiryStatus:'valid' },
+  'RDN-2025-00391': { cisrsStudentId:'CISRS-91204', firstName:'Sarah', lastName:'Thompson', courseName:'Getmie Safe Working at Height', certificateNo:'RDN-2025-00391', instructorName:'Leila Adeyemi', instructorNo:'INS-00034', results:'Pass', venue:'Radian Training Centre, Manchester', startDate:'5 Mar 2025', endDate:'6 Mar 2025', expiryDate:'5 Mar 2028', expiryStatus:'valid' },
+  'RDN-2023-00088': { cisrsStudentId:'CISRS-75190', firstName:'Kevin', lastName:'Osei', courseName:'Getmie Safe Rescue Training', certificateNo:'RDN-2023-00088', instructorName:'David Okafor', instructorNo:'INS-00021', results:'Pass', venue:'Radian Training Centre, London', startDate:'22 Jan 2023', endDate:'22 Jan 2023', expiryDate:'21 Jan 2026', expiryStatus:'expired' },
+  'RDN-2025-00512': { cisrsStudentId:'CISRS-93817', firstName:'Ahmed', lastName:'Hassan', courseName:'CISRS Scaffold Inspection Training', certificateNo:'RDN-2025-00512', instructorName:'Leila Adeyemi', instructorNo:'INS-00034', results:'Pass — Merit', venue:'Radian Training Centre, Birmingham', startDate:'9 Dec 2025', endDate:'11 Dec 2025', expiryDate:'8 Dec 2026', expiryStatus:'soon' },
+};
+
+const STATUS_LABEL = { valid:'✓ Valid', expired:'✗ Expired', soon:'⚠ Expiring Soon' };
+
+/* ── Rotating Seal ── */
+function Seal() {
+  return (
+    <div className="cred-seal">
+      <svg className="cred-seal-ring" viewBox="0 0 96 96">
+        <defs>
+          <path id="sealPath" d="M48,48 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/>
+        </defs>
+        <circle cx="48" cy="48" r="46" fill="none" stroke="rgba(34,201,122,0.3)" strokeWidth="1"/>
+        <circle cx="48" cy="48" r="38" fill="none" stroke="rgba(34,201,122,0.2)" strokeWidth="1"/>
+        <text className="cred-seal-text">
+          <textPath href="#sealPath" startOffset="0">
+            ★ VERIFIED AUTHENTIC ★ RADIAN H.A. LIMITED ★ VERIFIED ★ RADIAN ★
+          </textPath>
+        </text>
+      </svg>
+      <div className="cred-seal-core">✓</div>
+    </div>
+  );
+}
+
+/* ── Digital Credential ── */
+function Credential({ data, onReset, onRequest }) {
+  const [fillW, setFillW] = useState('8%');
+  useEffect(() => {
+    const target = data.expiryStatus === 'expired' ? '92%' : data.expiryStatus === 'soon' ? '70%' : '46%';
+    const t = setTimeout(() => setFillW(target), 200);
+    return () => clearTimeout(t);
+  }, [data]);
+
+  const now = new Date();
+  const verifiedOn = now.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+  return (
+    <div>
+      <div className="credential">
+        <div className="cred-watermark">VERIFIED</div>
+        <div className="cred-topbar">
+          <div className="cred-brand">
+            <div className="mark">R</div>
+            <div className="name">RADIAN H.A. LIMITED</div>
+          </div>
+          <div className="cred-verified-tag">
+            <span className="tick">✓</span>
+            <span>Verified Authentic</span>
+          </div>
+        </div>
+
+        <Seal/>
+
+        <div className="cred-body">
+          <div className="cred-intro">Certificate of Training</div>
+          <div className="cred-cert-type">{data.results.toLowerCase().includes('pass') ? 'Successfully Completed' : 'Record of Attendance'}</div>
+
+          <div className="cred-presented">This certifies that</div>
+          <div className="cred-name">{data.firstName} {data.lastName}</div>
+          <div className="cred-completed">has successfully completed</div>
+          <div className="cred-course">{data.courseName}</div>
+
+          <div className="cred-details">
+            <div className="cred-detail">
+              <div className="cred-detail-label">CISRS Student ID</div>
+              <div className="cred-detail-value">{data.cisrsStudentId}</div>
+            </div>
+            <div className="cred-detail">
+              <div className="cred-detail-label">Certificate No.</div>
+              <div className="cred-detail-value mono">{data.certificateNo}</div>
+            </div>
+            <div className="cred-detail">
+              <div className="cred-detail-label">Result</div>
+              <div className="cred-detail-value pass">{data.results}</div>
+            </div>
+            <div className="cred-detail">
+              <div className="cred-detail-label">Instructor</div>
+              <div className="cred-detail-value">{data.instructorName}</div>
+            </div>
+            <div className="cred-detail">
+              <div className="cred-detail-label">Instructor No.</div>
+              <div className="cred-detail-value">{data.instructorNo}</div>
+            </div>
+            <div className="cred-detail">
+              <div className="cred-detail-label">Venue</div>
+              <div className="cred-detail-value" style={{fontSize:'0.82rem'}}>{data.venue}</div>
+            </div>
+          </div>
+
+          <div className="cred-validity">
+            <div className="cred-validity-head">
+              <div className="cred-validity-title">Validity Period</div>
+              <div className={`cred-status-badge ${data.expiryStatus}`}>{STATUS_LABEL[data.expiryStatus]}</div>
+            </div>
+            <div className="timeline">
+              <div className="timeline-fill" style={{width: fillW}}></div>
+              <div className="timeline-node done">
+                <div className="timeline-dot"></div>
+                <div className="timeline-label">Start</div>
+                <div className="timeline-date">{data.startDate}</div>
+              </div>
+              <div className="timeline-node end">
+                <div className="timeline-dot"></div>
+                <div className="timeline-label">Completed</div>
+                <div className="timeline-date">{data.endDate}</div>
+              </div>
+              <div className="timeline-node expiry">
+                <div className="timeline-dot"></div>
+                <div className="timeline-label">Expires</div>
+                <div className="timeline-date">{data.expiryDate}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cred-footer">
+          <div className="cred-footer-item">
+            <div className="cred-footer-label">Verified On</div>
+            <div className="cred-footer-value">{verifiedOn}</div>
+          </div>
+          <div className="cred-footer-item">
+            <div className="cred-footer-label">Issuing Body</div>
+            <div className="cred-footer-value">CISRS Accredited · Radian H.A. Ltd</div>
+          </div>
+          <div className="cred-qr" title="Verification code"></div>
+        </div>
+      </div>
+
+      <div className="result-actions">
+        <button className="btn-sm btn-sm-primary" onClick={()=>window.print()}>🖨 Print / Save PDF</button>
+        <button className="btn-sm btn-sm-outline" onClick={onReset}>Verify Another</button>
+        <button className="btn-sm btn-sm-outline" onClick={onRequest}>Request Copy</button>
+      </div>
+    </div>
+  );
+}
+
+/* ── Radian Verify Panel ── */
+function RadianPanel({ onRequest }) {
+  const [lastName, setLastName] = useState('');
+  const [certNo, setCertNo] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [result, setResult] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const handleVerify = () => {
+    const e = {};
+    if (!lastName.trim()) e.lastName = 'Please enter your last name';
+    if (!certNo.trim()) e.certNo = 'Please enter your certificate number';
+    if (Object.keys(e).length) { setErrors(e); return; }
+    setErrors({});
+    setStatus('verifying');
+    setTimeout(() => {
+      const rec = CERT_DB[certNo.trim().toUpperCase()];
+      if (rec && rec.lastName.toLowerCase() === lastName.trim().toLowerCase()) {
+        setResult(rec); setStatus('success');
+      } else { setStatus('fail'); }
+    }, 2200);
+  };
+
+  const reset = () => { setStatus('idle'); setResult(null); setLastName(''); setCertNo(''); setErrors({}); };
+
+  if (status === 'verifying') {
+    return (
+      <div className="panel">
+        <div className="panel-accent"></div>
+        <div className="scanner">
+          <div className="scanner-card">
+            <div className="scanner-beam"></div>
+            <div className="sk-line" style={{top:'24px', left:'24px', width:'60%'}}></div>
+            <div className="sk-line" style={{top:'48px', left:'24px', width:'80%'}}></div>
+            <div className="sk-line" style={{top:'72px', left:'24px', width:'45%'}}></div>
+            <div className="sk-line" style={{top:'112px', left:'24px', width:'70%', height:'20px'}}></div>
+            <div className="sk-line" style={{top:'146px', left:'24px', width:'50%'}}></div>
+          </div>
+          <div className="scanner-status">VERIFYING</div>
+          <div className="scanner-sub">Checking the Radian certificate registry<span className="scan-dots"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'success') {
+    return <Credential data={result} onReset={reset} onRequest={onRequest}/>;
+  }
+
+  if (status === 'fail') {
+    return (
+      <div className="fail-card">
+        <div className="fail-head">
+          <div className="fail-icon">✕</div>
+          <div>
+            <div className="fail-title">No Match Found</div>
+            <div className="fail-sub">We couldn't verify a certificate with those details.</div>
+          </div>
+        </div>
+        <div className="fail-body">
+          <p>This usually means one of the following:</p>
+          <div className="fail-list">
+            <div className="fail-list-item">The certificate number was entered incorrectly</div>
+            <div className="fail-list-item">The last name doesn't match the certificate exactly</div>
+            <div className="fail-list-item">The certificate was not issued by Radian H.A. Limited</div>
+          </div>
+          <p style={{marginTop:18, marginBottom:0, color:'rgba(248,250,255,0.4)'}}>Still stuck? Email <span style={{color:'var(--orange-light)'}}>training@radianhalimited.com</span></p>
+          <div className="result-actions">
+            <button className="btn-sm btn-sm-primary" onClick={reset}>Try Again</button>
+            <button className="btn-sm btn-sm-outline" onClick={onRequest}>Request a Certificate</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="panel">
+      <div className="panel-accent"></div>
+      <div className="panel-head">
+        <h2>Radian Certificate Lookup</h2>
+        <p>Enter the last name and certificate number exactly as they appear on the certificate. Verification is instant.</p>
+      </div>
+      <div className="panel-body">
+        <div className="form-row">
+          <div className="form-group" style={{marginBottom:0}}>
+            <label className="form-label">Last Name</label>
+            <input className={`form-input ${errors.lastName?'error':''}`} type="text" placeholder="e.g. Mitchell" value={lastName}
+              onChange={e=>{setLastName(e.target.value); setErrors(p=>({...p,lastName:''}));}}
+              onKeyDown={e=>{if(e.key==='Enter') handleVerify();}}/>
+            {errors.lastName && <div className="field-err">{errors.lastName}</div>}
+          </div>
+          <div className="form-group" style={{marginBottom:0}}>
+            <label className="form-label">Certificate Number</label>
+            <input className={`form-input ${errors.certNo?'error':''}`} type="text" placeholder="RDN-2024-00142" value={certNo}
+              onChange={e=>{setCertNo(e.target.value); setErrors(p=>({...p,certNo:''}));}}
+              onKeyDown={e=>{if(e.key==='Enter') handleVerify();}}/>
+            {errors.certNo && <div className="field-err">{errors.certNo}</div>}
+          </div>
+        </div>
+        <div className="form-hint" style={{marginBottom:24}}>Format: RDN-YYYY-NNNNN — printed on your certificate and record card.</div>
+        <button className="btn-full" onClick={handleVerify}>
+          <span>Verify Certificate</span><span>→</span>
+        </button>
+        <div style={{marginTop:18, textAlign:'center'}}>
+          <button className="link-btn" onClick={onRequest}>Don't have your certificate? Request one →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── CISRS Panel ── */
+function CISRSPanel() {
+  return (
+    <div className="panel">
+      <div className="panel-accent"></div>
+      <div className="panel-head">
+        <h2>CISRS Card Checker</h2>
+        <p>CISRS cards are managed and verified by NOCN. We'll send you to their official Card Checker to confirm a card's validity.</p>
+      </div>
+      <div className="panel-body">
+        <div className="notice">
+          <strong>Official NOCN Portal</strong>
+          The button below opens the official NOCN Card Checker in a new tab, where you can enter the CISRS card number to confirm it is valid and current.
+        </div>
+        <div className="redirect-box">
+          <div className="label">You will be redirected to</div>
+          <div className="url"><span style={{color:'var(--orange)'}}>↗</span> nocn.org.uk — CISRS Card Checker</div>
+        </div>
+        <a href="https://www.nocn.org.uk/cisrs/card-checker/" target="_blank" rel="noopener noreferrer" style={{textDecoration:'none'}}>
+          <button className="btn-full btn-external">
+            <span>Open NOCN Card Checker</span>
+            <span style={{opacity:0.6, fontSize:'0.8rem'}}>↗</span>
+          </button>
+        </a>
+        <div className="help-box">
+          Having trouble? Contact us at <span style={{color:'var(--orange-light)'}}>training@radianhalimited.com</span> and we'll assist with card verification.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Request Modal ── */
+function RequestModal({ onClose }) {
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({ firstName:'', lastName:'', email:'', certNo:'', reason:'', idType:'passport' });
+  const [file, setFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const fileRef = useRef();
+  const update = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const handleSubmit = () => {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = 'Required';
+    if (!form.lastName.trim()) e.lastName = 'Required';
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Valid email required';
+    if (!file) e.file = 'Please upload a proof of identity';
+    if (Object.keys(e).length) { setErrors(e); return; }
+    setErrors({}); setSubmitting(true);
+    setTimeout(()=>{ setSubmitting(false); setStep(2); }, 1800);
+  };
+
+  useEffect(() => {
+    const h = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose]);
+
+  return (
+    <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="modal">
+        <div className="modal-header">
+          <div className="modal-title">Request a Certificate</div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          {step === 1 ? (
+            <>
+              <div className="modal-section-label">Your Details</div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+                <div className="form-group" style={{marginBottom:0}}>
+                  <label className="form-label">First Name</label>
+                  <input className={`form-input ${errors.firstName?'error':''}`} type="text" placeholder="First name" value={form.firstName} onChange={e=>update('firstName',e.target.value)}/>
+                  {errors.firstName&&<div className="field-err">{errors.firstName}</div>}
+                </div>
+                <div className="form-group" style={{marginBottom:0}}>
+                  <label className="form-label">Last Name</label>
+                  <input className={`form-input ${errors.lastName?'error':''}`} type="text" placeholder="Last name" value={form.lastName} onChange={e=>update('lastName',e.target.value)}/>
+                  {errors.lastName&&<div className="field-err">{errors.lastName}</div>}
+                </div>
+              </div>
+              <div className="form-group" style={{marginTop:18}}>
+                <label className="form-label">Email Address</label>
+                <input className={`form-input ${errors.email?'error':''}`} type="email" placeholder="your@email.com" value={form.email} onChange={e=>update('email',e.target.value)}/>
+                {errors.email&&<div className="field-err">{errors.email}</div>}
+                <div className="form-hint">Your certificate will be sent here</div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Certificate Number (if known)</label>
+                <input className="form-input" type="text" placeholder="RDN-YYYY-NNNNN (optional)" value={form.certNo} onChange={e=>update('certNo',e.target.value)}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Reason for Request</label>
+                <select className="form-input" value={form.reason} onChange={e=>update('reason',e.target.value)} style={{cursor:'pointer'}}>
+                  <option value="">Select a reason…</option>
+                  <option value="lost">Lost original certificate</option>
+                  <option value="damaged">Certificate damaged</option>
+                  <option value="employer">Required by employer</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="modal-section-label">Proof of Identity</div>
+              <div style={{marginBottom:14,fontSize:'0.82rem',color:'rgba(248,250,255,0.45)', lineHeight:1.6}}>
+                To protect certificate holders, we require a copy of a valid photo ID.
+              </div>
+              <div className="id-type-grid">
+                {[{v:'passport',l:'Passport',i:'🛂'},{v:'driving',l:'Driving Licence',i:'🚗'},{v:'national',l:'National ID',i:'🪪'}].map(opt=>(
+                  <button key={opt.v} className={`id-type-btn ${form.idType===opt.v?'active':''}`} onClick={()=>update('idType',opt.v)}>
+                    <span className="ico">{opt.i}</span>{opt.l}
+                  </button>
+                ))}
+              </div>
+              <div className="file-drop" onClick={()=>fileRef.current.click()} style={errors.file?{borderColor:'var(--red)'}:{}}>
+                <div className="file-drop-icon">📎</div>
+                <div className="file-drop-text">
+                  <strong>Click to upload</strong> or drag and drop<br/>
+                  <span style={{fontSize:'0.75rem'}}>JPG, PNG or PDF · Max 5MB</span>
+                </div>
+                <input ref={fileRef} type="file" accept=".jpg,.jpeg,.png,.pdf" style={{display:'none'}} onChange={e=>{if(e.target.files[0]) setFile(e.target.files[0]);}}/>
+              </div>
+              {file && (
+                <div className="file-accepted">
+                  <span style={{fontSize:'1.2rem'}}>✓</span>
+                  <span className="file-accepted-name">{file.name}</span>
+                  <button onClick={()=>setFile(null)} style={{background:'none',border:'none',color:'rgba(248,250,255,0.3)',cursor:'pointer',fontSize:'1rem'}}>✕</button>
+                </div>
+              )}
+              {errors.file&&<div className="field-err" style={{marginTop:8}}>{errors.file}</div>}
+
+              <button className="btn-full" onClick={handleSubmit} disabled={submitting} style={{marginTop:28}}>
+                {submitting ? (<><div className="spinner"/><span>Submitting</span></>) : (<><span>Submit Request</span><span>→</span></>)}
+              </button>
+              <div style={{marginTop:14,fontSize:'0.75rem',color:'rgba(248,250,255,0.25)',textAlign:'center',lineHeight:1.6}}>
+                Reviewed within 2–3 business days. We'll contact you at the email provided.
+              </div>
+            </>
+          ) : (
+            <div className="modal-success">
+              <div className="modal-success-icon">✓</div>
+              <h3>Request Submitted</h3>
+              <p>Your certificate request has been received. We'll review your identity document and send your certificate to <strong style={{color:'var(--white)'}}>{form.email}</strong> within 2–3 business days.</p>
+              <button className="btn-full" onClick={onClose} style={{marginTop:30, maxWidth:200, marginLeft:'auto', marginRight:'auto'}}>Done</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function App() {
+  const [method, setMethod] = useState('radian');
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <div className="cert-page">
+        <div className="method-toggle">
+          <div className={`method-slider ${method==='cisrs'?'right':''}`}></div>
+          <button className={`method-tab ${method==='radian'?'active':''}`} onClick={()=>setMethod('radian')}>
+            <div className="method-tab-icon">📜</div>
+            <div className="method-tab-text">
+              <div className="method-tab-title">Radian Certificate</div>
+              <div className="method-tab-sub">Verify instantly here</div>
+            </div>
+          </button>
+          <button className={`method-tab ${method==='cisrs'?'active':''}`} onClick={()=>setMethod('cisrs')}>
+            <div className="method-tab-icon">🪪</div>
+            <div className="method-tab-text">
+              <div className="method-tab-title">CISRS Card</div>
+              <div className="method-tab-sub">Via NOCN portal</div>
+            </div>
+          </button>
+        </div>
+
+        {method === 'radian' ? <RadianPanel onRequest={()=>setShowModal(true)}/> : <CISRSPanel/>}
+      </div>
+
+      {method === 'radian' && (
+        <div className="demo-hint">
+          <div className="demo-hint-inner">
+            <div style={{fontSize:'1.2rem',flexShrink:0}}>💡</div>
+            <div style={{fontSize:'0.82rem',color:'rgba(248,250,255,0.45)',lineHeight:1.8}}>
+              <strong style={{color:'rgba(248,250,255,0.6)'}}>Demo — try a sample certificate: </strong>
+              <span className="demo-chip" onClick={()=>fillDemo('Mitchell','RDN-2024-00142')}>Mitchell · RDN-2024-00142</span>
+              <span className="demo-chip" onClick={()=>fillDemo('Thompson','RDN-2025-00391')}>Thompson · RDN-2025-00391</span>
+              <span className="demo-chip" onClick={()=>fillDemo('Osei','RDN-2023-00088')}>Osei · RDN-2023-00088 (expired)</span>
+              <span className="demo-chip" onClick={()=>fillDemo('Hassan','RDN-2025-00512')}>Hassan · RDN-2025-00512 (soon)</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <footer style={{background:'#060e1e',padding:'40px 60px',borderTop:'1px solid rgba(255,255,255,0.05)',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:16}}>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.2rem',letterSpacing:'0.1em',color:'var(--white)'}}>RADIAN H.A. LIMITED</div>
+        <div style={{fontSize:'0.78rem',color:'rgba(248,250,255,0.25)'}}>© 2026 Radian H.A. Limited Training. All rights reserved.</div>
+      </footer>
+
+      {showModal && <RequestModal onClose={()=>setShowModal(false)}/>}
+    </>
+  );
+}
+
+/* helper to fill demo fields */
+function fillDemo(lastName, certNo) {
+  const inputs = document.querySelectorAll('.form-input');
+  if (inputs.length >= 2) {
+    const setVal = (el, val) => {
+      const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+      setter.call(el, val);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    setVal(inputs[0], lastName);
+    setVal(inputs[1], certNo);
+    inputs[1].focus();
+  }
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

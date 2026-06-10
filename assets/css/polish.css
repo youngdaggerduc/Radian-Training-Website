@@ -1,0 +1,369 @@
+/* ============================================================================
+   polish.css — Radian H.A. Limited
+   Shared interaction / fluidity layer, loaded AFTER each page's own CSS.
+   Additive only: micro-interactions, nav behaviour, scroll affordances.
+   Everything respects prefers-reduced-motion. Paired with assets/js/polish.js.
+============================================================================ */
+
+/* ── Scroll progress hairline (injected by polish.js) ─────────────────── */
+#rad-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2.5px;
+  z-index: 2000; pointer-events: none;
+  background: linear-gradient(90deg, var(--orange, #e8890a), var(--orange-light, #ffb547));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  box-shadow: 0 0 12px rgba(232, 137, 10, 0.55);
+}
+
+/* ── Film grain overlay (injected by polish.js) ───────────────────────── */
+#rad-grain {
+  position: fixed; inset: -100px;
+  z-index: 1500; pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: radGrain 0.9s steps(6) infinite;
+}
+@keyframes radGrain {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-34px, 22px); }
+  50%  { transform: translate(18px, -40px); }
+  75%  { transform: translate(-26px, -14px); }
+  100% { transform: translate(30px, 34px); }
+}
+
+/* ── Nav: smart hide on scroll-down, glassy reveal on scroll-up ───────── */
+nav#navbar {
+  transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s,
+              transform 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+  will-change: transform;
+}
+nav#navbar.rad-nav-hidden { transform: translateY(-110%); }
+nav#navbar.scrolled { box-shadow: 0 10px 40px rgba(4, 10, 20, 0.45); }
+
+/* Nav entrance — links cascade in on load */
+@keyframes radNavIn { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+nav#navbar .nav-links li { animation: radNavIn 0.6s cubic-bezier(0.33, 1, 0.68, 1) both; }
+nav#navbar .nav-links li:nth-child(1) { animation-delay: 0.10s; }
+nav#navbar .nav-links li:nth-child(2) { animation-delay: 0.17s; }
+nav#navbar .nav-links li:nth-child(3) { animation-delay: 0.24s; }
+nav#navbar .nav-links li:nth-child(4) { animation-delay: 0.31s; }
+nav#navbar .nav-links li:nth-child(5) { animation-delay: 0.38s; }
+nav#navbar .nav-links li:nth-child(6) { animation-delay: 0.45s; }
+nav#navbar .nav-cta { animation: radNavIn 0.6s 0.48s cubic-bezier(0.33, 1, 0.68, 1) both; }
+
+/* Nav v2 — links sit in a glass pill; active page = solid orange pill.
+   Replaces the per-page underline (which only rendered on home) and the
+   letter-spacing hover (which made neighbouring links shift). */
+nav#navbar { padding: 13px 44px; }
+nav#navbar .nav-links {
+  gap: 4px;
+  background: rgba(13, 26, 46, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  padding: 5px;
+  backdrop-filter: blur(12px);
+}
+nav#navbar .nav-links a {
+  display: block;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.07em;
+  position: static;
+  transition: color 0.25s, background 0.25s;
+}
+nav#navbar .nav-links a::after { display: none; }   /* kill the old underline everywhere */
+nav#navbar .nav-links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white, #f8faff);
+}
+nav#navbar .nav-links a.active {
+  background: var(--orange, #e8890a);
+  color: var(--navy, #0a1628);
+  font-weight: 700;
+}
+nav#navbar .nav-links a.active:hover { background: var(--orange-light, #ffb547); color: var(--navy, #0a1628); }
+@media (max-width: 1120px) {
+  nav#navbar { padding: 12px 22px; }
+  nav#navbar .nav-brand-text { display: none; }      /* logo mark only — stops the squeeze */
+  nav#navbar .nav-links a { padding: 8px 13px; font-size: 0.72rem; }
+}
+
+/* Logo — lift + glow on hover */
+nav#navbar .nav-logo { transition: filter 0.3s; }
+nav#navbar .nav-logo .logo-mark { transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+nav#navbar .nav-logo:hover .logo-mark { transform: translateY(-2px) rotate(-6deg) scale(1.08); }
+nav#navbar .nav-logo:hover { filter: drop-shadow(0 0 14px rgba(232, 137, 10, 0.35)); }
+
+/* ── Buttons — shine sweep + press feedback ───────────────────────────── */
+.nav-cta, .sb-btn, .btn-outline,
+body:not(.rad-home) .btn-primary { position: relative; overflow: hidden; }
+
+.nav-cta::after, .sb-btn::after,
+body:not(.rad-home) .btn-primary::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; left: -75%;
+  width: 50%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s cubic-bezier(0.33, 1, 0.68, 1);
+  pointer-events: none;
+}
+.nav-cta:hover::after, .sb-btn:hover::after,
+body:not(.rad-home) .btn-primary:hover::after { left: 125%; }
+
+.nav-cta:active, .btn-primary:active, .btn-outline:active, .sb-btn:active {
+  transform: translateY(0) scale(0.97) !important;
+  transition-duration: 0.08s;
+}
+
+/* ── Card spotlight (overlay injected by polish.js, tracks the cursor) ── */
+.rad-glow {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%),
+              rgba(255, 200, 120, 0.16), rgba(232, 137, 10, 0.05) 38%, transparent 62%);
+  mix-blend-mode: screen;
+}
+.rad-spot:hover .rad-glow { opacity: 1; }
+
+/* ── Anchors don't hide under the fixed nav ───────────────────────────── */
+html { scroll-padding-top: 96px; }
+
+/* ── Scrollbar — steel rail, orange grip ──────────────────────────────── */
+html { scrollbar-width: thin; scrollbar-color: #3d5a80 #0a1628; }
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: #0a1628; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3d5a80, #1a3560);
+  border: 2px solid #0a1628; border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #e8890a, #b96d08); }
+
+/* ── Selection + focus ─────────────────────────────────────────────────── */
+::selection { background: rgba(232, 137, 10, 0.85); color: #0a1628; }
+:focus-visible { outline: 2px solid rgba(232, 137, 10, 0.8); outline-offset: 3px; }
+
+/* ── 3D inspector card: safety-tip footer (added by scaffold3d.js) ────── */
+.s3d-card .s3d-card-tip {
+  margin-top: 12px; padding-top: 10px;
+  border-top: 1px dashed rgba(232, 137, 10, 0.35);
+  font-size: 0.78rem; line-height: 1.5;
+  color: var(--orange-light, #ffb547);
+}
+.s3d-card .s3d-card-tip::before { content: '⚠ '; opacity: 0.9; }
+
+/* ── Headline word-mask spans (created by motion.js splitTitles) ──────── */
+.rm-m { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.rm-w { display: inline-block; will-change: transform; }
+
+/* ── Crane cable + hook (created by motion.js setupCraneTitles) ───────── */
+.rm-cable {
+  position: absolute; bottom: 100%; left: 50%;
+  width: 2px; height: 130vh; margin-left: -1px;
+  background: linear-gradient(180deg, rgba(138, 164, 200, 0) 0%, rgba(138, 164, 200, 0.55) 40%, #8aa4c8 100%);
+  pointer-events: none;
+}
+.rm-cable .rm-hook {
+  position: absolute; bottom: -14px; left: 50%;
+  width: 12px; height: 14px; margin-left: -6px;
+  border: 2.5px solid var(--orange, #e8890a);
+  border-top-color: transparent;
+  border-radius: 0 0 50% 50%;
+}
+.rm-cable .rm-hook::before {
+  content: ''; position: absolute; top: -6px; left: 50%;
+  width: 2.5px; height: 7px; margin-left: -1.25px;
+  background: #8aa4c8;
+}
+
+/* ── Harness-clip anchors (created by polish.js clipAndScroll) ────────── */
+.rad-clip {
+  position: fixed; z-index: 3000;
+  width: 13px; height: 20px; margin-top: -10px;
+  pointer-events: none;
+  border: 2.5px solid var(--orange, #e8890a);
+  border-radius: 7px / 10px;
+  opacity: 0;
+  transform: rotate(-24deg) scale(0.4);
+  transition: opacity 0.18s, transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rad-clip::before {     /* the gate */
+  content: ''; position: absolute; right: -2.5px; top: 3px;
+  width: 2.5px; height: 7px;
+  background: var(--orange-light, #ffb547);
+}
+.rad-clip.on  { opacity: 1; transform: rotate(-24deg) scale(1); }
+.rad-clip.off { opacity: 0; transform: rotate(12deg) scale(0.55) translateY(-9px); transition-duration: 0.4s; }
+
+/* ── Mobile navigation (burger + overlay, injected by polish.js) ──────── */
+#rad-burger {
+  display: none;
+  width: 42px; height: 42px;
+  background: none; border: none; cursor: pointer;
+  position: relative; z-index: 210;
+  padding: 10px;
+}
+#rad-burger span {
+  display: block; height: 2px; width: 100%;
+  background: var(--white, #f8faff);
+  transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.25s;
+}
+#rad-burger span + span { margin-top: 6px; }
+#rad-burger span:nth-child(2) { width: 70%; background: var(--orange, #e8890a); }
+#rad-burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+#rad-burger.open span:nth-child(2) { opacity: 0; }
+#rad-burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+#rad-mobile-menu {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(8, 17, 32, 0.98);
+  backdrop-filter: blur(12px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 90px 32px 40px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+#rad-mobile-menu.open { opacity: 1; pointer-events: auto; }
+#rad-mobile-menu a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.9rem, 8vw, 2.6rem);
+  letter-spacing: 0.08em;
+  color: var(--white, #f8faff);
+  text-decoration: none;
+  padding: 8px 18px;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.4s, transform 0.4s, color 0.25s;
+}
+#rad-mobile-menu.open a { opacity: 1; transform: translateY(0); }
+#rad-mobile-menu a:nth-child(1) { transition-delay: 0.06s; }
+#rad-mobile-menu a:nth-child(2) { transition-delay: 0.12s; }
+#rad-mobile-menu a:nth-child(3) { transition-delay: 0.18s; }
+#rad-mobile-menu a:nth-child(4) { transition-delay: 0.24s; }
+#rad-mobile-menu a:nth-child(5) { transition-delay: 0.30s; }
+#rad-mobile-menu a:nth-child(6) { transition-delay: 0.36s; }
+#rad-mobile-menu a:nth-child(7) { transition-delay: 0.42s; }
+#rad-mobile-menu a:hover, #rad-mobile-menu a.active { color: var(--orange, #e8890a); }
+#rad-mobile-menu .rad-mm-cta {
+  margin-top: 18px;
+  background: var(--orange, #e8890a);
+  color: var(--navy, #0a1628) !important;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 16px 44px;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+}
+html.rad-mm-lock, html.rad-mm-lock body { overflow: hidden !important; }
+
+@media (max-width: 900px) {
+  #rad-burger { display: block; }
+  nav#navbar .nav-links { display: none; }   /* unify hide point across pages */
+  nav#navbar .nav-cta { display: none; }     /* Enroll lives in the menu on mobile */
+}
+
+/* ── Reduced motion: switch the whole layer off ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #rad-grain { animation: none; }
+  nav#navbar .nav-links li, nav#navbar .nav-cta { animation: none; }
+  nav#navbar.rad-nav-hidden { transform: none; }
+  .nav-cta::after, .sb-btn::after, .btn-primary::after { display: none; }
+  .rad-glow { display: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ── Floating WhatsApp button (injected by polish.js) ─────────────────── */
+#rad-wa {
+  position: fixed; left: 24px; bottom: 22px; z-index: 96;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #25d366;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
+}
+#rad-wa:hover { transform: scale(1.12); box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
+#rad-wa svg { width: 28px; height: 28px; fill: #fff; }
+#rad-wa::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid rgba(37,211,102,0.6);
+  animation: radWaPulse 2.2s ease-out infinite;
+}
+@keyframes radWaPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.65); opacity: 0; } }
+@media (max-width: 900px) { #rad-wa { left: 14px; bottom: 14px; width: 48px; height: 48px; } }
+@media print { #rad-wa { display: none; } }
+@media (prefers-reduced-motion: reduce) { #rad-wa::after { animation: none; } }
+/* ── Shared footer: the site information board (footer.php, rfx-*) ────── */
+/* Hard reset first: the original per-page stylesheets still contain element-level
+   footer{display:grid;...} rules for the old in-app footers — neutralise them. */
+footer.rfx {
+  display: block;
+  padding: 0;
+  gap: 0;
+  grid-template-columns: none;
+  background: #060e1e;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.rfx-tape {
+  height: 6px;
+  background: repeating-linear-gradient(-45deg, var(--orange, #e8890a) 0 14px, #060e1e 14px 28px);
+  opacity: 0.55;
+}
+.rfx-inner { max-width: 1300px; margin: 0 auto; padding: 64px 60px 50px; }
+.rfx-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 48px; }
+
+.rfx-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.rfx-logo img { width: 40px; height: 40px; object-fit: contain; }
+.rfx-logo span { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.12em; color: var(--white, #f8faff); }
+.rfx-tag { margin-top: 16px; font-size: 0.84rem; line-height: 1.7; color: rgba(248,250,255,0.45); max-width: 300px; }
+.rfx-accred { margin-top: 16px; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,137,10,0.8); }
+
+.rfx-head { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.18em; color: var(--white, #f8faff); margin-bottom: 18px; }
+.rfx-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.rfx-col ul a {
+  color: rgba(248,250,255,0.5); text-decoration: none; font-size: 0.86rem;
+  transition: color 0.2s, padding-left 0.25s;
+  border-left: 0 solid var(--orange, #e8890a);
+}
+.rfx-col ul a:hover { color: var(--orange-light, #ffb547); padding-left: 6px; }
+.rfx-contact li { display: flex; gap: 10px; font-size: 0.84rem; color: rgba(248,250,255,0.5); line-height: 1.5; }
+.rfx-contact span { flex-shrink: 0; }
+.rfx-contact a { color: rgba(248,250,255,0.65); text-decoration: none; }
+.rfx-contact a:hover { color: var(--orange-light, #ffb547); }
+
+.rfx-social { display: flex; gap: 10px; margin-top: 20px; }
+.rfx-social a {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(248,250,255,0.5); text-decoration: none;
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+  transition: all 0.25s;
+}
+.rfx-social a:hover { border-color: var(--orange, #e8890a); color: var(--orange, #e8890a); transform: translateY(-3px); }
+
+.rfx-bar { border-top: 1px solid rgba(255,255,255,0.05); }
+.rfx-bar-inner {
+  max-width: 1300px; margin: 0 auto; padding: 18px 60px;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  font-size: 0.74rem; color: rgba(248,250,255,0.3);
+}
+.rfx-motto { letter-spacing: 0.08em; font-style: italic; color: rgba(248,250,255,0.22); }
+.rfx-top {
+  background: none; border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(248,250,255,0.55); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 8px 16px;
+  transition: all 0.25s;
+}
+.rfx-top:hover { border-color: var(--orange, #e8890a); color: var(--orange, #e8890a); }
+
+@media (max-width: 1000px) { .rfx-grid { grid-template-columns: 1fr 1fr; gap: 36px; } }
+@media (max-width: 640px) {
+  .rfx-grid { grid-template-columns: 1fr; }
+  .rfx-inner { padding: 44px 24px 36px; }
+  .rfx-bar-inner { padding: 16px 24px; justify-content: center; text-align: center; }
+}

@@ -1,0 +1,349 @@
+/* ============================================================================
+   site-hud.css — Radian H.A. Limited · "construction site HUD" (all design pages)
+   Pairs with assets/js/site-hud.js. Tower appears on pages with 4+ zones.
+
+   1  Scaffold Lift Tower   — scroll progress as an erecting scaffold + nav
+   2  Blueprint crosshair   — drafting-table cursor with live readout
+   3  Site status board     — zone + site-time ticker (bottom right)
+   5  Weld-spark clicks     — handled in JS, dot styled here
+   6  Steel detailing       — corner bolts, extra couplers, hazard tape
+============================================================================ */
+
+/* ── 1 · SCAFFOLD LIFT TOWER ──────────────────────────────────────────── */
+#rhud-tower {
+  position: fixed; left: 26px; top: 50%; transform: translateY(-50%);
+  height: 58vh; width: 56px; z-index: 95;
+  pointer-events: none;
+}
+@media (max-width: 1180px) { #rhud-tower { display: none; } }
+
+/* the two standards (vertical rails) */
+#rhud-tower .rhud-rail {
+  position: absolute; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(90deg, #2c3e58, #56708f 45%, #2c3e58);
+  border-radius: 2px;
+}
+#rhud-tower .rhud-rail.l { left: 10px; }
+#rhud-tower .rhud-rail.r { left: 33px; }
+/* base plates */
+#rhud-tower .rhud-rail::after {
+  content: ''; position: absolute; bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 13px; height: 5px; background: var(--orange, #e8890a);
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
+}
+
+/* erected fill — orange glow rises with scroll (height set by JS) */
+#rhud-tower .rhud-fill {
+  position: absolute; bottom: 0; left: 8px; right: 16px; height: 0%;
+  background: linear-gradient(0deg, rgba(232,137,10,0.32), rgba(232,137,10,0.05));
+  border-left: 3px solid var(--orange, #e8890a);
+  border-right: 3px solid var(--orange, #e8890a);
+  margin-right: 5px;
+  box-shadow: 0 0 18px rgba(232,137,10,0.25);
+  transition: height 0.15s linear;
+}
+
+/* lift joints — clickable section nav */
+#rhud-tower .rhud-lift {
+  position: absolute; left: 0; width: 46px; height: 22px;
+  transform: translateY(50%);
+  background: none; border: none; cursor: pointer;
+  pointer-events: auto;
+  display: flex; align-items: center;
+  font-family: 'DM Sans', sans-serif;
+}
+/* the ledger (rung) */
+#rhud-tower .rhud-lift::before {
+  content: ''; position: absolute; left: 10px; right: 10px; top: 50%;
+  height: 2px; margin-top: -1px;
+  background: #44587a;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+/* coupler node */
+#rhud-tower .rhud-node {
+  position: absolute; left: 17px; top: 50%;
+  width: 12px; height: 12px; margin-top: -6px;
+  border-radius: 50%;
+  background: #16243c;
+  border: 2px solid #44587a;
+  transition: all 0.3s;
+}
+#rhud-tower .rhud-lift.done::before  { background: var(--orange, #e8890a); }
+#rhud-tower .rhud-lift.done .rhud-node {
+  border-color: var(--orange, #e8890a);
+  background: #2a1c08;
+}
+#rhud-tower .rhud-lift.active .rhud-node {
+  background: var(--orange, #e8890a);
+  border-color: var(--orange-light, #ffb547);
+  box-shadow: 0 0 12px rgba(232,137,10,0.8);
+}
+/* lift tag — slides out on hover / active */
+#rhud-tower .rhud-tag {
+  position: absolute; left: 50px; top: 50%; transform: translateY(-50%) translateX(-6px);
+  white-space: nowrap;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--orange-light, #ffb547);
+  background: rgba(10,22,40,0.92);
+  border: 1px solid rgba(232,137,10,0.35);
+  border-left: 3px solid var(--orange, #e8890a);
+  padding: 4px 10px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+#rhud-tower .rhud-lift:hover .rhud-tag,
+#rhud-tower .rhud-lift.active .rhud-tag { opacity: 1; transform: translateY(-50%) translateX(0); }
+#rhud-tower .rhud-lift:hover .rhud-node { border-color: var(--orange-light, #ffb547); }
+
+/* climbing work platform */
+#rhud-tower .rhud-plat {
+  position: absolute; left: 8px; width: 31px; height: 8px; bottom: 0%;
+  transition: bottom 0.15s linear;
+  pointer-events: none;
+}
+#rhud-tower .rhud-plat::before {     /* plank */
+  content: ''; position: absolute; left: 0; right: 0; top: 3px; height: 4px;
+  background: linear-gradient(90deg, #b98a4e, #d8aa6a 50%, #b98a4e);
+  border-radius: 1px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+#rhud-tower .rhud-plat::after {      /* hard-hat operative */
+  content: ''; position: absolute; left: 50%; top: -6px;
+  width: 7px; height: 7px; margin-left: -3.5px;
+  border-radius: 50% 50% 20% 20%;
+  background: var(--orange, #e8890a);
+  box-shadow: 0 0 8px rgba(232,137,10,0.7);
+}
+
+/* readout */
+#rhud-tower .rhud-pct {
+  position: absolute; left: 50%; bottom: -44px; transform: translateX(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.78rem; letter-spacing: 0.18em;
+  color: rgba(248,250,255,0.45);
+  white-space: nowrap;
+}
+#rhud-tower .rhud-pct b { color: var(--orange, #e8890a); font-weight: 400; }
+
+/* ── 2 · BLUEPRINT CROSSHAIR ──────────────────────────────────────────── */
+#rhud-cross { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
+#rhud-cross.on { opacity: 1; }
+#rhud-cross .rhud-x, #rhud-cross .rhud-y { position: absolute; background: rgba(138,164,200,0.13); }
+#rhud-cross .rhud-x { left: 0; right: 0; height: 1px; top: 0; }
+#rhud-cross .rhud-y { top: 0; bottom: 0; width: 1px; left: 0; }
+#rhud-cross .rhud-ring {
+  position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px;
+  border: 1px solid rgba(232,137,10,0.4); border-radius: 50%;
+}
+#rhud-cross .rhud-ring::after {
+  content: ''; position: absolute; inset: 10px; border-radius: 50%;
+  background: rgba(232,137,10,0.55);
+}
+#rhud-cross .rhud-chip {
+  position: absolute; margin: 16px 0 0 18px;
+  font-family: 'DM Sans', monospace; font-size: 0.6rem; letter-spacing: 0.14em;
+  color: rgba(138,164,200,0.75);
+  background: rgba(10,22,40,0.85);
+  border: 1px solid rgba(138,164,200,0.18);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+#rhud-cross .rhud-chip b { color: var(--orange-light, #ffb547); font-weight: 600; }
+@media (max-width: 1180px), (pointer: coarse) { #rhud-cross { display: none; } }
+
+/* ── 3 · SITE STATUS BOARD ────────────────────────────────────────────── */
+#rhud-status {
+  position: fixed; right: 26px; bottom: 22px; z-index: 95;
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.62rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(248,250,255,0.5);
+  background: rgba(10,22,40,0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 2px solid var(--orange, #e8890a);
+  padding: 8px 14px;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+#rhud-status .rhud-beacon {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #36cf6e;
+  box-shadow: 0 0 8px rgba(54,207,110,0.8);
+  animation: rhudBeacon 1.6s ease-in-out infinite;
+}
+@keyframes rhudBeacon { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+#rhud-status b { color: var(--orange-light, #ffb547); font-weight: 700; }
+#rhud-status .rhud-clock { color: rgba(138,164,200,0.8); }
+@media (max-width: 900px) { #rhud-status { display: none; } }
+
+/* ── 5 · WELD-SPARK CLICKS ────────────────────────────────────────────── */
+.rhud-spark {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange-light, #ffb547);
+  box-shadow: 0 0 8px rgba(255,181,71,0.9);
+}
+
+/* ── 6 · STEEL DETAILING ──────────────────────────────────────────────── */
+/* corner bolts on the cards */
+.course-card,
+.stat-card,
+.getmie-card,
+.area-card,
+.meta-card,
+.related-card,
+.sb-card,
+.date-card,
+.people-card {
+  background-image:
+    radial-gradient(circle 3.2px at 11px 11px,                       #56708f 0 1.4px, #1c2c44 1.6px 2.5px, transparent 3.2px),
+    radial-gradient(circle 3.2px at calc(100% - 11px) 11px,          #56708f 0 1.4px, #1c2c44 1.6px 2.5px, transparent 3.2px),
+    radial-gradient(circle 3.2px at 11px calc(100% - 11px),          #56708f 0 1.4px, #1c2c44 1.6px 2.5px, transparent 3.2px),
+    radial-gradient(circle 3.2px at calc(100% - 11px) calc(100% - 11px), #56708f 0 1.4px, #1c2c44 1.6px 2.5px, transparent 3.2px);
+}
+
+/* extra couplers on the pole dividers (adds 2 inner nodes to the existing 2) */
+.pole-divider {
+  background:
+    radial-gradient(circle 6px at 38% 50%, var(--navy, #0a1628) 0 3px, var(--orange, #e8890a) 3.5px 5px, transparent 6px),
+    radial-gradient(circle 6px at 62% 50%, var(--navy, #0a1628) 0 3px, var(--orange, #e8890a) 3.5px 5px, transparent 6px),
+    linear-gradient(90deg, transparent, var(--steel-dim, #3d5a80), var(--orange, #e8890a), var(--steel-dim, #3d5a80), transparent);
+}
+
+/* animated hazard tape above the CTA section */
+.cta-section { position: relative; }
+.cta-section::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--orange, #e8890a) 0 16px,
+    #0a1628 16px 32px
+  );
+  background-size: 45.25px 8px;
+  opacity: 0.65;
+  animation: rhudTape 1.6s linear infinite;
+}
+@keyframes rhudTape { to { background-position: 45.25px 0; } }
+
+/* ── 7 · BLUEPRINT MODE ───────────────────────────────────────────────── */
+/* toggle button in the status board */
+#rhud-status .rhud-bp-btn {
+  pointer-events: auto; cursor: pointer;
+  background: none;
+  border: 1px solid rgba(138,164,200,0.35);
+  color: #9fc6e8;
+  font-family: inherit; font-size: inherit;
+  letter-spacing: inherit; text-transform: uppercase;
+  padding: 3px 9px; margin-left: 6px;
+  transition: all 0.25s;
+}
+#rhud-status .rhud-bp-btn:hover { border-color: #9fc6e8; background: rgba(159,198,232,0.08); }
+#rhud-status .rhud-bp-btn.on {
+  background: #9fc6e8; color: #0b2a4a; border-color: #9fc6e8;
+  box-shadow: 0 0 14px rgba(159,198,232,0.4);
+}
+
+/* drawing-office view — one class on <body> flips the whole site */
+body.rhud-bp { background: #0a2342; }
+
+/* drafting grid over everything */
+body.rhud-bp::before {
+  content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(159,198,232,0.05) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(0deg,  rgba(159,198,232,0.05) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, rgba(159,198,232,0.1)  0 1px, transparent 1px 100px),
+    repeating-linear-gradient(0deg,  rgba(159,198,232,0.1)  0 1px, transparent 1px 100px);
+}
+/* DRAFT stamp */
+body.rhud-bp::after {
+  content: 'BLUEPRINT — NOT FOR CONSTRUCTION';
+  position: fixed; top: 50%; left: 50%; z-index: 1; pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-family: 'Bebas Neue', sans-serif; font-size: 6vw; letter-spacing: 0.18em;
+  color: rgba(159,198,232,0.07);
+  border: 4px solid rgba(159,198,232,0.07);
+  padding: 8px 40px;
+  white-space: nowrap;
+}
+
+/* sections + hero go drawing blue */
+body.rhud-bp .hero,
+body.rhud-bp .page-hero { background: linear-gradient(160deg, #0a2342 0%, #0d2f5a 55%, #0a2748 100%); }
+body.rhud-bp .page-hero h1 { color: transparent; -webkit-text-stroke: 1.5px #9fc6e8; }
+body.rhud-bp .panel,
+body.rhud-bp .credential { background-color: rgba(159,198,232,0.03); border-color: rgba(159,198,232,0.35); }
+body.rhud-bp .training-section.alt,
+body.rhud-bp .cta-section { background: rgba(159,198,232,0.025); }
+
+/* headings become outlined construction lettering */
+body.rhud-bp .section-title,
+body.rhud-bp .cta-title,
+body.rhud-bp .hero-title {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #9fc6e8;
+}
+body.rhud-bp .section-title .dim,
+body.rhud-bp .hero-title .accent,
+body.rhud-bp .hero-title .outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(159,198,232,0.45);
+}
+
+/* photos & 3D become cyanotype prints */
+body.rhud-bp #root img,
+body.rhud-bp #hero3d-mount canvas {
+  filter: grayscale(1) brightness(1.05) sepia(0.5) hue-rotate(165deg) saturate(2.4);
+}
+
+/* cards become drawn boxes — dashed cyan linework */
+body.rhud-bp .course-card,
+body.rhud-bp .stat-card,
+body.rhud-bp .getmie-card,
+body.rhud-bp .pillar,
+body.rhud-bp .area-card,
+body.rhud-bp .meta-card,
+body.rhud-bp .related-card,
+body.rhud-bp .sb-card,
+body.rhud-bp .date-card,
+body.rhud-bp .people-card {
+  background-color: rgba(159,198,232,0.03);
+  border: 1px dashed rgba(159,198,232,0.45);
+}
+
+/* marquee bands print in ink */
+body.rhud-bp .marquee-band { background: #11365f; color: #9fc6e8; }
+body.rhud-bp .marquee-band.dark { background: #0a2342; }
+
+/* dividers redraw in cyan */
+body.rhud-bp .pole-divider {
+  background:
+    radial-gradient(circle 6px at 38% 50%, #0a2342 0 3px, #9fc6e8 3.5px 5px, transparent 6px),
+    radial-gradient(circle 6px at 62% 50%, #0a2342 0 3px, #9fc6e8 3.5px 5px, transparent 6px),
+    linear-gradient(90deg, transparent, rgba(159,198,232,0.4), #9fc6e8, rgba(159,198,232,0.4), transparent);
+}
+
+/* HUD furniture matches the drawing */
+body.rhud-bp #rhud-tower .rhud-fill {
+  border-color: #9fc6e8;
+  background: linear-gradient(0deg, rgba(159,198,232,0.3), rgba(159,198,232,0.05));
+  box-shadow: 0 0 18px rgba(159,198,232,0.25);
+}
+body.rhud-bp #rhud-tower .rhud-lift.done::before { background: #9fc6e8; }
+body.rhud-bp #rhud-tower .rhud-lift.done .rhud-node { border-color: #9fc6e8; }
+body.rhud-bp #rhud-tower .rhud-lift.active .rhud-node { background: #9fc6e8; border-color: #d6eaff; box-shadow: 0 0 12px rgba(159,198,232,0.8); }
+body.rhud-bp #rhud-tower .rhud-pct b { color: #9fc6e8; }
+body.rhud-bp #rhud-cross .rhud-ring { border-color: rgba(159,198,232,0.55); }
+body.rhud-bp #rhud-cross .rhud-ring::after { background: rgba(159,198,232,0.6); }
+body.rhud-bp #rhud-cross .rhud-chip b { color: #9fc6e8; }
+
+/* keep the enroll CTA orange — the one thing still "live" on the drawing */
+body.rhud-bp .nav-cta, body.rhud-bp .btn-primary { filter: none; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #rhud-cross { display: none; }
+  #rhud-status .rhud-beacon { animation: none; }
+  .cta-section::after { animation: none; }
+}

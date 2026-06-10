@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Course Detail — Radian H.A. Limited Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="course-data.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3560;
+  --white: #f8faff; --orange: #e8890a; --orange-light: #ffb547;
+  --steel: #8aa4c8; --steel-dim: #3d5a80;
+  --rescue: #ff7070;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,22,40,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo .logo-mark { width: 36px; height: 36px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: var(--navy); clip-path: polygon(0 0,100% 0,100% 70%,85% 100%,0 100%); }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: rgba(248,250,255,0.7); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links a.active { color: var(--orange); }
+.nav-cta { background: var(--orange); color: var(--navy); padding: 10px 24px; font-weight: 700; font-size: 0.83rem; letter-spacing: 0.08em; text-transform: uppercase; border: none; cursor: pointer; clip-path: polygon(0 0,100% 0,100% 70%,92% 100%,0 100%); transition: all 0.2s; font-family: 'DM Sans',sans-serif; }
+.nav-cta:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* COURSE HERO */
+.course-hero {
+  position: relative;
+  padding: 140px 60px 60px;
+  background: linear-gradient(160deg,#0a1628 0%,#112240 60%,#0d1e3a 100%);
+  overflow: hidden;
+}
+.course-hero-bg {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg,rgba(255,255,255,0.025) 0px,rgba(255,255,255,0.025) 1px,transparent 1px,transparent 100px), repeating-linear-gradient(0deg,rgba(255,255,255,0.025) 0px,rgba(255,255,255,0.025) 1px,transparent 1px,transparent 100px);
+  pointer-events: none; animation: drift 20s linear infinite;
+}
+@keyframes drift { 0%{background-position:0 0;} 100%{background-position:100px 100px;} }
+.course-hero-inner { position: relative; max-width: 1300px; margin: 0 auto; }
+.breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: rgba(248,250,255,0.45); margin-bottom: 32px; flex-wrap: wrap; }
+.breadcrumb a { color: rgba(248,250,255,0.45); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(248,250,255,0.2); }
+.breadcrumb .current { color: var(--orange); }
+
+.course-hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; align-items: end; }
+.course-hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.ch-tag { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 12px; font-weight: 700; }
+.ch-tag.code { background: var(--orange); color: var(--navy); clip-path: polygon(0 0,100% 0,100% 70%,94% 100%,0 100%); }
+.ch-tag.code.rescue { background: var(--rescue); }
+.ch-tag.type { background: rgba(255,255,255,0.08); color: rgba(248,250,255,0.85); border: 1px solid rgba(255,255,255,0.12); }
+.course-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 5.5vw, 5rem); line-height: 0.98; letter-spacing: 0.03em; max-width: 800px; }
+.course-hero h1 .dim { color: rgba(248,250,255,0.25); }
+
+.course-meta-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.meta-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 18px 22px; transition: all 0.25s; }
+.meta-card:hover { border-color: rgba(232,137,10,0.3); }
+.meta-card-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-bottom: 6px; font-weight: 600; }
+.meta-card-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.04em; color: var(--white); line-height: 1; }
+.meta-card.price .meta-card-value { color: var(--orange); font-size: 1.6rem; }
+.meta-card.price .vat { font-size: 0.65rem; color: rgba(248,250,255,0.35); margin-top: 4px; font-family: 'DM Sans', sans-serif; letter-spacing: 0; text-transform: none; }
+
+/* TABS */
+.tabs-section { padding: 60px 60px 100px; max-width: 1300px; margin: 0 auto; }
+.tabs-bar {
+  display: flex; gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: sticky; top: 76px; z-index: 50;
+  background: var(--navy);
+  margin-bottom: 56px;
+  margin-left: -8px;
+  padding-left: 8px;
+}
+.tab-btn {
+  padding: 18px 36px; cursor: pointer;
+  font-size: 0.84rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+  color: rgba(248,250,255,0.4);
+  border: none; border-bottom: 3px solid transparent;
+  background: none; transition: all 0.2s; margin-bottom: -1px;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+}
+.tab-btn:hover { color: var(--white); }
+.tab-btn.active { color: var(--white); border-bottom-color: var(--orange); }
+.tab-btn .tab-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--orange); margin-right: 10px; letter-spacing: 0.04em; }
+
+/* TAB CONTENT */
+.tab-panel { animation: panelFade 0.3s ease; }
+@keyframes panelFade { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+
+.content-grid { display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start; }
+.content-main { min-width: 0; }
+
+.section-h {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem; letter-spacing: 0.05em; line-height: 1;
+  margin-bottom: 20px; margin-top: 40px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-h:first-child { margin-top: 0; }
+.section-h::before {
+  content: ''; display: block;
+  width: 32px; height: 3px; background: var(--orange);
+}
+
+.outline-block { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); padding: 28px 32px; margin-bottom: 16px; }
+.outline-block-label { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 10px; }
+.outline-block-text { font-size: 0.98rem; line-height: 1.8; color: rgba(248,250,255,0.78); }
+.outline-block-text strong { color: var(--white); font-weight: 600; }
+
+.cert-block {
+  background: linear-gradient(135deg, rgba(232,137,10,0.08), rgba(232,137,10,0.02));
+  border: 1px solid rgba(232,137,10,0.2);
+  padding: 28px 32px;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.cert-block-icon { font-size: 2rem; flex-shrink: 0; }
+.cert-block-text { font-size: 0.95rem; line-height: 1.8; color: rgba(248,250,255,0.75); }
+
+.ppe-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.ppe-item { display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; color: rgba(248,250,255,0.78); line-height: 1.5; }
+.ppe-item-icon { color: var(--orange); flex-shrink: 0; font-weight: 700; }
+.ppe-note { padding: 18px 22px; background: rgba(232,137,10,0.04); border-left: 3px solid var(--orange); font-size: 0.88rem; color: rgba(248,250,255,0.7); line-height: 1.7; }
+
+/* CURRICULUM */
+.curr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.curr-block {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 32px;
+}
+.curr-block.theory { border-top: 3px solid var(--orange); }
+.curr-block.practical { border-top: 3px solid #60b4ff; }
+.curr-block-label { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.curr-block.theory .curr-block-label { color: var(--orange); }
+.curr-block.practical .curr-block-label { color: #80c8ff; }
+.curr-block-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; margin-bottom: 24px; }
+.curr-list { display: flex; flex-direction: column; gap: 0; }
+.curr-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.92rem; line-height: 1.6; color: rgba(248,250,255,0.78); }
+.curr-item:last-child { border-bottom: none; }
+.curr-item-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; color: rgba(232,137,10,0.5); flex-shrink: 0; min-width: 24px; }
+.curr-block.practical .curr-item-num { color: rgba(100,180,255,0.5); }
+.curr-item-sub { display: block; font-size: 0.82rem; color: rgba(248,250,255,0.5); margin-top: 4px; line-height: 1.6; }
+.curr-item-bullets { margin-top: 8px; padding-left: 14px; display: flex; flex-direction: column; gap: 4px; }
+.curr-item-bullets li { font-size: 0.82rem; color: rgba(248,250,255,0.55); list-style: disc; margin-left: 8px; }
+
+/* SIDEBAR */
+.sidebar { position: sticky; top: 156px; display: flex; flex-direction: column; gap: 16px; }
+.sb-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 28px; }
+.sb-card.enrol { background: linear-gradient(135deg, rgba(232,137,10,0.1), rgba(232,137,10,0.02)); border-color: rgba(232,137,10,0.3); }
+.sb-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.08em; margin-bottom: 16px; color: var(--orange); }
+.sb-fact-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; align-items: center; }
+.sb-fact-row:last-child { border-bottom: none; }
+.sb-fact-label { color: rgba(248,250,255,0.5); }
+.sb-fact-value { color: var(--white); font-weight: 600; text-align: right; }
+.sb-price-large { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--orange); line-height: 1; }
+.sb-price-vat { font-size: 0.72rem; color: rgba(248,250,255,0.4); margin-top: 4px; margin-bottom: 20px; }
+.sb-btn { width: 100%; padding: 14px; background: var(--orange); color: var(--navy); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; clip-path: polygon(0 0,100% 0,100% 75%,95% 100%,0 100%); }
+.sb-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+.sb-btn.outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.2); clip-path: none; margin-top: 10px; }
+.sb-btn.outline:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+/* RELATED */
+.related-section { padding: 80px 60px; background: rgba(255,255,255,0.012); border-top: 1px solid rgba(255,255,255,0.05); }
+.related-inner { max-width: 1300px; margin: 0 auto; }
+.related-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; flex-wrap: wrap; gap: 16px; }
+.related-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.06em; }
+.related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.related-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 24px; text-decoration: none; color: inherit; transition: all 0.3s; display: flex; flex-direction: column; gap: 12px; }
+.related-card:hover { border-color: rgba(232,137,10,0.4); transform: translateY(-4px); }
+.related-card-tag { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); font-weight: 700; }
+.related-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.04em; line-height: 1.1; }
+.related-card-meta { display: flex; gap: 12px; font-size: 0.78rem; color: rgba(248,250,255,0.45); margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+.related-card-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* FOOTER */
+footer { background: #060e1e; padding: 60px; border-top: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; }
+.footer-brand .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.1em; margin-bottom: 16px; }
+.footer-brand p { font-size: 0.85rem; color: rgba(248,250,255,0.4); line-height: 1.7; max-width: 280px; }
+.footer-col h4 { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; font-weight: 700; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { color: rgba(248,250,255,0.45); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--white); }
+.footer-bottom { background: #060e1e; padding: 20px 60px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 0.78rem; color: rgba(248,250,255,0.25); }
+
+/* NOT FOUND */
+.not-found { padding: 200px 60px; text-align: center; }
+.not-found h2 { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.04em; margin-bottom: 16px; }
+.not-found p { color: rgba(248,250,255,0.5); margin-bottom: 32px; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1100px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .related-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .course-hero { padding: 120px 24px 48px; }
+  .course-hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .tabs-section { padding: 40px 24px 60px; }
+  .tabs-bar { position: relative; top: 0; }
+  .tab-btn { padding: 14px 20px; font-size: 0.78rem; }
+  .curr-grid { grid-template-columns: 1fr; }
+  .ppe-list { grid-template-columns: 1fr; }
+  .related-section { padding: 60px 24px; }
+  .related-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
+  .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="logo-mark">R</div>
+    RADIAN H.A. LIMITED
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cisrs.html">CISRS OTS</a></li>
+    <li><a href="getmie-safe.html">Getmie Safe</a></li>
+    <li><a href="index.html#calendar">Schedule</a></li>
+    <li><a href="certificate.html">Certificates</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.querySelector('.sb-btn')?.click()">Enrol Now</button>
+</nav>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+function getCourseId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id') || 'cisrs-l1';
+}
+
+function NotFound() {
+  return (
+    <div className="not-found">
+      <h2>Course Not Found</h2>
+      <p>We couldn't find the course you were looking for.</p>
+      <a href="cisrs.html" style={{padding:'14px 32px', background:'var(--orange)', color:'var(--navy)', textDecoration:'none', fontWeight:700, fontSize:'0.88rem', letterSpacing:'0.1em', textTransform:'uppercase'}}>← Back to CISRS OTS</a>
+    </div>
+  );
+}
+
+function App() {
+  const [courseId, setCourseId] = useState(getCourseId());
+  const [tab, setTab] = useState('overview');
+
+  useEffect(() => {
+    const handler = () => { setCourseId(getCourseId()); setTab('overview'); window.scrollTo(0, 0); };
+    window.addEventListener('popstate', handler);
+    return () => window.removeEventListener('popstate', handler);
+  }, []);
+
+  const course = window.COURSES_DATA[courseId];
+
+  useEffect(() => {
+    if (course) {
+      document.title = course.title + ' — Radian H.A. Limited Training';
+    }
+  }, [course]);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, [tab, courseId]);
+
+  if (!course) return <><div className="not-found"><NotFound/></div></>;
+
+  const isRescue = course.category === 'rescue' || course.category === 'wah';
+  const parentPage = course.category === 'cisrs' ? 'cisrs.html' : 'getmie-safe.html';
+  const parentName = course.category === 'cisrs' ? 'CISRS OTS' : 'Getmie Safe';
+
+  const related = Object.entries(window.COURSES_DATA)
+    .filter(([id, c]) => id !== courseId && c.category === course.category)
+    .slice(0, 3);
+
+  return (
+    <>
+      {/* HERO */}
+      <div className="course-hero">
+        <div className="course-hero-bg"></div>
+        <div className="course-hero-inner">
+          <div className="breadcrumb">
+            <a href="index.html">Home</a>
+            <span className="sep">/</span>
+            <a href={parentPage}>{parentName}</a>
+            <span className="sep">/</span>
+            <span className="current">{course.title}</span>
+          </div>
+          <div className="course-hero-grid">
+            <div>
+              <div className="course-hero-tags">
+                <span className={`ch-tag code ${course.category!=='cisrs'?'rescue':''}`}>{course.code}</span>
+                <span className="ch-tag type">{course.courseType}</span>
+              </div>
+              <h1>{course.title}</h1>
+            </div>
+            <div className="course-meta-cards">
+              <div className="meta-card">
+                <div className="meta-card-label">Duration</div>
+                <div className="meta-card-value">{course.duration}</div>
+              </div>
+              <div className="meta-card">
+                <div className="meta-card-label">Training Time</div>
+                <div className="meta-card-value" style={{fontSize:'1rem'}}>{course.trainingTime}</div>
+              </div>
+              <div className="meta-card price" style={{gridColumn:'1/-1'}}>
+                <div className="meta-card-label">Course Fee</div>
+                <div className="meta-card-value">TT${course.price}</div>
+                <div className="vat">VAT inclusive</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="tabs-section">
+        <div className="tabs-bar">
+          <button className={`tab-btn ${tab==='overview'?'active':''}`} onClick={()=>setTab('overview')}>
+            <span className="tab-num">01</span>Overview
+          </button>
+          <button className={`tab-btn ${tab==='curriculum'?'active':''}`} onClick={()=>setTab('curriculum')}>
+            <span className="tab-num">02</span>Curriculum
+          </button>
+        </div>
+
+        <div className="content-grid">
+          <div className="content-main">
+            {tab === 'overview' ? (
+              <div className="tab-panel" key="overview">
+                <h2 className="section-h reveal">Outline</h2>
+                <div className="outline-block reveal">
+                  <div className="outline-block-label">Who Should Attend</div>
+                  <div className="outline-block-text">{course.whoShouldAttend}</div>
+                </div>
+                <div className="outline-block reveal">
+                  <div className="outline-block-label">Prerequisites</div>
+                  <div className="outline-block-text" dangerouslySetInnerHTML={{__html: course.prerequisites}}/>
+                </div>
+                <div className="outline-block reveal">
+                  <div className="outline-block-label">Course Objectives</div>
+                  <div className="outline-block-text">{course.objectives}</div>
+                </div>
+                {course.specifications && (
+                  <div className="outline-block reveal">
+                    <div className="outline-block-label">Specifications</div>
+                    <div className="outline-block-text" dangerouslySetInnerHTML={{__html: course.specifications}}/>
+                  </div>
+                )}
+                {course.careerPath && (
+                  <div className="outline-block reveal">
+                    <div className="outline-block-label">Career Path</div>
+                    <div className="outline-block-text">{course.careerPath}</div>
+                  </div>
+                )}
+
+                <h2 className="section-h reveal">PPE Requirements</h2>
+                <p className="reveal" style={{marginBottom:20, fontSize:'0.95rem', color:'rgba(248,250,255,0.6)', lineHeight:1.8}}>
+                  Delegates attending {course.category==='cisrs' || course.code==='GMS-WAH' || course.category==='rescue' || course.category==='wah'?'any of our practical courses':'this course'} are required to be fully outfitted in PPE:
+                </p>
+                <div className="ppe-list reveal">
+                  {course.ppe.map((p, i) => (
+                    <div className="ppe-item" key={i}>
+                      <span className="ppe-item-icon">✓</span>
+                      <span>{p}</span>
+                    </div>
+                  ))}
+                </div>
+                {course.ppeNote && (
+                  <div className="ppe-note reveal">{course.ppeNote}</div>
+                )}
+
+                <h2 className="section-h reveal">Certifications</h2>
+                <div className="cert-block reveal">
+                  <div className="cert-block-icon">📜</div>
+                  <div className="cert-block-text" dangerouslySetInnerHTML={{__html: course.certifications}}/>
+                </div>
+              </div>
+            ) : (
+              <div className="tab-panel" key="curriculum">
+                <h2 className="section-h reveal">Course Contents</h2>
+                <div className="curr-grid">
+                  <div className="curr-block theory reveal">
+                    <div className="curr-block-label">Track A</div>
+                    <div className="curr-block-title">{course.curriculum.theoryTitle || 'Core Theory Units'}</div>
+                    <div className="curr-list">
+                      {course.curriculum.theory.map((item, i) => (
+                        <div key={i} className="curr-item">
+                          <span className="curr-item-num">{String(i+1).padStart(2,'0')}</span>
+                          <span>
+                            {typeof item === 'string' ? item : (
+                              <>
+                                {item.title}
+                                {item.sub && <span className="curr-item-sub">{item.sub}</span>}
+                                {item.bullets && (
+                                  <ul className="curr-item-bullets">
+                                    {item.bullets.map((b,j)=><li key={j}>{b}</li>)}
+                                  </ul>
+                                )}
+                              </>
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {course.curriculum.practical && (
+                    <div className="curr-block practical reveal">
+                      <div className="curr-block-label">Track B</div>
+                      <div className="curr-block-title">{course.curriculum.practicalTitle || 'Practical Units'}</div>
+                      <div className="curr-list">
+                        {course.curriculum.practical.map((item, i) => (
+                          <div key={i} className="curr-item">
+                            <span className="curr-item-num">{String(i+1).padStart(2,'0')}</span>
+                            <span>
+                              {typeof item === 'string' ? item : (
+                                <>
+                                  {item.title}
+                                  {item.sub && <span className="curr-item-sub">{item.sub}</span>}
+                                  {item.bullets && (
+                                    <ul className="curr-item-bullets">
+                                      {item.bullets.map((b,j)=><li key={j}>{b}</li>)}
+                                    </ul>
+                                  )}
+                                </>
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* SIDEBAR */}
+          <div className="sidebar">
+            <div className="sb-card enrol">
+              <div className="sb-card-title">Enrol Now</div>
+              <div className="sb-price-large">TT${course.price}</div>
+              <div className="sb-price-vat">VAT inclusive</div>
+              <button className="sb-btn" onClick={()=>window.location.href=`enrol.html?id=${courseId}`}>
+                <span>Enrol on Course</span><span>→</span>
+              </button>
+              <button className="sb-btn outline" onClick={()=>window.location.href='index.html#calendar'}>View Dates</button>
+            </div>
+
+            <div className="sb-card">
+              <div className="sb-card-title">Course Facts</div>
+              <div className="sb-fact-row">
+                <span className="sb-fact-label">Course Code</span>
+                <span className="sb-fact-value">{course.code}</span>
+              </div>
+              <div className="sb-fact-row">
+                <span className="sb-fact-label">Duration</span>
+                <span className="sb-fact-value">{course.duration}</span>
+              </div>
+              <div className="sb-fact-row">
+                <span className="sb-fact-label">Daily Hours</span>
+                <span className="sb-fact-value" style={{fontSize:'0.78rem'}}>{course.trainingTime}</span>
+              </div>
+              <div className="sb-fact-row">
+                <span className="sb-fact-label">Category</span>
+                <span className="sb-fact-value">{course.courseType}</span>
+              </div>
+              <div className="sb-fact-row">
+                <span className="sb-fact-label">Certificate</span>
+                <span className="sb-fact-value">5 Years Valid</span>
+              </div>
+            </div>
+
+            <div className="sb-card">
+              <div className="sb-card-title">Need Help?</div>
+              <div style={{fontSize:'0.85rem', color:'rgba(248,250,255,0.6)', lineHeight:1.7, marginBottom:14}}>
+                Questions about this course or group enrolments?
+              </div>
+              <div style={{fontSize:'0.82rem', color:'var(--orange-light)', marginBottom:6}}>📧 training@radianhalimited.com</div>
+              <div style={{fontSize:'0.82rem', color:'rgba(248,250,255,0.6)'}}>📞 Contact us for details</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* RELATED */}
+      {related.length > 0 && (
+        <section className="related-section">
+          <div className="related-inner">
+            <div className="related-header">
+              <div>
+                <div style={{fontSize:'0.72rem', letterSpacing:'0.18em', textTransform:'uppercase', color:'var(--orange)', fontWeight:700, marginBottom:8}}>Explore More</div>
+                <div className="related-title">Related {parentName} Courses</div>
+              </div>
+              <a href={parentPage} style={{color:'var(--orange-light)', textDecoration:'none', fontSize:'0.85rem', fontWeight:600}}>View all courses →</a>
+            </div>
+            <div className="related-grid">
+              {related.map(([id, c]) => (
+                <a key={id} href={`course.html?id=${id}`} className="related-card">
+                  <div className="related-card-tag">{c.code}</div>
+                  <div className="related-card-title">{c.title}</div>
+                  <div className="related-card-meta">
+                    <span>⏱ {c.duration}</span>
+                    <span style={{marginLeft:'auto', color:'var(--orange)'}}>TT${c.price}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FOOTER */}
+      <footer>
+        <div className="footer-brand">
+          <div className="logo">RADIAN H.A. LIMITED</div>
+          <p>20+ years of industry-recognised scaffolding training. Building competence, safety and careers across the scaffolding workforce.</p>
+        </div>
+        <div className="footer-col">
+          <h4>Training</h4>
+          <ul>
+            <li><a href="cisrs.html">CISRS OTS Training</a></li>
+            <li><a href="getmie-safe.html">Getmie Safe</a></li>
+            <li><a href="index.html#calendar">Schedule</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="index.html#videos">Videos</a></li>
+            <li><a href="certificate.html">Certificates</a></li>
+          </ul>
+        </div>
+      </footer>
+      <div className="footer-bottom">
+        <p>© 2026 Radian H.A. Limited Training. All rights reserved.</p>
+        <p style={{color:'rgba(248,250,255,0.2)', fontSize:'0.72rem'}}>CISRS Accredited Scaffold Training Provider</p>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

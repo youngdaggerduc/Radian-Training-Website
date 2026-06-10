@@ -1,0 +1,13 @@
+{
+  "name": "Radian H.A. Limited Training",
+  "short_name": "Radian Training",
+  "description": "CISRS-accredited scaffolding and working-at-height training.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "icons": [
+    { "src": "/wp-content/themes/Training/assets/media/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/wp-content/themes/Training/assets/media/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

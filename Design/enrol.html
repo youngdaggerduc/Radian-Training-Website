@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enrol — Radian H.A. Limited Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="course-data.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3560;
+  --white: #f8faff; --orange: #e8890a; --orange-light: #ffb547;
+  --steel: #8aa4c8; --steel-dim: #3d5a80;
+  --rescue: #ff7070; --green: #22c97a;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; min-height: 100vh; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60px; display: flex; align-items: center; justify-content: space-between; background: rgba(10,22,40,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo .logo-mark { width: 36px; height: 36px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: var(--navy); clip-path: polygon(0 0,100% 0,100% 70%,85% 100%,0 100%); }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: rgba(248,250,255,0.7); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--white); }
+
+/* HEADER */
+.enrol-header { padding: 120px 60px 30px; max-width: 1300px; margin: 0 auto; }
+.breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: rgba(248,250,255,0.45); margin-bottom: 24px; flex-wrap: wrap; }
+.breadcrumb a { color: rgba(248,250,255,0.45); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--orange); }
+.breadcrumb .sep { color: rgba(248,250,255,0.2); }
+.breadcrumb .current { color: var(--orange); }
+
+.enrol-title-row { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 24px; margin-bottom: 16px; }
+.enrol-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.04em; line-height: 1; }
+.enrol-h1 .dim { color: rgba(248,250,255,0.3); }
+.enrol-course-tag { font-size: 0.78rem; color: var(--orange); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; display: inline-block; }
+.enrol-sub { font-size: 0.95rem; color: rgba(248,250,255,0.5); }
+
+/* STEPPER */
+.stepper-wrap { padding: 24px 60px 0; max-width: 1300px; margin: 0 auto; }
+.stepper { display: flex; align-items: stretch; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); padding: 4px; gap: 4px; }
+.step-pill {
+  flex: 1; padding: 18px 24px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all 0.25s;
+  background: transparent; border: none;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+}
+.step-pill:not(:disabled):hover { background: rgba(255,255,255,0.04); }
+.step-pill:disabled { cursor: not-allowed; opacity: 0.6; }
+.step-pill.active { background: rgba(232,137,10,0.1); }
+.step-pill.complete { background: rgba(34,201,122,0.05); }
+.step-num { width: 36px; height: 36px; flex-shrink: 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: rgba(248,250,255,0.5); transition: all 0.25s; }
+.step-pill.active .step-num { background: var(--orange); border-color: var(--orange); color: var(--navy); }
+.step-pill.complete .step-num { background: var(--green); border-color: var(--green); color: var(--navy); }
+.step-info { min-width: 0; flex: 1; }
+.step-label { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-bottom: 2px; font-weight: 600; }
+.step-pill.active .step-label { color: var(--orange); }
+.step-pill.complete .step-label { color: var(--green); }
+.step-title { font-size: 0.88rem; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-pill:not(.active):not(.complete) .step-title { color: rgba(248,250,255,0.5); }
+
+/* MAIN */
+.enrol-main { max-width: 1300px; margin: 0 auto; padding: 40px 60px 80px; display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
+.enrol-panel {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 40px;
+  animation: panelIn 0.35s ease;
+  min-height: 400px;
+}
+@keyframes panelIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+.panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; margin-bottom: 8px; }
+.panel-sub { font-size: 0.92rem; color: rgba(248,250,255,0.55); margin-bottom: 32px; line-height: 1.6; }
+
+/* DATE PICKER */
+.dates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.date-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 22px 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.date-card:hover { border-color: rgba(232,137,10,0.5); background: rgba(232,137,10,0.05); transform: translateY(-3px); }
+.date-card.selected { border-color: var(--orange); background: rgba(232,137,10,0.08); }
+.date-card.selected::before { content: '✓'; position: absolute; top: 12px; right: 14px; color: var(--orange); font-weight: 700; }
+.date-card-top { display: flex; align-items: flex-end; gap: 12px; }
+.date-day { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; color: var(--orange); letter-spacing: 0.02em; }
+.date-month { font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(248,250,255,0.5); font-weight: 700; padding-bottom: 4px; }
+.date-year { font-size: 0.72rem; color: rgba(248,250,255,0.35); padding-bottom: 4px; }
+.date-meta { font-size: 0.78rem; color: rgba(248,250,255,0.55); line-height: 1.5; }
+.date-meta-row { display: flex; gap: 8px; align-items: center; padding: 2px 0; }
+.date-spots { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; padding: 4px 10px; background: rgba(34,201,122,0.1); color: var(--green); border: 1px solid rgba(34,201,122,0.25); font-weight: 600; align-self: flex-start; }
+.date-spots.low { background: rgba(255,180,0,0.1); color: #ffd060; border-color: rgba(255,180,0,0.25); }
+
+.empty-dates { padding: 60px 20px; text-align: center; color: rgba(248,250,255,0.4); }
+.empty-dates h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--white); margin-bottom: 8px; letter-spacing: 0.06em; }
+.empty-dates p { font-size: 0.92rem; line-height: 1.7; }
+
+/* PEOPLE PICKER */
+.people-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+.people-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 28px 24px;
+  cursor: pointer; transition: all 0.25s;
+  position: relative;
+  text-align: center;
+}
+.people-card:hover { border-color: rgba(232,137,10,0.5); transform: translateY(-3px); }
+.people-card.selected { border-color: var(--orange); background: rgba(232,137,10,0.08); }
+.people-card.selected::before { content: '✓'; position: absolute; top: 10px; right: 14px; color: var(--orange); font-weight: 700; }
+.people-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: var(--white); }
+.people-card.selected .people-num { color: var(--orange); }
+.people-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-top: 4px; font-weight: 600; }
+.people-cost { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.74rem; color: rgba(248,250,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; }
+.people-cost-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--orange); letter-spacing: 0.03em; margin-top: 4px; }
+.people-cost-vat { font-size: 0.65rem; color: rgba(248,250,255,0.3); margin-top: 2px; text-transform: none; letter-spacing: 0; }
+
+.people-plus {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 24px 28px;
+  display: flex; align-items: center; gap: 24px;
+}
+.people-plus.selected { border-color: var(--orange); background: rgba(232,137,10,0.06); }
+.pp-label { flex: 1; }
+.pp-label-top { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.04em; }
+.pp-label-sub { font-size: 0.82rem; color: rgba(248,250,255,0.5); margin-top: 4px; }
+.pp-input { width: 100px; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 1rem; outline: none; text-align: center; transition: all 0.2s; }
+.pp-input:focus { border-color: var(--orange); }
+.pp-cost { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--orange); letter-spacing: 0.03em; min-width: 140px; text-align: right; }
+
+/* DELEGATES */
+.delegates-grid { display: flex; flex-direction: column; gap: 20px; }
+.delegate-block {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 28px 32px;
+  position: relative;
+}
+.delegate-block-header { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.delegate-num { width: 36px; height: 36px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--navy); }
+.delegate-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; }
+.delegate-status { margin-left: auto; font-size: 0.72rem; color: var(--green); background: rgba(34,201,122,0.1); padding: 4px 10px; border: 1px solid rgba(34,201,122,0.25); font-weight: 600; letter-spacing: 0.06em; opacity: 0; transition: opacity 0.2s; }
+.delegate-status.show { opacity: 1; }
+
+.field-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(248,250,255,0.5); font-weight: 600; }
+.field-input {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+  outline: none; transition: all 0.2s;
+}
+.field-input:focus { border-color: var(--orange); background: rgba(232,137,10,0.04); }
+.field-input::placeholder { color: rgba(248,250,255,0.22); }
+.field-input.error { border-color: var(--rescue); }
+.field-err { font-size: 0.7rem; color: var(--rescue); margin-top: 2px; }
+
+/* CONFIRMATION */
+.confirm-panel { text-align: center; padding: 60px 40px; }
+.confirm-icon-wrap { width: 92px; height: 92px; background: rgba(34,201,122,0.12); border: 2px solid rgba(34,201,122,0.35); border-radius: 50%; margin: 0 auto 28px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; animation: confirmPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes confirmPop { from{transform:scale(0.5);opacity:0;} to{transform:scale(1);opacity:1;} }
+.confirm-h { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; letter-spacing: 0.04em; line-height: 1.05; margin-bottom: 16px; }
+.confirm-h .accent { color: var(--green); }
+.confirm-p { font-size: 1rem; color: rgba(248,250,255,0.6); line-height: 1.8; max-width: 480px; margin: 0 auto 36px; }
+.confirm-ref { display: inline-flex; gap: 24px; padding: 16px 28px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); margin: 0 auto 32px; }
+.confirm-ref-item { text-align: left; }
+.confirm-ref-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,250,255,0.35); margin-bottom: 4px; font-weight: 600; }
+.confirm-ref-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--orange); letter-spacing: 0.05em; }
+.confirm-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* BUTTONS */
+.actions-bar { display: flex; justify-content: space-between; gap: 12px; margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.05); }
+.btn { padding: 14px 32px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--orange); color: var(--navy); clip-path: polygon(0 0,100% 0,100% 75%,95% 100%,0 100%); }
+.btn-primary:hover:not(:disabled) { background: var(--orange-light); transform: translateY(-2px); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: rgba(248,250,255,0.7); border: 1px solid rgba(255,255,255,0.15); }
+.btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
+
+/* SUMMARY SIDEBAR */
+.summary { position: sticky; top: 100px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); padding: 0; overflow: hidden; }
+.summary-header { padding: 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); background: linear-gradient(135deg, rgba(232,137,10,0.06), transparent); }
+.summary-label { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 6px; }
+.summary-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.04em; line-height: 1.1; }
+.summary-body { padding: 24px 28px; }
+.summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; gap: 16px; align-items: flex-start; }
+.summary-row:last-child { border-bottom: none; }
+.sr-label { color: rgba(248,250,255,0.5); flex-shrink: 0; }
+.sr-value { color: var(--white); font-weight: 500; text-align: right; }
+.sr-value.dim { color: rgba(248,250,255,0.4); font-style: italic; }
+.summary-total { padding: 20px 28px; background: rgba(232,137,10,0.08); border-top: 1px solid rgba(232,137,10,0.2); display: flex; justify-content: space-between; align-items: baseline; }
+.summary-total-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); font-weight: 700; }
+.summary-total-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--orange); letter-spacing: 0.03em; }
+.summary-total-vat { font-size: 0.66rem; color: rgba(248,250,255,0.35); margin-top: 2px; }
+
+@media (max-width: 1100px) {
+  .enrol-main { grid-template-columns: 1fr; }
+  .summary { position: static; }
+}
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .enrol-header { padding: 100px 24px 20px; }
+  .stepper-wrap { padding: 16px 24px 0; }
+  .stepper { flex-direction: column; }
+  .step-pill { padding: 12px 16px; }
+  .enrol-main { padding: 24px 24px 60px; gap: 24px; }
+  .enrol-panel { padding: 24px; }
+  .people-grid { grid-template-columns: 1fr 1fr; }
+  .field-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="logo-mark">R</div>
+    RADIAN H.A. LIMITED
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cisrs.html">CISRS OTS</a></li>
+    <li><a href="getmie-safe.html">Getmie Safe</a></li>
+    <li><a href="index.html#calendar">Schedule</a></li>
+    <li><a href="certificate.html">Certificates</a></li>
+  </ul>
+</nav>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* Generate plausible training dates per-course over next 6 months */
+function generateDates(courseId) {
+  const today = new Date('2026-05-27');
+  const slots = [];
+  // 4-6 future date slots per course
+  const seeds = {
+    'cisrs-l1': [[5,'2026-06-08','London',8],[6,'2026-07-13','Manchester',7],[7,'2026-08-10','London',6],[8,'2026-09-14','London',8],[9,'2026-10-12','Birmingham',6]],
+    'cisrs-l2': [[5,'2026-06-15','London',6],[6,'2026-07-20','London',8],[7,'2026-08-24','Manchester',7],[8,'2026-09-21','London',6]],
+    'cisrs-l3': [[5,'2026-07-06','London',5],[6,'2026-08-17','London',5],[7,'2026-10-19','Birmingham',4],[8,'2026-11-23','London',6]],
+    'cisrs-basic-inspection': [[3,'2026-06-22','London',6],[3,'2026-07-27','Manchester',5],[3,'2026-09-07','London',6],[3,'2026-10-26','Birmingham',5]],
+    'cisrs-advanced-inspection': [[2,'2026-07-02','London',4],[2,'2026-08-13','London',5],[2,'2026-10-08','Manchester',4],[2,'2026-11-12','London',5]],
+    'cisrs-supervisor': [[3,'2026-06-29','London',6],[3,'2026-08-03','London',5],[3,'2026-09-28','Birmingham',6],[3,'2026-11-02','London',5]],
+    'gms-wah': [[1,'2026-06-04','London',12],[1,'2026-06-25','Manchester',10],[1,'2026-07-16','London',12],[1,'2026-08-06','London',10],[1,'2026-09-03','Birmingham',12],[1,'2026-10-01','London',10]],
+    'gms-rescue-basic': [[1,'2026-06-12','London',10],[1,'2026-07-10','London',8],[1,'2026-08-14','Manchester',10],[1,'2026-09-11','London',9],[1,'2026-10-09','London',10]],
+    'gms-rescue-advanced': [[2,'2026-06-18','London',8],[2,'2026-07-23','London',6],[2,'2026-09-17','Manchester',8],[2,'2026-11-05','London',7]],
+    'gms-rescue-refresher': [[1,'2026-06-05','London',10],[1,'2026-07-03','London',9],[1,'2026-08-07','Manchester',10],[1,'2026-09-04','London',10],[1,'2026-10-02','Birmingham',10]],
+  };
+  return (seeds[courseId] || []).map(([days, dateStr, venue, spots], i) => {
+    const start = new Date(dateStr + 'T00:00:00');
+    const end = new Date(start);
+    end.setDate(end.getDate() + days - 1);
+    return {
+      id: `${courseId}-${i}`,
+      start, end, venue, spots,
+      startStr: start.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}),
+      endStr: end.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}),
+      year: start.getFullYear(),
+    };
+  });
+}
+
+function getCourseId() {
+  const p = new URLSearchParams(window.location.search);
+  return p.get('id') || 'cisrs-l1';
+}
+
+function generateRef() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let r = 'RDN-';
+  for (let i = 0; i < 6; i++) r += chars[Math.floor(Math.random()*chars.length)];
+  return r;
+}
+
+function StepPill({ num, label, title, status, onClick }) {
+  return (
+    <button className={`step-pill ${status}`} onClick={onClick} disabled={status==='locked'}>
+      <div className="step-num">{status==='complete'?'✓':num}</div>
+      <div className="step-info">
+        <div className="step-label">{label}</div>
+        <div className="step-title">{title}</div>
+      </div>
+    </button>
+  );
+}
+
+function DateStep({ dates, selected, onSelect }) {
+  if (dates.length === 0) {
+    return (
+      <div className="empty-dates">
+        <h3>No Upcoming Dates Listed</h3>
+        <p>Please contact our training team to discuss availability:<br/><span style={{color:'var(--orange-light)'}}>training@radianhalimited.com</span></p>
+      </div>
+    );
+  }
+  return (
+    <div className="dates-grid">
+      {dates.map(d => (
+        <div key={d.id} className={`date-card ${selected?.id===d.id?'selected':''}`} onClick={()=>onSelect(d)}>
+          <div className="date-card-top">
+            <div className="date-day">{String(d.start.getDate()).padStart(2,'0')}</div>
+            <div>
+              <div className="date-month">{MONTHS[d.start.getMonth()].slice(0,3)}</div>
+              <div className="date-year">{d.year}</div>
+            </div>
+          </div>
+          <div className="date-meta">
+            <div className="date-meta-row">📅 <span>{d.startStr} – {d.endStr}</span></div>
+            <div className="date-meta-row">📍 <span>Training Centre, {d.venue}</span></div>
+          </div>
+          <div className={`date-spots ${d.spots<=5?'low':''}`}>● {d.spots} spots left</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PeopleStep({ course, count, customCount, onSelect, onCustom }) {
+  const price = parseFloat(course.price.replace(/,/g,''));
+  const fmt = (n) => 'TT$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const customN = parseInt(customCount, 10) || 6;
+  const customTotal = price * customN;
+
+  return (
+    <>
+      <div className="people-grid">
+        {[1,2,3,4,5].map(n => (
+          <div key={n} className={`people-card ${count===n?'selected':''}`} onClick={()=>onSelect(n)}>
+            <div className="people-num">{n}</div>
+            <div className="people-label">{n===1?'Delegate':'Delegates'}</div>
+            <div className="people-cost">
+              Cost
+              <div className="people-cost-value">{fmt(price*n)}</div>
+              <div className="people-cost-vat">VAT inclusive</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`people-plus ${count==='custom'?'selected':''}`} onClick={()=>onSelect('custom')}>
+        <div className="pp-label">
+          <div className="pp-label-top">6+ Delegates</div>
+          <div className="pp-label-sub">Select attendees for larger groups — bulk rates may apply</div>
+        </div>
+        <input
+          type="number" min="6" max="50"
+          className="pp-input"
+          value={count==='custom'?customCount:6}
+          onChange={e => { onSelect('custom'); onCustom(e.target.value); }}
+          onClick={e => e.stopPropagation()}
+        />
+        <div className="pp-cost">{count==='custom' ? fmt(customTotal) : fmt(price*6)}</div>
+      </div>
+    </>
+  );
+}
+
+function DelegateStep({ count, delegates, onChange, errors }) {
+  return (
+    <div className="delegates-grid">
+      {Array.from({length: count}).map((_, i) => {
+        const d = delegates[i] || { name:'', dob:'', number:'' };
+        const isComplete = d.name && d.dob && d.number;
+        return (
+          <div className="delegate-block" key={i}>
+            <div className="delegate-block-header">
+              <div className="delegate-num">{i+1}</div>
+              <div className="delegate-title">Delegate {i+1}</div>
+              <div className={`delegate-status ${isComplete?'show':''}`}>✓ Complete</div>
+            </div>
+            <div className="field-grid">
+              <div className="field">
+                <div className="field-label">Full Name</div>
+                <input
+                  className={`field-input ${errors[i]?.name?'error':''}`}
+                  type="text" placeholder="e.g. James Mitchell"
+                  value={d.name}
+                  onChange={e => onChange(i, 'name', e.target.value)}
+                />
+                {errors[i]?.name && <div className="field-err">{errors[i].name}</div>}
+              </div>
+              <div className="field">
+                <div className="field-label">Date of Birth</div>
+                <input
+                  className={`field-input ${errors[i]?.dob?'error':''}`}
+                  type="date"
+                  value={d.dob}
+                  onChange={e => onChange(i, 'dob', e.target.value)}
+                  max="2010-01-01"
+                />
+                {errors[i]?.dob && <div className="field-err">{errors[i].dob}</div>}
+              </div>
+              <div className="field">
+                <div className="field-label">Contact Number</div>
+                <input
+                  className={`field-input ${errors[i]?.number?'error':''}`}
+                  type="tel" placeholder="+1 868 555 0123"
+                  value={d.number}
+                  onChange={e => onChange(i, 'number', e.target.value)}
+                />
+                {errors[i]?.number && <div className="field-err">{errors[i].number}</div>}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ConfirmStep({ course, date, count, ref }) {
+  return (
+    <div className="confirm-panel">
+      <div className="confirm-icon-wrap">✓</div>
+      <h2 className="confirm-h">REQUEST<br/><span className="accent">SUBMITTED</span></h2>
+      <p className="confirm-p">
+        Your enrolment request has been sent to the training team. They will reach out shortly with payment instructions, confirmation, and joining details.
+      </p>
+      <div className="confirm-ref">
+        <div className="confirm-ref-item">
+          <div className="confirm-ref-label">Reference</div>
+          <div className="confirm-ref-value">{ref}</div>
+        </div>
+        <div className="confirm-ref-item">
+          <div className="confirm-ref-label">Course</div>
+          <div className="confirm-ref-value" style={{fontSize:'0.95rem'}}>{course.code}</div>
+        </div>
+        <div className="confirm-ref-item">
+          <div className="confirm-ref-label">Delegates</div>
+          <div className="confirm-ref-value">{count}</div>
+        </div>
+      </div>
+      <div className="confirm-actions">
+        <a href="index.html" className="btn btn-ghost" style={{textDecoration:'none'}}>← Return Home</a>
+        <a href={`course.html?id=${course.id}`} className="btn btn-primary" style={{textDecoration:'none'}}>View Course Page</a>
+      </div>
+    </div>
+  );
+}
+
+function Summary({ course, date, count, customCount, total }) {
+  const isCisrs = course.category === 'cisrs';
+  return (
+    <div className="summary">
+      <div className="summary-header">
+        <div className="summary-label">{isCisrs?'CISRS OTS':'Getmie Safe'} · {course.code}</div>
+        <div className="summary-title">{course.title}</div>
+      </div>
+      <div className="summary-body">
+        <div className="summary-row">
+          <span className="sr-label">Duration</span>
+          <span className="sr-value">{course.duration}</span>
+        </div>
+        <div className="summary-row">
+          <span className="sr-label">Daily Hours</span>
+          <span className="sr-value" style={{fontSize:'0.8rem'}}>{course.trainingTime}</span>
+        </div>
+        <div className="summary-row">
+          <span className="sr-label">Per Delegate</span>
+          <span className="sr-value">TT${course.price}</span>
+        </div>
+        <div className="summary-row">
+          <span className="sr-label">Date</span>
+          <span className={`sr-value ${!date?'dim':''}`}>
+            {date ? `${date.startStr} – ${date.endStr}` : 'Not selected'}
+          </span>
+        </div>
+        <div className="summary-row">
+          <span className="sr-label">Venue</span>
+          <span className={`sr-value ${!date?'dim':''}`}>
+            {date ? date.venue : 'Not selected'}
+          </span>
+        </div>
+        <div className="summary-row">
+          <span className="sr-label">Delegates</span>
+          <span className={`sr-value ${!count?'dim':''}`}>
+            {count==='custom' ? customCount : count || 'Not selected'}
+          </span>
+        </div>
+      </div>
+      <div className="summary-total">
+        <div>
+          <div className="summary-total-label">Total Estimate</div>
+          <div className="summary-total-vat">VAT inclusive</div>
+        </div>
+        <div className="summary-total-value">{total ? `TT$${total.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2})}` : '—'}</div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const courseId = getCourseId();
+  const course = window.COURSES_DATA[courseId];
+  const dates = useMemo(() => course ? generateDates(courseId) : [], [courseId]);
+
+  const [step, setStep] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [peopleChoice, setPeopleChoice] = useState(null); // 1-5 or 'custom'
+  const [customCount, setCustomCount] = useState('6');
+  const [delegates, setDelegates] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedRef, setSubmittedRef] = useState(null);
+
+  const numDelegates = peopleChoice === 'custom' ? Math.max(6, parseInt(customCount,10) || 6) : peopleChoice;
+  const price = course ? parseFloat(course.price.replace(/,/g,'')) : 0;
+  const total = numDelegates ? price * numDelegates : 0;
+
+  if (!course) {
+    return (
+      <div style={{padding:'200px 60px', textAlign:'center'}}>
+        <h2 style={{fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.4rem', letterSpacing:'0.04em'}}>Course Not Found</h2>
+        <p style={{color:'rgba(248,250,255,0.5)', marginTop:16, marginBottom:32}}>We couldn't find the course you're trying to enrol on.</p>
+        <a href="cisrs.html" style={{padding:'14px 32px', background:'var(--orange)', color:'var(--navy)', textDecoration:'none', fontWeight:700, fontSize:'0.88rem', letterSpacing:'0.1em', textTransform:'uppercase'}}>Browse Courses</a>
+      </div>
+    );
+  }
+
+  const updateDelegate = (idx, field, val) => {
+    const next = [...delegates];
+    next[idx] = { ...(next[idx] || {}), [field]: val };
+    setDelegates(next);
+    if (errors[idx]?.[field]) {
+      const ne = {...errors};
+      ne[idx] = { ...ne[idx], [field]: '' };
+      setErrors(ne);
+    }
+  };
+
+  const validateDelegates = () => {
+    const e = {};
+    for (let i = 0; i < numDelegates; i++) {
+      const d = delegates[i] || {};
+      const row = {};
+      if (!d.name?.trim()) row.name = 'Required';
+      if (!d.dob) row.dob = 'Required';
+      if (!d.number?.trim()) row.number = 'Required';
+      else if (d.number.replace(/[^0-9]/g,'').length < 7) row.number = 'Invalid phone';
+      if (Object.keys(row).length) e[i] = row;
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const submit = () => {
+    if (!validateDelegates()) return;
+    setSubmitting(true);
+    setTimeout(() => {
+      setSubmittedRef(generateRef());
+      setStep(4);
+      setSubmitting(false);
+      window.scrollTo({top:0, behavior:'smooth'});
+    }, 1500);
+  };
+
+  const stepStatus = (n) => {
+    if (step === 4) return n === 4 ? 'active' : 'complete';
+    if (n < step) return 'complete';
+    if (n === step) return 'active';
+    // locked unless prereq met
+    if (n === 2 && !selectedDate) return 'locked';
+    if (n === 3 && (!selectedDate || !peopleChoice)) return 'locked';
+    return '';
+  };
+
+  const goToStep = (n) => {
+    if (stepStatus(n) === 'locked') return;
+    setStep(n);
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+
+  return (
+    <>
+      <div className="enrol-header">
+        <div className="breadcrumb">
+          <a href="index.html">Home</a>
+          <span className="sep">/</span>
+          <a href={course.category==='cisrs'?'cisrs.html':'getmie-safe.html'}>{course.category==='cisrs'?'CISRS OTS':'Getmie Safe'}</a>
+          <span className="sep">/</span>
+          <a href={`course.html?id=${course.id}`}>{course.title}</a>
+          <span className="sep">/</span>
+          <span className="current">Enrol</span>
+        </div>
+        <div className="enrol-course-tag">{course.code} · {course.duration}</div>
+        <div className="enrol-title-row">
+          <h1 className="enrol-h1">ENROL ON<br/>{course.title}</h1>
+        </div>
+        <div className="enrol-sub">Follow the steps below to request enrolment. Our training team will confirm availability and send payment instructions.</div>
+      </div>
+
+      {step < 4 && (
+        <div className="stepper-wrap">
+          <div className="stepper">
+            <StepPill num="1" label="Step One" title="Select Date" status={stepStatus(1)} onClick={()=>goToStep(1)}/>
+            <StepPill num="2" label="Step Two" title="Number of People" status={stepStatus(2)} onClick={()=>goToStep(2)}/>
+            <StepPill num="3" label="Step Three" title="Delegate Details" status={stepStatus(3)} onClick={()=>goToStep(3)}/>
+          </div>
+        </div>
+      )}
+
+      <div className="enrol-main">
+        <div>
+          <div className="enrol-panel" key={step}>
+            {step === 1 && (
+              <>
+                <div className="panel-title">Step 1 — Select Your Training Date</div>
+                <div className="panel-sub">Choose an upcoming session that suits your schedule. All sessions are held {course.trainingTime}.</div>
+                <DateStep dates={dates} selected={selectedDate} onSelect={setSelectedDate}/>
+                <div className="actions-bar">
+                  <a href={`course.html?id=${course.id}`} className="btn btn-ghost" style={{textDecoration:'none'}}>← Back to Course</a>
+                  <button className="btn btn-primary" disabled={!selectedDate} onClick={()=>{ setStep(2); window.scrollTo({top:0,behavior:'smooth'}); }}>
+                    Continue →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <div className="panel-title">Step 2 — Select The Number Of People</div>
+                <div className="panel-sub">How many delegates will attend this session? Costs shown are VAT inclusive.</div>
+                <PeopleStep course={course} count={peopleChoice} customCount={customCount} onSelect={setPeopleChoice} onCustom={setCustomCount}/>
+                <div className="actions-bar">
+                  <button className="btn btn-ghost" onClick={()=>setStep(1)}>← Back</button>
+                  <button className="btn btn-primary" disabled={!peopleChoice} onClick={()=>{ setStep(3); window.scrollTo({top:0,behavior:'smooth'}); }}>
+                    Continue →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 3 && (
+              <>
+                <div className="panel-title">Step 3 — Delegate Details</div>
+                <div className="panel-sub">Please enter the details for each delegate attending. All fields are required.</div>
+                <DelegateStep count={numDelegates} delegates={delegates} onChange={updateDelegate} errors={errors}/>
+                <div className="actions-bar">
+                  <button className="btn btn-ghost" onClick={()=>setStep(2)} disabled={submitting}>← Back</button>
+                  <button className="btn btn-primary" onClick={submit} disabled={submitting}>
+                    {submitting ? (
+                      <>
+                        <div style={{width:14,height:14,border:'2px solid rgba(10,22,40,0.3)',borderTopColor:'var(--navy)',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+                        <span>Submitting</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Request</span>
+                        <span>→</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 4 && submittedRef && (
+              <ConfirmStep course={course} date={selectedDate} count={numDelegates} ref={submittedRef}/>
+            )}
+          </div>
+        </div>
+
+        <Summary course={course} date={selectedDate} count={peopleChoice} customCount={customCount} total={total}/>
+      </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

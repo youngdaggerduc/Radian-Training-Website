@@ -1,0 +1,47 @@
+{
+  "_readme": "Editable site content. instructors/testimonials/accreds show on the About page; events feed the home-page calendar. courseId must match Design/course-data.js ids (cisrs-l1, cisrs-l2, cisrs-l3, cisrs-basic-inspection, cisrs-advanced-inspection, cisrs-supervisor, gms-wah, gms-rescue-basic, gms-rescue-advanced, gms-rescue-refresher). Dates are YYYY-MM-DD. Keep this file valid JSON (no trailing commas).",
+
+  "instructors": [
+    {"name":"David Okafor",    "role":"Lead CISRS Instructor",          "reg":"INS-00021", "years":18, "tags":["Operative L1–L3","Supervision"]},
+    {"name":"Leila Adeyemi",   "role":"Senior Instructor — Inspection", "reg":"INS-00034", "years":12, "tags":["Scaffold Inspection","Awareness"]},
+    {"name":"Marcus Joseph",   "role":"Rescue & Height Instructor",     "reg":"INS-00012", "years":15, "tags":["Working at Height","Rescue"]},
+    {"name":"Anya Ramkissoon", "role":"Instructor & Assessor",          "reg":"INS-00047", "years":9,  "tags":["Assessment","Theory"]}
+  ],
+
+  "testimonials": [
+    {"quote":"Passed Level 1 first time — the practical yard time is unmatched. I was on a platform job the week after.", "name":"Kerron Baptiste", "org":"Scaffolder · Caribbean Industrial Services", "course":"CISRS Level 1"},
+    {"quote":"We put 14 of our crew through Working at Height. Organised, rigorous, and zero downtime for the site.", "name":"Michelle Persad", "org":"HSE Manager · PetroWorks T&T", "course":"Getmie Safe WAH"},
+    {"quote":"The rescue drills are as real as it gets. My team's emergency response time has halved.", "name":"Andre Charles", "org":"Site Supervisor · Atlantic Rigging Ltd", "course":"Rescue Training"},
+    {"quote":"The inspection course gave me the confidence to sign off scaffolds properly — and the card to prove it.", "name":"Shazana Mohammed", "org":"Scaffold Inspector · GulfBuild", "course":"Basic Inspection"}
+  ],
+
+  "accreds": [
+    {"seal":"★", "title":"CISRS OTS",     "sub":"Approved Training Centre",     "ref":"Centre № OTS-TT-0042", "since":"Since 2006"},
+    {"seal":"✓", "title":"NOCN",          "sub":"Card Scheme Partner",          "ref":"Partner Ref NOCN-8821", "since":"Since 2010"},
+    {"seal":"⛨", "title":"HSE Compliant", "sub":"Safety Management System",     "ref":"Cert № SMS-2024-117",   "since":"Audited annually"},
+    {"seal":"§", "title":"Fully Insured", "sub":"Public & Employers Liability", "ref":"Policy TT-PL-99031",    "since":"TT$10M cover"}
+  ],
+
+  "events": [
+    {"id":1,  "date":"2026-05-05", "title":"CISRS Operative — Level 1",          "type":"cisrs",  "courseId":"cisrs-l1",               "duration":"5 days", "venue":"Training Centre, London",     "spots":8,  "time":"08:00 – 17:00"},
+    {"id":2,  "date":"2026-05-12", "title":"Working at Height — Getmie Safe",    "type":"getmie", "courseId":"gms-wah",                "duration":"2 days", "venue":"Training Centre, London",     "spots":12, "time":"08:30 – 16:30"},
+    {"id":3,  "date":"2026-05-19", "title":"CISRS Scaffold Inspection",          "type":"cisrs",  "courseId":"cisrs-basic-inspection", "duration":"3 days", "venue":"Training Centre, Manchester", "spots":6,  "time":"08:00 – 17:00"},
+    {"id":4,  "date":"2026-05-22", "title":"Getmie Safe Rescue Training",        "type":"rescue", "courseId":"gms-rescue-basic",       "duration":"1 day",  "venue":"Training Centre, London",     "spots":10, "time":"08:00 – 16:00"},
+    {"id":5,  "date":"2026-05-26", "title":"CISRS Management & Supervision",     "type":"cisrs",  "courseId":"cisrs-supervisor",       "duration":"5 days", "venue":"Training Centre, Birmingham", "spots":5,  "time":"08:00 – 17:00"},
+    {"id":6,  "date":"2026-06-02", "title":"CISRS Operative — Level 2",          "type":"cisrs",  "courseId":"cisrs-l2",               "duration":"5 days", "venue":"Training Centre, London",     "spots":8,  "time":"08:00 – 17:00"},
+    {"id":7,  "date":"2026-06-09", "title":"Scaffolding Awareness",              "type":"cisrs",  "courseId":"",                       "duration":"1 day",  "venue":"Training Centre, London",     "spots":15, "time":"09:00 – 17:00"},
+    {"id":8,  "date":"2026-06-11", "title":"Working at Height — Getmie Safe",    "type":"getmie", "courseId":"gms-wah",                "duration":"2 days", "venue":"Training Centre, Leeds",      "spots":12, "time":"08:30 – 16:30"},
+    {"id":9,  "date":"2026-06-16", "title":"CISRS Scaffold Inspection",          "type":"cisrs",  "courseId":"cisrs-basic-inspection", "duration":"3 days", "venue":"Training Centre, London",     "spots":6,  "time":"08:00 – 17:00"},
+    {"id":10, "date":"2026-06-23", "title":"Getmie Safe Rescue Training",        "type":"rescue", "courseId":"gms-rescue-basic",       "duration":"1 day",  "venue":"Training Centre, Manchester", "spots":10, "time":"08:00 – 16:00"},
+    {"id":11, "date":"2026-06-25", "title":"CISRS Operative — Level 3 Advanced", "type":"cisrs",  "courseId":"cisrs-l3",               "duration":"5 days", "venue":"Training Centre, London",     "spots":6,  "time":"08:00 – 17:00"},
+    {"id":12, "date":"2026-07-07", "title":"CISRS Operative — Level 1",          "type":"cisrs",  "courseId":"cisrs-l1",               "duration":"5 days", "venue":"Training Centre, London",     "spots":8,  "time":"08:00 – 17:00"},
+    {"id":13, "date":"2026-07-14", "title":"Working at Height — Getmie Safe",    "type":"getmie", "courseId":"gms-wah",                "duration":"2 days", "venue":"Training Centre, Bristol",    "spots":12, "time":"08:30 – 16:30"},
+    {"id":14, "date":"2026-07-17", "title":"Getmie Safe Rescue Training",        "type":"rescue", "courseId":"gms-rescue-basic",       "duration":"1 day",  "venue":"Training Centre, London",     "spots":10, "time":"08:00 – 16:00"},
+    {"id":15, "date":"2026-07-21", "title":"CISRS Management & Supervision",     "type":"cisrs",  "courseId":"cisrs-supervisor",       "duration":"5 days", "venue":"Training Centre, London",     "spots":5,  "time":"08:00 – 17:00"},
+    {"id":16, "date":"2026-07-28", "title":"CISRS Scaffold Inspection",          "type":"cisrs",  "courseId":"cisrs-basic-inspection", "duration":"3 days", "venue":"Training Centre, Glasgow",    "spots":6,  "time":"08:00 – 17:00"},
+    {"id":17, "date":"2026-08-04", "title":"CISRS Operative — Level 2",          "type":"cisrs",  "courseId":"cisrs-l2",               "duration":"5 days", "venue":"Training Centre, London",     "spots":8,  "time":"08:00 – 17:00"},
+    {"id":18, "date":"2026-08-11", "title":"Working at Height — Getmie Safe",    "type":"getmie", "courseId":"gms-wah",                "duration":"2 days", "venue":"Training Centre, London",     "spots":12, "time":"08:30 – 16:30"},
+    {"id":19, "date":"2026-08-18", "title":"Getmie Safe Rescue Training",        "type":"rescue", "courseId":"gms-rescue-basic",       "duration":"1 day",  "venue":"Training Centre, Birmingham", "spots":10, "time":"08:00 – 16:00"},
+    {"id":20, "date":"2026-08-25", "title":"Scaffolding Awareness",              "type":"cisrs",  "courseId":"",                       "duration":"1 day",  "venue":"Training Centre, London",     "spots":15, "time":"09:00 – 17:00"}
+  ]
+}

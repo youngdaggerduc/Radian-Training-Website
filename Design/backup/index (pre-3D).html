@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Radian H.A. Limited Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="image-slot.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0a1628; --navy-mid: #112240; --navy-light: #1a3560;
+  --white: #f8faff; --orange: #e8890a; --orange-light: #ffb547;
+  --steel: #8aa4c8; --steel-dim: #3d5a80;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled { background: rgba(10,22,40,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo .logo-mark { width: 36px; height: 36px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; color: var(--navy); clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%); }
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a { color: rgba(248,250,255,0.7); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: var(--orange); transform: scaleX(0); transition: transform 0.2s; }
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta { background: var(--orange); color: var(--navy); padding: 10px 24px; font-weight: 700; font-size: 0.83rem; letter-spacing: 0.08em; text-transform: uppercase; border: none; cursor: pointer; clip-path: polygon(0 0,100% 0,100% 70%,92% 100%,0 100%); transition: all 0.2s; font-family: 'DM Sans',sans-serif; }
+.nav-cta:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* HERO */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; background: linear-gradient(160deg,#0a1628 0%,#112240 50%,#0d1e3a 100%); }
+.scaffold-bg { position: absolute; inset: 0; background-image: repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 120px), repeating-linear-gradient(0deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 120px); animation: scaffoldDrift 20s linear infinite; pointer-events: none; }
+@keyframes scaffoldDrift { 0%{background-position:0 0;} 100%{background-position:120px 120px;} }
+.scaffold-poles { position: absolute; inset: 0; pointer-events: none; }
+.float-pole { position: absolute; background: rgba(255,255,255,0.04); border-radius: 2px; animation: floatPole linear infinite; }
+@keyframes floatPole { 0%{transform:translateY(0) rotate(var(--r));opacity:0;} 10%{opacity:1;} 90%{opacity:0.3;} 100%{transform:translateY(-120vh) rotate(var(--r));opacity:0;} }
+
+/* HERO CONTENT — centred in the viewport with clearance top (nav) + bottom (stats strip) */
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  max-width: 1000px; margin: 0 auto;
+  padding: 120px 40px 180px;   /* top: nav height; bottom: stats strip height + gap */
+  width: 100%;
+}
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,137,10,0.12); border: 1px solid rgba(232,137,10,0.35); padding: 6px 18px; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange-light); font-weight: 600; margin-bottom: 28px; animation: fadeSlideDown 0.8s ease both; }
+.hero-badge-dot { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.4);} }
+@keyframes fadeSlideDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+
+.hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 7rem); line-height: 0.92; letter-spacing: 0.04em; color: var(--white); animation: fadeSlideUp 0.9s 0.2s ease both; }
+.hero-title .accent { color: var(--orange); }
+.hero-title .outline { -webkit-text-stroke: 2px var(--white); color: transparent; }
+.hero-sub { margin-top: 24px; font-size: 1.1rem; line-height: 1.7; color: rgba(248,250,255,0.65); max-width: 580px; margin-left: auto; margin-right: auto; animation: fadeSlideUp 0.9s 0.4s ease both; }
+.hero-actions { margin-top: 36px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeSlideUp 0.9s 0.6s ease both; }
+
+/* SCROLL INDICATOR — sits between buttons and stats strip */
+.scroll-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 48px; animation: fadeSlideUp 1s 1s ease both; }
+.scroll-hint-text { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+.scroll-mouse { width: 22px; height: 36px; border: 1.5px solid rgba(255,255,255,0.25); border-radius: 12px; display: flex; justify-content: center; padding-top: 6px; }
+.scroll-wheel { width: 3px; height: 8px; background: var(--orange); border-radius: 2px; animation: scrollWheel 1.5s infinite; }
+@keyframes scrollWheel { 0%{transform:translateY(0);opacity:1;} 100%{transform:translateY(10px);opacity:0;} }
+
+/* STATS STRIP — anchored to hero bottom */
+.hero-stats-strip { position: relative; z-index: 2; background: rgba(255,255,255,0.04); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: stretch; }
+.hero-stat { flex: 1; padding: 24px 32px; display: flex; align-items: center; gap: 20px; border-right: 1px solid rgba(255,255,255,0.07); }
+.hero-stat:last-child { border-right: none; }
+.hero-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--orange); line-height: 1; }
+.hero-stat-label { font-size: 0.78rem; color: rgba(248,250,255,0.5); line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* BUTTONS */
+.btn-primary { background: var(--orange); color: var(--navy); padding: 16px 40px; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; clip-path: polygon(0 0,100% 0,100% 75%,94% 100%,0 100%); transition: all 0.25s; font-family: 'DM Sans',sans-serif; }
+.btn-primary:hover { background: var(--orange-light); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(232,137,10,0.35); }
+.btn-outline { background: transparent; color: var(--white); padding: 14px 40px; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid rgba(248,250,255,0.3); cursor: pointer; transition: all 0.25s; font-family: 'DM Sans',sans-serif; }
+.btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.06); transform: translateY(-3px); }
+
+/* SECTIONS */
+.section { padding: 120px 60px; max-width: 1300px; margin: 0 auto; }
+.section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); font-weight: 600; margin-bottom: 20px; }
+.section-label::before { content: ''; display: block; width: 32px; height: 2px; background: var(--orange); }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 5vw, 5rem); line-height: 1; letter-spacing: 0.03em; }
+.section-title .dim { color: rgba(248,250,255,0.25); }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 80px; align-items: start; }
+.about-text p { font-size: 1.05rem; line-height: 1.8; color: rgba(248,250,255,0.7); margin-bottom: 20px; }
+.about-pillars { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+.pillar { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); transition: all 0.3s; }
+.pillar:hover { border-color: var(--orange); background: rgba(232,137,10,0.05); transform: translateX(8px); }
+.pillar-icon { width: 36px; height: 36px; background: rgba(232,137,10,0.15); display: flex; align-items: center; justify-content: center; color: var(--orange); font-size: 1rem; flex-shrink: 0; }
+.pillar-text { font-size: 0.9rem; color: rgba(248,250,255,0.8); font-weight: 500; }
+.big-stat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 40px 30px; position: relative; overflow: hidden; transition: all 0.35s; }
+.stat-card:hover { border-color: var(--orange); transform: translateY(-6px); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--orange); transform: scaleX(0); transition: transform 0.35s; }
+.stat-card:hover::before { transform: scaleX(1); }
+.stat-card-num { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; line-height: 1; color: var(--orange); }
+.stat-card-label { margin-top: 8px; font-size: 0.82rem; color: rgba(248,250,255,0.5); line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* DIVIDER */
+.pole-divider { height: 2px; background: linear-gradient(90deg,transparent,var(--steel-dim),var(--orange),var(--steel-dim),transparent); margin: 0 60px; position: relative; }
+.pole-divider::before, .pole-divider::after { content: ''; position: absolute; top: 50%; width: 12px; height: 12px; border: 2px solid var(--orange); border-radius: 50%; transform: translateY(-50%); background: var(--navy); }
+.pole-divider::before { left: 20%; }
+.pole-divider::after { right: 20%; }
+
+/* TRAINING SECTIONS */
+.training-section { padding: 120px 0; position: relative; }
+.training-section.alt { background: rgba(255,255,255,0.015); }
+.training-inner { max-width: 1300px; margin: 0 auto; padding: 0 60px; }
+.cisrs-header { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 80px; }
+.cisrs-badge { display: inline-block; background: var(--orange); color: var(--navy); font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.12em; padding: 8px 24px; margin-bottom: 24px; clip-path: polygon(0 0,100% 0,100% 60%,94% 100%,0 100%); }
+.cisrs-desc { font-size: 1rem; line-height: 1.8; color: rgba(248,250,255,0.65); }
+.courses-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.course-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 36px 28px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.35s; display: flex; flex-direction: column; gap: 16px; }
+.course-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0; background: linear-gradient(0deg,rgba(232,137,10,0.08),transparent); transition: height 0.35s; }
+.course-card:hover, .course-card.active-course { border-color: rgba(232,137,10,0.5); transform: translateY(-8px); }
+.course-card:hover::after { height: 100%; }
+.course-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: rgba(232,137,10,0.12); line-height: 1; position: absolute; top: 16px; right: 20px; }
+.course-icon { width: 48px; height: 48px; background: rgba(232,137,10,0.1); border: 1px solid rgba(232,137,10,0.2); display: flex; align-items: center; justify-content: center; color: var(--orange); font-size: 1.4rem; }
+.course-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; line-height: 1.1; color: var(--white); }
+.course-desc { font-size: 0.85rem; color: rgba(248,250,255,0.55); line-height: 1.65; }
+.course-arrow { margin-top: auto; color: var(--orange); font-size: 1.2rem; transition: transform 0.25s; }
+.course-card:hover .course-arrow { transform: translateX(6px); }
+
+/* GETMIE */
+.getmie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.getmie-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); padding: 52px 44px; position: relative; overflow: hidden; transition: all 0.35s; }
+.getmie-card:hover { border-color: rgba(232,137,10,0.4); }
+.getmie-card-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--orange); }
+.getmie-label { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 20px; }
+.getmie-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; letter-spacing: 0.06em; line-height: 1.05; margin-bottom: 20px; }
+.getmie-desc { font-size: 0.95rem; line-height: 1.8; color: rgba(248,250,255,0.65); }
+
+/* VIDEOS */
+.videos-section { padding: 120px 0; }
+.videos-inner { max-width: 1300px; margin: 0 auto; padding: 0 60px; }
+.videos-tabs { display: flex; gap: 0; margin-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.vtab { padding: 16px 32px; cursor: pointer; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: rgba(248,250,255,0.4); border-bottom: 2px solid transparent; transition: all 0.25s; margin-bottom: -1px; background: none; border-left: none; border-right: none; border-top: none; font-family: 'DM Sans',sans-serif; }
+.vtab.active { color: var(--white); border-bottom-color: var(--orange); }
+.vtab:hover { color: var(--white); }
+.videos-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.video-placeholder { aspect-ratio: 16/9; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); position: relative; overflow: hidden; cursor: pointer; transition: all 0.35s; }
+.video-placeholder:hover { border-color: var(--orange); transform: scale(1.02); }
+.video-placeholder:hover .vp-play { transform: translate(-50%,-50%) scale(1.15); background: var(--orange); }
+.vp-bg { position: absolute; inset: 0; background: linear-gradient(135deg,rgba(17,34,64,0.9) 0%,rgba(10,22,40,0.95) 100%); display: flex; align-items: center; justify-content: center; }
+.vp-stripe { position: absolute; inset: 0; background: repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(255,255,255,0.013) 12px,rgba(255,255,255,0.013) 24px); }
+.vp-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 64px; height: 64px; background: rgba(232,137,10,0.85); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+.vp-play svg { margin-left: 4px; }
+.vp-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(0deg,rgba(10,22,40,0.95) 0%,transparent 100%); font-size: 0.85rem; font-weight: 600; color: var(--white); }
+.vp-tag { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--orange); margin-bottom: 4px; }
+
+/* CALENDAR */
+.calendar-section { padding: 120px 0; background: rgba(255,255,255,0.012); }
+.calendar-inner { max-width: 1300px; margin: 0 auto; padding: 0 60px; }
+.cal-layout { display: grid; grid-template-columns: 340px 1fr; gap: 60px; margin-top: 64px; align-items: start; }
+.cal-sidebar { }
+.cal-upcoming { display: flex; flex-direction: column; gap: 12px; }
+.cal-upcoming-title { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(248,250,255,0.4); margin-bottom: 8px; }
+.cal-event-item { padding: 16px 20px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.25s; display: flex; gap: 16px; align-items: center; }
+.cal-event-item:hover { border-color: var(--orange); background: rgba(232,137,10,0.05); }
+.cal-event-item.selected { border-color: var(--orange); background: rgba(232,137,10,0.08); }
+.cal-event-date-box { width: 44px; height: 44px; background: var(--orange); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+.cal-event-date-box .day { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; line-height: 1; color: var(--navy); }
+.cal-event-date-box .mon { font-size: 0.6rem; font-weight: 700; color: var(--navy); letter-spacing: 0.06em; text-transform: uppercase; }
+.cal-event-info { flex: 1; min-width: 0; }
+.cal-event-name { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-event-meta { font-size: 0.75rem; color: rgba(248,250,255,0.4); }
+.cal-event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* calendar grid */
+.cal-grid-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); overflow: hidden; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.cal-month-label { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.08em; }
+.cal-nav-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--white); cursor: pointer; font-size: 1.1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.cal-nav-btn:hover { background: var(--orange); border-color: var(--orange); color: var(--navy); }
+.cal-dow { display: grid; grid-template-columns: repeat(7,1fr); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cal-dow-cell { padding: 12px; text-align: center; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,250,255,0.3); font-weight: 600; }
+.cal-days { display: grid; grid-template-columns: repeat(7,1fr); }
+.cal-day { min-height: 80px; padding: 10px; border-right: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04); position: relative; transition: background 0.2s; }
+.cal-day:nth-child(7n) { border-right: none; }
+.cal-day.other-month .cal-day-num { color: rgba(248,250,255,0.12); }
+.cal-day.today { background: rgba(232,137,10,0.06); }
+.cal-day.today .cal-day-num { color: var(--orange); font-weight: 700; }
+.cal-day.has-events { cursor: pointer; }
+.cal-day.has-events:hover { background: rgba(232,137,10,0.05); }
+.cal-day-num { font-size: 0.85rem; color: rgba(248,250,255,0.5); font-weight: 500; }
+.cal-day-events { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.cal-day-pill { font-size: 0.65rem; padding: 2px 6px; border-radius: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; letter-spacing: 0.02em; }
+.cal-day-pill.type-cisrs { background: rgba(232,137,10,0.2); color: var(--orange-light); }
+.cal-day-pill.type-getmie { background: rgba(100,180,255,0.15); color: #80c8ff; }
+.cal-day-pill.type-rescue { background: rgba(255,80,80,0.15); color: #ff9090; }
+
+/* calendar legend */
+.cal-legend { display: flex; gap: 24px; margin-top: 20px; }
+.cal-legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: rgba(248,250,255,0.5); }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* EVENT MODAL */
+.event-modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(5,12,24,0.85); display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+.event-modal { width: min(580px,92vw); background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.1); position: relative; animation: scaleIn 0.25s ease; overflow: hidden; }
+.event-modal-top { background: var(--orange); padding: 28px 36px; }
+.event-modal-top .em-tag { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(10,22,40,0.7); font-weight: 700; margin-bottom: 6px; }
+.event-modal-top h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.06em; color: var(--navy); line-height: 1; }
+.event-modal-body { padding: 32px 36px; }
+.em-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 0.9rem; }
+.em-label { color: rgba(248,250,255,0.35); width: 100px; flex-shrink: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 2px; }
+.em-value { color: var(--white); font-weight: 500; }
+.em-close { position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.2); border: none; color: var(--navy); width: 28px; height: 28px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.em-enrol-btn { width: 100%; margin-top: 8px; padding: 14px; background: var(--orange); color: var(--navy); font-weight: 700; font-size: 0.88rem; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.2s; }
+.em-enrol-btn:hover { background: var(--orange-light); }
+
+/* VIDEO MODAL */
+.video-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(5,12,24,0.95); display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+.video-modal { width: min(860px,92vw); background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.08); position: relative; animation: scaleIn 0.25s ease; }
+.video-modal-close { position: absolute; top: -48px; right: 0; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.5rem; cursor: pointer; transition: color 0.2s; }
+.video-modal-close:hover { color: var(--white); }
+.video-modal-inner { aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: rgba(255,255,255,0.3); }
+.video-modal-title { padding: 20px 28px; font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.08em; border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* TRUST BAND */
+.trust-band { background: var(--orange); padding: 0 60px; display: flex; align-items: stretch; overflow: hidden; }
+.trust-item { flex: 1; padding: 28px 20px; display: flex; align-items: center; gap: 16px; border-right: 1px solid rgba(0,0,0,0.12); color: var(--navy); }
+.trust-item:last-child { border-right: none; }
+.trust-icon { font-size: 1.6rem; flex-shrink: 0; }
+.trust-text strong { display: block; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.04em; }
+.trust-text span { font-size: 0.76rem; opacity: 0.65; }
+
+/* CTA */
+.cta-section { padding: 160px 60px; text-align: center; position: relative; overflow: hidden; background: linear-gradient(135deg,var(--navy-mid) 0%,#0c1f40 100%); }
+.cta-section::before { content: 'RADIAN'; position: absolute; font-family: 'Bebas Neue', sans-serif; font-size: 28vw; letter-spacing: -0.02em; color: rgba(255,255,255,0.025); top: 50%; left: 50%; transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; user-select: none; }
+.cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem,6vw,7rem); line-height: 0.95; letter-spacing: 0.04em; position: relative; }
+.cta-sub { margin: 28px auto 48px; font-size: 1.1rem; line-height: 1.7; color: rgba(248,250,255,0.6); max-width: 560px; position: relative; }
+.cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+/* FOOTER */
+footer { background: #060e1e; padding: 60px; border-top: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; }
+.footer-brand .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.1em; margin-bottom: 16px; }
+.footer-brand p { font-size: 0.85rem; color: rgba(248,250,255,0.4); line-height: 1.7; max-width: 280px; }
+.footer-col h4 { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; font-weight: 700; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { color: rgba(248,250,255,0.45); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--white); }
+.footer-bottom { background: #060e1e; padding: 20px 60px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 0.78rem; color: rgba(248,250,255,0.25); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-50px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(50px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+@keyframes scaleIn { from{transform:scale(0.92);opacity:0;} to{transform:scale(1);opacity:1;} }
+@keyframes scaffoldFadeIn { from{opacity:0;} to{opacity:1;} }
+
+/* swipe transition */
+.cal-slide-enter { animation: slideInRight 0.3s ease; }
+.cal-slide-enter-left { animation: slideInLeft 0.3s ease; }
+@keyframes slideInRight { from{opacity:0;transform:translateX(40px);} to{opacity:1;transform:translateX(0);} }
+@keyframes slideInLeft { from{opacity:0;transform:translateX(-40px);} to{opacity:1;transform:translateX(0);} }
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .section { padding: 80px 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .courses-grid { grid-template-columns: 1fr 1fr; }
+  .getmie-grid { grid-template-columns: 1fr; }
+  .videos-grid { grid-template-columns: 1fr 1fr; }
+  footer { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
+  .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; }
+  .cisrs-header { grid-template-columns: 1fr; gap: 32px; }
+  .trust-band { flex-wrap: wrap; padding: 0 24px; }
+  .cal-layout { grid-template-columns: 1fr; }
+}
+
+/* ════════════════════════════════════════════════ */
+/* LIFE & MOTION ENHANCEMENTS — Phase 2              */
+/* ════════════════════════════════════════════════ */
+
+/* HERO mouse-follow glow */
+.hero { position: relative; }
+.hero-glow {
+  position: absolute; pointer-events: none; z-index: 1;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,137,10,0.18) 0%, rgba(232,137,10,0.06) 30%, transparent 60%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  mix-blend-mode: screen;
+  filter: blur(20px);
+}
+
+/* Hero animated radial pulse behind title */
+.hero-content::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(232,137,10,0.06) 0%, transparent 50%);
+  pointer-events: none;
+  animation: heroBgPulse 6s ease-in-out infinite;
+  z-index: -1;
+}
+@keyframes heroBgPulse {
+  0%,100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%,-50%) scale(1.08); }
+}
+
+/* ── MARQUEE STRIP ── */
+.marquee-band {
+  background: var(--orange);
+  color: var(--navy);
+  overflow: hidden;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  position: relative;
+}
+.marquee-track {
+  display: flex; gap: 64px;
+  white-space: nowrap;
+  animation: marqueeScroll 28s linear infinite;
+  padding: 18px 0;
+  width: max-content;
+}
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.marquee-dot {
+  width: 10px; height: 10px;
+  background: var(--navy);
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+@keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Dark marquee variant */
+.marquee-band.dark {
+  background: linear-gradient(90deg, #060e1e, #0a1628, #060e1e);
+  color: var(--white);
+  border-color: rgba(255,255,255,0.06);
+}
+.marquee-band.dark .marquee-item { color: rgba(248,250,255,0.4); }
+.marquee-band.dark .marquee-item .accent { color: var(--orange); font-size: 1.6rem; }
+.marquee-band.dark .marquee-dot { background: var(--orange); opacity: 0.6; }
+
+/* ── 3D CARD TILT ── */
+.tilt-card {
+  transition: transform 0.4s cubic-bezier(.2,.7,.3,1), box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ── ANIMATED SECTION DIVIDER WITH SPARKS ── */
+.spark-divider {
+  position: relative;
+  height: 120px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  margin: 0;
+}
+.spark-divider .line {
+  position: absolute;
+  top: 50%; left: 60px; right: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,137,10,0.4) 30%, var(--orange) 50%, rgba(232,137,10,0.4) 70%, transparent);
+}
+.spark-divider .center-dot {
+  position: relative; z-index: 2;
+  width: 16px; height: 16px;
+  background: var(--orange);
+  border-radius: 50%;
+  box-shadow: 0 0 24px rgba(232,137,10,0.8), 0 0 8px rgba(232,137,10,1);
+  animation: weldPulse 2s ease-in-out infinite;
+}
+.spark-divider .center-dot::before,
+.spark-divider .center-dot::after {
+  content: '';
+  position: absolute; inset: -8px;
+  border: 2px solid rgba(232,137,10,0.4);
+  border-radius: 50%;
+  animation: weldRing 2s ease-out infinite;
+}
+.spark-divider .center-dot::after { animation-delay: 1s; }
+@keyframes weldPulse {
+  0%,100% { box-shadow: 0 0 24px rgba(232,137,10,0.8), 0 0 8px rgba(232,137,10,1); transform: scale(1); }
+  50% { box-shadow: 0 0 36px rgba(232,137,10,1), 0 0 16px rgba(255,255,255,0.8); transform: scale(1.15); }
+}
+@keyframes weldRing {
+  0% { opacity: 1; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+
+/* spark particles */
+.spark-divider .spark {
+  position: absolute; top: 50%; left: 50%;
+  width: 3px; height: 3px;
+  background: var(--orange);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--orange);
+  animation: sparkFly 1.8s linear infinite;
+  opacity: 0;
+}
+@keyframes sparkFly {
+  0% { transform: translate(-50%,-50%) translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(0); opacity: 0; }
+}
+
+/* ── SHIMMER on text/numbers ── */
+.shimmer-text {
+  background: linear-gradient(120deg, var(--orange) 0%, var(--orange-light) 25%, var(--white) 50%, var(--orange-light) 75%, var(--orange) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmerSlide 4s linear infinite;
+}
+@keyframes shimmerSlide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── SCROLL PROGRESS ── */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: rgba(255,255,255,0.04);
+  z-index: 200;
+}
+.scroll-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light), var(--orange));
+  background-size: 200% 100%;
+  width: 0%;
+  transition: width 0.1s ease-out;
+  animation: progressShimmer 2s linear infinite;
+  box-shadow: 0 0 12px rgba(232,137,10,0.6);
+}
+@keyframes progressShimmer { from {background-position: 0 0;} to {background-position: 200% 0;} }
+
+/* ── HOVER LIFT for stat cards/courses ── */
+.stat-card, .course-card, .getmie-card, .area-card {
+  position: relative;
+}
+.stat-card::after, .course-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(232,137,10,0.12), transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.stat-card:hover::after, .course-card:hover::before { opacity: 1; }
+
+/* ── FLOATING BACKGROUND ICONS ── */
+.float-icon {
+  position: absolute; opacity: 0.04;
+  font-size: 4rem;
+  pointer-events: none;
+  animation: iconDrift linear infinite;
+  filter: drop-shadow(0 0 12px rgba(232,137,10,0.2));
+}
+@keyframes iconDrift {
+  0% { transform: translate(0,0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.06; }
+  90% { opacity: 0.04; }
+  100% { transform: translate(var(--tx),var(--ty)) rotate(var(--tr)); opacity: 0; }
+}
+
+/* ── ANIMATED SECTION TITLE UNDERLINE ── */
+.section-title {
+  position: relative;
+}
+.section-title.with-line::after {
+  content: '';
+  display: block;
+  width: 80px; height: 3px;
+  background: var(--orange);
+  margin-top: 24px;
+  animation: linePulse 3s ease-in-out infinite;
+}
+@keyframes linePulse {
+  0%,100% { width: 80px; opacity: 1; }
+  50% { width: 140px; opacity: 0.7; }
+}
+
+/* ── HEADER BLOB BG for sections ── */
+.bg-blob {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,137,10,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  filter: blur(40px);
+  animation: blobFloat 14s ease-in-out infinite;
+}
+@keyframes blobFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(40px,-30px) scale(1.1); }
+  66% { transform: translate(-30px,20px) scale(0.95); }
+}
+
+/* ── PULSING DOT for live indicators ── */
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: #22c97a;
+  border-radius: 50%;
+  position: relative;
+}
+.live-dot::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: liveRing 1.6s ease-out infinite;
+}
+@keyframes liveRing {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* ── HOVER GLOW for buttons ── */
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.btn-primary:hover::before { transform: translateX(100%); }
+
+/* ── NEW: animated number tick ── */
+.tick-num {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.tick-num.bump { animation: numBump 0.4s ease; }
+@keyframes numBump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); color: var(--orange-light); }
+  100% { transform: scale(1); }
+}
+
+/* ════════════════════════════════════════════════ */
+/* IMAGE SLOTS                                        */
+/* ════════════════════════════════════════════════ */
+image-slot {
+  display: block;
+  --image-slot-bg: rgba(255,255,255,0.025);
+  --image-slot-border: 1px dashed rgba(232,137,10,0.3);
+  --image-slot-color: rgba(248,250,255,0.4);
+}
+.img-frame {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.img-frame::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 36px; height: 36px;
+  border-top: 3px solid var(--orange);
+  border-left: 3px solid var(--orange);
+  pointer-events: none; z-index: 3;
+}
+.img-frame::before {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 36px; height: 36px;
+  border-bottom: 3px solid var(--orange);
+  border-right: 3px solid var(--orange);
+  pointer-events: none; z-index: 3;
+}
+.img-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 16px 20px;
+  background: linear-gradient(0deg, rgba(6,14,30,0.92) 0%, transparent 100%);
+  z-index: 2; pointer-events: none;
+}
+.img-caption-tag { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); font-weight: 700; margin-bottom: 3px; }
+.img-caption-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.05em; }
+
+/* GALLERY */
+.gallery-section { padding: 120px 0; }
+.gallery-inner { max-width: 1300px; margin: 0 auto; padding: 0 60px; }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 16px;
+  margin-top: 56px;
+}
+.gallery-grid .g-tall { grid-row: span 2; }
+.gallery-grid .g-wide { grid-column: span 2; }
+.gallery-grid image-slot { width: 100%; height: 100%; }
+
+@media (max-width: 900px) {
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; }
+  .gallery-grid .g-wide { grid-column: span 2; }
+  .gallery-grid .g-tall { grid-row: span 1; }
+}
+
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="index.html">
+    <div class="logo-mark">R</div>
+    RADIAN H.A. LIMITED
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="cisrs.html">CISRS OTS</a></li>
+    <li><a href="getmie-safe.html">Getmie Safe</a></li>
+    <li><a href="#calendar">Schedule</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="certificate.html">Certificates</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Enrol Now</button>
+</nav>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── Scaffold SVG ── */
+function ScaffoldSVG() {
+  return (
+    <svg className="scaffold-poles" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      {[80,200,360,520,720,920,1080,1240,1380].map((x,i)=>(
+        <line key={`v${i}`} x1={x} y1="0" x2={x} y2="900" stroke="rgba(255,255,255,0.04)" strokeWidth="3"/>
+      ))}
+      {[120,260,420,600,750].map((y,i)=>(
+        <line key={`h${i}`} x1="0" y1={y} x2="1440" y2={y} stroke="rgba(255,255,255,0.035)" strokeWidth="2"/>
+      ))}
+      {[80,200,360,520,720,920,1080,1240].map(x=>
+        [120,260,420,600,750].map((y)=>(
+          <circle key={`j${x}${y}`} cx={x} cy={y} r="5" fill="none" stroke="rgba(232,137,10,0.18)" strokeWidth="1.5"/>
+        ))
+      )}
+      <line x1="80" y1="120" x2="200" y2="260" stroke="rgba(255,255,255,0.04)" strokeWidth="2"/>
+      <line x1="200" y1="120" x2="360" y2="260" stroke="rgba(255,255,255,0.04)" strokeWidth="2"/>
+      <line x1="1240" y1="120" x2="1380" y2="260" stroke="rgba(255,255,255,0.04)" strokeWidth="2"/>
+      <line x1="1080" y1="120" x2="1240" y2="260" stroke="rgba(255,255,255,0.04)" strokeWidth="2"/>
+    </svg>
+  );
+}
+
+/* ── Welding Spark Divider ── */
+function SparkDivider() {
+  const sparks = [];
+  for (let i = 0; i < 10; i++) {
+    const angle = (Math.PI * 2 * i) / 10 + Math.random();
+    const distance = 40 + Math.random() * 50;
+    sparks.push({
+      dx: Math.cos(angle) * distance + 'px',
+      dy: Math.sin(angle) * distance + 'px',
+      delay: Math.random() * 1.8,
+    });
+  }
+  return (
+    <div className="spark-divider">
+      <div className="line"/>
+      <div className="center-dot"/>
+      {sparks.map((s, i) => (
+        <div key={i} className="spark" style={{
+          '--dx': s.dx, '--dy': s.dy,
+          animationDelay: s.delay + 's',
+        }}/>
+      ))}
+    </div>
+  );
+}
+
+/* ── Scroll Progress Bar ── */
+function ScrollProgress() {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const h = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      setPct(max > 0 ? (h.scrollTop / max) * 100 : 0);
+    };
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  return (
+    <div className="scroll-progress">
+      <div className="scroll-progress-fill" style={{width: pct + '%'}}/>
+    </div>
+  );
+}
+
+function FloatingPoles() {
+  const poles=[
+    {w:3,h:140,left:'8%',delay:'0s',dur:'14s',r:'12deg'},
+    {w:2,h:90,left:'18%',delay:'3s',dur:'11s',r:'-8deg'},
+    {w:4,h:180,left:'75%',delay:'1s',dur:'16s',r:'5deg'},
+    {w:2,h:120,left:'85%',delay:'5s',dur:'12s',r:'-15deg'},
+    {w:3,h:100,left:'60%',delay:'2s',dur:'18s',r:'20deg'},
+    {w:2,h:160,left:'42%',delay:'7s',dur:'13s',r:'-3deg'},
+  ];
+  return <>{poles.map((p,i)=>(
+    <div key={i} className="float-pole" style={{width:p.w,height:p.h,left:p.left,bottom:'-200px','--r':p.r,animationDuration:p.dur,animationDelay:p.delay}}/>
+  ))}</>;
+}
+
+/* ── Counter ── */
+function useCounter(target, duration=1800) {
+  const [count,setCount]=useState(0);
+  const [started,setStarted]=useState(false);
+  const ref=useRef();
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{
+      if(e.isIntersecting&&!started){
+        setStarted(true);
+        const start=performance.now();
+        const tick=(now)=>{
+          const t=Math.min((now-start)/duration,1);
+          const ease=1-Math.pow(1-t,3);
+          setCount(Math.round(ease*target));
+          if(t<1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    },{threshold:0.5});
+    if(ref.current) obs.observe(ref.current);
+    return ()=>obs.disconnect();
+  },[started,target,duration]);
+  return [count,ref];
+}
+
+/* ── TRAINING DATES DATA ── */
+const TRAINING_EVENTS = [
+  // May 2026
+  {id:1, date:'2026-05-05', title:'CISRS Operative — Level 1', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:8, time:'08:00 – 17:00'},
+  {id:2, date:'2026-05-12', title:'Working at Height — Getmie Safe', type:'getmie', duration:'2 days', venue:'Training Centre, London', spots:12, time:'08:30 – 16:30'},
+  {id:3, date:'2026-05-19', title:'CISRS Scaffold Inspection', type:'cisrs', duration:'3 days', venue:'Training Centre, Manchester', spots:6, time:'08:00 – 17:00'},
+  {id:4, date:'2026-05-22', title:'Getmie Safe Rescue Training', type:'rescue', duration:'1 day', venue:'Training Centre, London', spots:10, time:'08:00 – 16:00'},
+  {id:5, date:'2026-05-26', title:'CISRS Management & Supervision', type:'cisrs', duration:'5 days', venue:'Training Centre, Birmingham', spots:5, time:'08:00 – 17:00'},
+  // June 2026
+  {id:6, date:'2026-06-02', title:'CISRS Operative — Level 2', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:8, time:'08:00 – 17:00'},
+  {id:7, date:'2026-06-09', title:'Scaffolding Awareness', type:'cisrs', duration:'1 day', venue:'Training Centre, London', spots:15, time:'09:00 – 17:00'},
+  {id:8, date:'2026-06-11', title:'Working at Height — Getmie Safe', type:'getmie', duration:'2 days', venue:'Training Centre, Leeds', spots:12, time:'08:30 – 16:30'},
+  {id:9, date:'2026-06-16', title:'CISRS Scaffold Inspection', type:'cisrs', duration:'3 days', venue:'Training Centre, London', spots:6, time:'08:00 – 17:00'},
+  {id:10, date:'2026-06-23', title:'Getmie Safe Rescue Training', type:'rescue', duration:'1 day', venue:'Training Centre, Manchester', spots:10, time:'08:00 – 16:00'},
+  {id:11, date:'2026-06-25', title:'CISRS Operative — Level 3 Advanced', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:6, time:'08:00 – 17:00'},
+  // July 2026
+  {id:12, date:'2026-07-07', title:'CISRS Operative — Level 1', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:8, time:'08:00 – 17:00'},
+  {id:13, date:'2026-07-14', title:'Working at Height — Getmie Safe', type:'getmie', duration:'2 days', venue:'Training Centre, Bristol', spots:12, time:'08:30 – 16:30'},
+  {id:14, date:'2026-07-17', title:'Getmie Safe Rescue Training', type:'rescue', duration:'1 day', venue:'Training Centre, London', spots:10, time:'08:00 – 16:00'},
+  {id:15, date:'2026-07-21', title:'CISRS Management & Supervision', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:5, time:'08:00 – 17:00'},
+  {id:16, date:'2026-07-28', title:'CISRS Scaffold Inspection', type:'cisrs', duration:'3 days', venue:'Training Centre, Glasgow', spots:6, time:'08:00 – 17:00'},
+  // August 2026
+  {id:17, date:'2026-08-04', title:'CISRS Operative — Level 2', type:'cisrs', duration:'5 days', venue:'Training Centre, London', spots:8, time:'08:00 – 17:00'},
+  {id:18, date:'2026-08-11', title:'Working at Height — Getmie Safe', type:'getmie', duration:'2 days', venue:'Training Centre, London', spots:12, time:'08:30 – 16:30'},
+  {id:19, date:'2026-08-18', title:'Getmie Safe Rescue Training', type:'rescue', duration:'1 day', venue:'Training Centre, Birmingham', spots:10, time:'08:00 – 16:00'},
+  {id:20, date:'2026-08-25', title:'Scaffolding Awareness', type:'cisrs', duration:'1 day', venue:'Training Centre, London', spots:15, time:'09:00 – 17:00'},
+];
+
+const TYPE_COLORS = {
+  cisrs: {pill:'type-cisrs', dot:'#e8890a'},
+  getmie: {pill:'type-getmie', dot:'#60b4ff'},
+  rescue: {pill:'type-rescue', dot:'#ff7070'},
+};
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+/* ── Calendar ── */
+function Calendar() {
+  const today = new Date();
+  const [viewYear, setViewYear] = useState(2026);
+  const [viewMonth, setViewMonth] = useState(4); // 0-indexed, 4=May
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [slideDir, setSlideDir] = useState('right');
+  const [animKey, setAnimKey] = useState(0);
+
+  const navigate = (dir) => {
+    setSlideDir(dir);
+    setAnimKey(k => k+1);
+    let m = viewMonth + (dir === 'right' ? 1 : -1);
+    let y = viewYear;
+    if (m > 11) { m = 0; y++; }
+    if (m < 0) { m = 11; y--; }
+    setViewMonth(m);
+    setViewYear(y);
+  };
+
+  // Build calendar days
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+  const daysInPrev = new Date(viewYear, viewMonth, 0).getDate();
+  const cells = [];
+  for (let i = firstDay - 1; i >= 0; i--) cells.push({day: daysInPrev-i, month:'prev'});
+  for (let i = 1; i <= daysInMonth; i++) cells.push({day:i, month:'cur'});
+  const remaining = 42 - cells.length;
+  for (let i = 1; i <= remaining; i++) cells.push({day:i, month:'next'});
+
+  // Events indexed by date string
+  const eventsByDate = {};
+  TRAINING_EVENTS.forEach(e => {
+    const d = e.date;
+    if (!eventsByDate[d]) eventsByDate[d] = [];
+    eventsByDate[d].push(e);
+  });
+
+  const getDateStr = (day, mo) => {
+    const m = mo === 'cur' ? viewMonth : mo === 'prev' ? (viewMonth-1+12)%12 : (viewMonth+1)%12;
+    const y = mo === 'cur' ? viewYear : mo === 'prev' ? (viewMonth === 0 ? viewYear-1 : viewYear) : (viewMonth === 11 ? viewYear+1 : viewYear);
+    return `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  };
+
+  const isToday = (day, mo) => {
+    if (mo !== 'cur') return false;
+    return day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+  };
+
+  // Upcoming events in this month
+  const monthStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}`;
+  const monthEvents = TRAINING_EVENTS.filter(e => e.date.startsWith(monthStr)).sort((a,b)=>a.date.localeCompare(b.date));
+
+  // Touch swipe
+  const touchStart = useRef(null);
+  const handleTouchStart = e => { touchStart.current = e.touches[0].clientX; };
+  const handleTouchEnd = e => {
+    if (touchStart.current === null) return;
+    const diff = touchStart.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 'right' : 'left');
+    touchStart.current = null;
+  };
+
+  return (
+    <div className="cal-layout">
+      {/* Sidebar */}
+      <div className="cal-sidebar">
+        <div className="cal-upcoming-title">Upcoming in {MONTHS[viewMonth]}</div>
+        <div className="cal-upcoming">
+          {monthEvents.length === 0 && <div style={{color:'rgba(248,250,255,0.3)',fontSize:'0.85rem',padding:'16px 0'}}>No sessions this month</div>}
+          {monthEvents.map(ev => {
+            const d = new Date(ev.date);
+            const mon = MONTHS[d.getMonth()].slice(0,3).toUpperCase();
+            return (
+              <div key={ev.id} className={`cal-event-item ${selectedEvent?.id===ev.id?'selected':''}`} onClick={()=>setSelectedEvent(ev)}>
+                <div className="cal-event-date-box">
+                  <span className="day">{d.getDate()}</span>
+                  <span className="mon">{mon}</span>
+                </div>
+                <div className="cal-event-info">
+                  <div className="cal-event-name">{ev.title}</div>
+                  <div className="cal-event-meta">{ev.duration} · {ev.spots} spots left</div>
+                </div>
+                <div className="cal-event-dot" style={{background:TYPE_COLORS[ev.type].dot}}/>
+              </div>
+            );
+          })}
+        </div>
+        <div className="cal-legend" style={{marginTop:24}}>
+          <div className="cal-legend-item"><div className="cal-legend-dot" style={{background:'rgba(232,137,10,0.4)'}}/> CISRS</div>
+          <div className="cal-legend-item"><div className="cal-legend-dot" style={{background:'rgba(100,180,255,0.4)'}}/> Getmie Safe</div>
+          <div className="cal-legend-item"><div className="cal-legend-dot" style={{background:'rgba(255,100,100,0.4)'}}/> Rescue</div>
+        </div>
+      </div>
+
+      {/* Calendar grid */}
+      <div>
+        <div className="cal-grid-wrap" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          <div className="cal-header">
+            <button className="cal-nav-btn" onClick={()=>navigate('left')}>‹</button>
+            <div className="cal-month-label">{MONTHS[viewMonth]} {viewYear}</div>
+            <button className="cal-nav-btn" onClick={()=>navigate('right')}>›</button>
+          </div>
+          <div className="cal-dow">
+            {DAYS.map(d=><div key={d} className="cal-dow-cell">{d}</div>)}
+          </div>
+          <div key={animKey} className={`cal-days ${slideDir==='right'?'cal-slide-enter':'cal-slide-enter-left'}`}>
+            {cells.map((cell, idx) => {
+              const ds = getDateStr(cell.day, cell.month);
+              const evs = eventsByDate[ds] || [];
+              return (
+                <div
+                  key={idx}
+                  className={`cal-day ${cell.month!=='cur'?'other-month':''} ${isToday(cell.day,cell.month)?'today':''} ${evs.length>0&&cell.month==='cur'?'has-events':''}`}
+                  onClick={()=>{ if(evs.length>0&&cell.month==='cur') setSelectedEvent(evs[0]); }}
+                >
+                  <div className="cal-day-num">{cell.day}</div>
+                  {cell.month==='cur' && evs.length>0 && (
+                    <div className="cal-day-events">
+                      {evs.slice(0,2).map(ev=>(
+                        <div key={ev.id} className={`cal-day-pill ${TYPE_COLORS[ev.type].pill}`}>
+                          {ev.title.length>18?ev.title.slice(0,18)+'…':ev.title}
+                        </div>
+                      ))}
+                      {evs.length>2&&<div style={{fontSize:'0.6rem',color:'rgba(248,250,255,0.3)',paddingLeft:4}}>+{evs.length-2} more</div>}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Event popup modal */}
+      {selectedEvent && (
+        <div className="event-modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setSelectedEvent(null);}}>
+          <div className="event-modal">
+            <div className="event-modal-top">
+              <button className="em-close" onClick={()=>setSelectedEvent(null)}>✕</button>
+              <div className="em-tag">{selectedEvent.type==='cisrs'?'CISRS OTS Training':selectedEvent.type==='getmie'?'Getmie Safe':'Rescue Training'}</div>
+              <h3>{selectedEvent.title}</h3>
+            </div>
+            <div className="event-modal-body">
+              {[
+                {label:'Date', value: new Date(selectedEvent.date).toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'})},
+                {label:'Time', value: selectedEvent.time},
+                {label:'Duration', value: selectedEvent.duration},
+                {label:'Venue', value: selectedEvent.venue},
+                {label:'Spots Left', value: `${selectedEvent.spots} available`},
+              ].map(r=>(
+                <div className="em-row" key={r.label}>
+                  <span className="em-label">{r.label}</span>
+                  <span className="em-value">{r.value}</span>
+                </div>
+              ))}
+              <button className="em-enrol-btn" onClick={()=>document.getElementById('cta').scrollIntoView({behavior:'smooth'})}>
+                Enrol on This Course →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Video Modal ── */
+function VideoModal({video,onClose}) {
+  useEffect(()=>{
+    const h=e=>{if(e.key==='Escape')onClose();};
+    window.addEventListener('keydown',h);
+    return ()=>window.removeEventListener('keydown',h);
+  },[onClose]);
+  return (
+    <div className="video-modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="video-modal">
+        <button className="video-modal-close" onClick={onClose}>✕</button>
+        <div className="video-modal-inner">
+          <div style={{fontSize:'3rem',opacity:0.3}}>▶</div>
+          <div style={{textAlign:'center',padding:'0 40px'}}>
+            <div style={{color:'rgba(255,255,255,0.4)',fontSize:'0.8rem',marginBottom:8}}>VIDEO PLACEHOLDER</div>
+            <div style={{color:'rgba(255,255,255,0.2)',fontSize:'0.72rem'}}>Drop your video file here</div>
+          </div>
+        </div>
+        <div className="video-modal-title">{video.title}</div>
+      </div>
+    </div>
+  );
+}
+
+function VideoCard({tag,title,onClick}) {
+  return (
+    <div className="video-placeholder" onClick={onClick}>
+      <div className="vp-bg"><div className="vp-stripe"/></div>
+      <div className="vp-play">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <div className="vp-label">
+        <div className="vp-tag">{tag}</div>
+        <div>{title}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function App() {
+  const [activeVideoTab,setActiveVideoTab]=useState('cisrs');
+  const [modalVideo,setModalVideo]=useState(null);
+  const [activeCourse,setActiveCourse]=useState(null);
+
+  useEffect(()=>{
+    const nav=document.getElementById('navbar');
+    const h=()=>nav.classList.toggle('scrolled',window.scrollY>60);
+    window.addEventListener('scroll',h);
+    return ()=>window.removeEventListener('scroll',h);
+  },[]);
+
+  useEffect(()=>{
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+    },{threshold:0.1});
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
+    return ()=>obs.disconnect();
+  },[]);
+
+  const [count20,ref20]=useCounter(20);
+  const [count1500,ref1500]=useCounter(1500);
+
+  const courses=[
+    {icon:'🏗️',title:'Scaffolding Operative Training',desc:'Covers different skill levels from beginner to advanced scaffolder.',num:'01'},
+    {icon:'🔍',title:'Scaffold Inspection Training',desc:'Enables individuals to conduct safe and compliant scaffold inspections.',num:'02'},
+    {icon:'📋',title:'Management & Supervision',desc:'Designed for supervisors, managers, and site leads.',num:'03'},
+    {icon:'👷',title:'Scaffolding Awareness',desc:'Provides a general understanding for those overseeing scaffolding operations.',num:'04'},
+  ];
+
+  const videoData={
+    cisrs:[
+      {tag:'CISRS OTS',title:'CISRS Scaffolding Operative Training Overview'},
+      {tag:'CISRS OTS',title:'CISRS Scaffold Inspection & Safety Procedures'},
+    ],
+    getmie:[
+      {tag:'Getmie Safe',title:'Working at Height — Risk & PPE Guide'},
+      {tag:'Getmie Safe',title:'Getmie Safe Rescue System Training'},
+    ],
+    general:[
+      {tag:'General',title:'Radian H.A. Limited — Training Programme Overview'},
+    ],
+  };
+  const activeVideos=videoData[activeVideoTab];
+
+  return (
+    <>
+      <ScrollProgress/>
+      {/* HERO */}
+      <section className="hero" id="home" onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const glow = document.getElementById('hero-glow');
+        if (glow) {
+          glow.style.left = (e.clientX - rect.left) + 'px';
+          glow.style.top = (e.clientY - rect.top) + 'px';
+          glow.style.opacity = '1';
+        }
+      }} onMouseLeave={() => { const g = document.getElementById('hero-glow'); if (g) g.style.opacity = '0'; }}>
+        <div className="scaffold-bg"/>
+        <ScaffoldSVG/>
+        <FloatingPoles/>
+        <div className="hero-glow" id="hero-glow" style={{opacity:0, left:'50%', top:'50%'}}/>
+        <div className="hero-content">
+          <div className="hero-badge">
+            <span className="hero-badge-dot"/>
+            CISRS Accredited Scaffold Training Provider
+          </div>
+          <h1 className="hero-title">
+            <span style={{color:'rgba(248,250,255,0.35)'}}>RADIAN</span><br/>
+            <span className="accent">H.A.</span> <span className="outline">LIMITED</span><br/>
+            TRAINING
+          </h1>
+          <p className="hero-sub">
+            Over 20 years of industry-leading scaffolding training — building competence,
+            safety, and careers across the scaffolding workforce.
+          </p>
+          <div className="hero-actions">
+            <button className="btn-primary" onClick={()=>document.getElementById('cisrs').scrollIntoView({behavior:'smooth'})}>
+              Explore Courses
+            </button>
+            <button className="btn-outline" onClick={()=>document.getElementById('about').scrollIntoView({behavior:'smooth'})}>
+              Learn More
+            </button>
+          </div>
+          <div className="scroll-hint">
+            <span className="scroll-hint-text">Scroll</span>
+            <div className="scroll-mouse"><div className="scroll-wheel"/></div>
+          </div>
+        </div>
+        <div className="hero-stats-strip">
+          <div className="hero-stat">
+            <div className="hero-stat-num" ref={ref20}>{count20}+</div>
+            <div className="hero-stat-label">Years of Training<br/>Experience</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num" ref={ref1500}>{count1500}+</div>
+            <div className="hero-stat-label">Participants<br/>Trained</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">CISRS</div>
+            <div className="hero-stat-label">British Standard<br/>Accredited</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">4</div>
+            <div className="hero-stat-label">Training<br/>Programmes</div>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST BAND — now a continuous marquee */}
+      <div className="marquee-band">
+        <div className="marquee-track">
+          {[
+            '🏆 CISRS OTS ACCREDITED',
+            '20+ YEARS EXPERIENCE',
+            '🛡️ BRITISH STANDARD COMPLIANT',
+            '1,500+ PARTICIPANTS TRAINED',
+            '🎓 INDUSTRY RECOGNISED',
+            '⚙️ PRACTICAL + THEORY',
+            '📍 4 CORE PROGRAMMES',
+            '⚠️ SAFETY FIRST',
+            // duplicate for seamless loop
+            '🏆 CISRS OTS ACCREDITED',
+            '20+ YEARS EXPERIENCE',
+            '🛡️ BRITISH STANDARD COMPLIANT',
+            '1,500+ PARTICIPANTS TRAINED',
+            '🎓 INDUSTRY RECOGNISED',
+            '⚙️ PRACTICAL + THEORY',
+            '📍 4 CORE PROGRAMMES',
+            '⚠️ SAFETY FIRST',
+          ].map((t, i) => (
+            <span className="marquee-item" key={i}>
+              <span className="marquee-dot"/>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ABOUT */}
+      <section id="about">
+        <div className="section">
+          <div className="section-label reveal">Our Story</div>
+          <h2 className="section-title reveal">BUILDING THE<br/><span className="dim">SCAFFOLDING</span><br/>WORKFORCE</h2>
+          <div className="about-grid">
+            <div className="about-text reveal-left">
+              <p>Radian H.A. Limited has been a trusted British Standard scaffold training provider for over two decades. Our extensive programmes ensure every participant gains the skills needed for a successful, safe career in scaffolding.</p>
+              <p>We are committed to building capacity and competence across the scaffolding workforce — delivering a higher standard of work and safety at every level.</p>
+              <div className="about-pillars">
+                {[
+                  {icon:'⚙️',text:'20+ years as a British Standard scaffold training provider'},
+                  {icon:'📜',text:'Industry-recognised qualifications, kickstart your career'},
+                  {icon:'📈',text:'Enhance your qualifications and advance your opportunities'},
+                  {icon:'🤝',text:'Committed to higher safety standards across the industry'},
+                ].map((p,i)=>(
+                  <div className="pillar" key={i} style={{transitionDelay:`${i*0.08}s`}}>
+                    <div className="pillar-icon">{p.icon}</div>
+                    <div className="pillar-text">{p.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="reveal-right">
+              <div className="img-frame" style={{marginBottom:16, aspectRatio:'16/10'}}>
+                <image-slot id="home-about" shape="rect" placeholder="Drop a training / team photo" style={{width:'100%', height:'100%'}}></image-slot>
+                <div className="img-caption">
+                  <div className="img-caption-tag">Radian H.A. Limited</div>
+                  <div className="img-caption-text">Our Training In Action</div>
+                </div>
+              </div>
+              <div className="big-stat-cards">
+                <div className="stat-card">
+                  <div className="stat-card-num">20+</div>
+                  <div className="stat-card-label">Years of Training Experience</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-card-num">1,500+</div>
+                  <div className="stat-card-label">Participants Trained</div>
+                </div>
+                <div className="stat-card" style={{gridColumn:'1/-1',background:'rgba(232,137,10,0.06)',borderColor:'rgba(232,137,10,0.15)'}}>
+                  <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.6rem',letterSpacing:'0.06em',marginBottom:12}}>CISRS ACCREDITED</div>
+                  <div style={{fontSize:'0.85rem',color:'rgba(248,250,255,0.55)',lineHeight:1.6}}>Our significant achievements validate our commitment to building the capacity and competence of the scaffolding workforce.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SparkDivider/>
+
+      {/* CISRS */}
+      <section className="training-section" id="cisrs">
+        <div className="training-inner">
+          <div className="cisrs-header">
+            <div>
+              <div className="cisrs-badge reveal">CISRS OTS</div>
+              <h2 className="section-title reveal">OVERSEAS TRAINING<br/><span className="dim">SCHEME</span></h2>
+            </div>
+            <div className="cisrs-desc reveal-right">
+              <p style={{marginBottom:16}}>The CISRS Overseas Scheme provides a comprehensive range of courses for scaffolding operatives, supervisors, managers, and scaffold inspectors.</p>
+              <p>These courses incorporate both practical and theoretical elements and full assessment, ensuring competence at every level.</p>
+            </div>
+          </div>
+          <div className="courses-grid">
+            {courses.map((c,i)=>(
+              <div className={`course-card reveal ${activeCourse===i?'active-course':''}`} key={i} style={{transitionDelay:`${i*0.1}s`}} onClick={()=>setActiveCourse(activeCourse===i?null:i)}>
+                <div className="course-num">{c.num}</div>
+                <div className="course-icon">{c.icon}</div>
+                <div className="course-title">{c.title}</div>
+                <div className="course-desc">{c.desc}</div>
+                <div className="course-arrow">→</div>
+              </div>
+            ))}
+          </div>
+          <div className="img-frame reveal" style={{marginTop:48, aspectRatio:'21/7'}}>
+            <image-slot id="home-cisrs" shape="rect" placeholder="Drop a CISRS training / facility photo" style={{width:'100%', height:'100%'}}></image-slot>
+            <div className="img-caption">
+              <div className="img-caption-tag">CISRS OTS</div>
+              <div className="img-caption-text">Hands-On Scaffolding Training</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SparkDivider/>
+
+      {/* GETMIE */}
+      <section className="training-section alt" id="getmie">
+        <div className="training-inner">
+          <div className="section-label reveal">Getmie Safe Programme</div>
+          <h2 className="section-title reveal" style={{marginBottom:60}}>WORKING AT HEIGHT<br/><span className="dim">TRAINING & RESCUE</span></h2>
+          <div className="getmie-grid">
+            <div className="getmie-card reveal-left">
+              <div className="getmie-card-accent"/>
+              <div className="img-frame" style={{marginBottom:24, aspectRatio:'16/9'}}>
+                <image-slot id="home-getmie-wah" shape="rect" placeholder="Drop a working-at-height photo" style={{width:'100%', height:'100%'}}></image-slot>
+              </div>
+              <div className="getmie-label">Working at Height</div>
+              <h3 className="getmie-title">Getmie Safe Working<br/>at Height</h3>
+              <p className="getmie-desc">Our Getmie Safe Working at Height course covers risk assessment, equipment selection, PPE use, and safe work practices at height. It's not only designed for scaffolders, but all personnel exposed to fall risks.</p>
+              <div style={{marginTop:32}}><button className="btn-primary" style={{fontSize:'0.82rem',padding:'12px 28px'}}>Learn More →</button></div>
+            </div>
+            <div className="getmie-card reveal-right">
+              <div className="getmie-card-accent"/>
+              <div className="img-frame" style={{marginBottom:24, aspectRatio:'16/9'}}>
+                <image-slot id="home-getmie-rescue" shape="rect" placeholder="Drop a rescue training photo" style={{width:'100%', height:'100%'}}></image-slot>
+              </div>
+              <div className="getmie-label">Emergency Rescue</div>
+              <h3 className="getmie-title">Getmie Safe<br/>Rescue Training</h3>
+              <p className="getmie-desc">For persons working at height, rescue is critical and can be life-saving. A successful rescue in minimum time is imperative. Our training focuses on safe rescue techniques, emergency equipment use, and team-based response using the Getmie Safe Rescue System.</p>
+              <div style={{marginTop:32}}><button className="btn-primary" style={{fontSize:'0.82rem',padding:'12px 28px'}}>Learn More →</button></div>
+            </div>
+          </div>
+          <div style={{marginTop:40,padding:'32px 44px',background:'rgba(232,137,10,0.06)',border:'1px solid rgba(232,137,10,0.2)',display:'flex',alignItems:'center',gap:32}} className="reveal">
+            <div style={{fontSize:'2.5rem',flexShrink:0}}>⚠️</div>
+            <div>
+              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.4rem',letterSpacing:'0.08em',color:'var(--orange)',marginBottom:8}}>RESCUE IS A LIFE-SAVING SKILL</div>
+              <div style={{fontSize:'0.9rem',color:'rgba(248,250,255,0.6)',lineHeight:1.65}}>Our training prepares teams for real emergency scenarios — using the Getmie Safe Rescue System to deliver the fastest, safest possible response when it matters most.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE BAND — Dark stats variant */}
+      <div className="marquee-band dark">
+        <div className="marquee-track">
+          {[
+            {n:'20+',l:'YEARS EXPERIENCE'},
+            {n:'1,500+',l:'DELEGATES TRAINED'},
+            {n:'6',l:'CISRS COURSES'},
+            {n:'4',l:'GETMIE PROGRAMMES'},
+            {n:'100%',l:'SAFETY FOCUSED'},
+            {n:'5YR',l:'CERTIFICATE VALIDITY'},
+            {n:'20+',l:'YEARS EXPERIENCE'},
+            {n:'1,500+',l:'DELEGATES TRAINED'},
+            {n:'6',l:'CISRS COURSES'},
+            {n:'4',l:'GETMIE PROGRAMMES'},
+            {n:'100%',l:'SAFETY FOCUSED'},
+            {n:'5YR',l:'CERTIFICATE VALIDITY'},
+          ].map((s,i)=>(
+            <span className="marquee-item" key={i}>
+              <span className="accent">{s.n}</span> {s.l}
+              <span className="marquee-dot"/>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* CALENDAR */}
+      <section className="calendar-section" id="calendar">
+        <div className="calendar-inner">
+          <div className="section-label reveal">Training Schedule</div>
+          <h2 className="section-title reveal" style={{marginBottom:8}}>UPCOMING<br/><span className="dim">TRAINING DATES</span></h2>
+          <p className="reveal" style={{marginTop:20,fontSize:'1rem',color:'rgba(248,250,255,0.5)',maxWidth:560}}>
+            Click any highlighted date or event to view full details and enrol. Swipe left or right to navigate months.
+          </p>
+          <Calendar/>
+        </div>
+      </section>
+
+      <SparkDivider/>
+
+      {/* GALLERY */}
+      <section className="gallery-section" id="gallery">
+        <div className="gallery-inner">
+          <div className="section-label reveal">Inside Radian</div>
+          <h2 className="section-title reveal">TRAINING<br/><span className="dim">GALLERY</span></h2>
+          <p className="reveal" style={{marginTop:20, fontSize:'1rem', color:'rgba(248,250,255,0.5)', maxWidth:560}}>
+            A look at our facilities, instructors, and delegates in action. Drag your own photos into any frame below.
+          </p>
+          <div className="gallery-grid reveal">
+            <div className="img-frame g-tall">
+              <image-slot id="gallery-1" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+            <div className="img-frame g-wide">
+              <image-slot id="gallery-2" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+            <div className="img-frame">
+              <image-slot id="gallery-3" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+            <div className="img-frame">
+              <image-slot id="gallery-4" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+            <div className="img-frame g-wide">
+              <image-slot id="gallery-5" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+            <div className="img-frame">
+              <image-slot id="gallery-6" shape="rect" placeholder="Drop a photo" style={{width:'100%',height:'100%'}}></image-slot>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SparkDivider/>
+
+      {/* VIDEOS */}
+      <section className="videos-section" id="videos">
+        <div className="videos-inner">
+          <div className="section-label reveal">See It In Action</div>
+          <h2 className="section-title reveal" style={{marginBottom:48}}>TRAINING<br/><span className="dim">VIDEOS</span></h2>
+          <div className="videos-tabs reveal">
+            {[{key:'cisrs',label:'CISRS OTS Training'},{key:'getmie',label:'Getmie Safe Training'},{key:'general',label:'General Overview'}].map(t=>(
+              <button key={t.key} className={`vtab ${activeVideoTab===t.key?'active':''}`} onClick={()=>setActiveVideoTab(t.key)}>{t.label}</button>
+            ))}
+          </div>
+          <div className="videos-grid">
+            {activeVideos.map((v,i)=>(
+              <VideoCard key={`${activeVideoTab}-${i}`} tag={v.tag} title={v.title} onClick={()=>setModalVideo(v)}/>
+            ))}
+            {activeVideos.length < 3 && (
+              <div style={{aspectRatio:'16/9',background:'rgba(232,137,10,0.04)',border:'1px dashed rgba(232,137,10,0.2)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:16,cursor:'pointer',transition:'all 0.3s'}}
+                onMouseEnter={e=>{e.currentTarget.style.background='rgba(232,137,10,0.08)';}}
+                onMouseLeave={e=>{e.currentTarget.style.background='rgba(232,137,10,0.04)';}}
+                onClick={()=>document.getElementById('cta').scrollIntoView({behavior:'smooth'})}>
+                <div style={{color:'var(--orange)',fontSize:'2rem'}}>+</div>
+                <div style={{color:'rgba(248,250,255,0.4)',fontSize:'0.82rem',textAlign:'center',letterSpacing:'0.08em',textTransform:'uppercase'}}>Ready to Train?<br/><span style={{color:'var(--orange)'}}>Enrol Now</span></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section" id="cta">
+        <div className="section-label reveal" style={{justifyContent:'center'}}>Start Your Journey</div>
+        <h2 className="cta-title reveal">READY TO<br/><span style={{color:'var(--orange)'}}>BUILD</span> YOUR<br/>CAREER?</h2>
+        <p className="cta-sub reveal">Enrol in our scaffolding training today to enhance your qualifications and advance your career opportunities with an industry-recognised qualification.</p>
+        <div className="cta-actions reveal">
+          <button className="btn-primary" style={{padding:'18px 52px',fontSize:'1rem'}}>Enrol Now</button>
+          <button className="btn-outline" style={{padding:'16px 52px',fontSize:'1rem'}}>Contact Us</button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer>
+        <div className="footer-brand">
+          <div className="logo">RADIAN H.A. LIMITED</div>
+          <p>20+ years of industry-recognised scaffolding training. Building competence, safety and careers across the scaffolding workforce.</p>
+        </div>
+        <div className="footer-col">
+          <h4>Training</h4>
+          <ul>
+            <li><a href="cisrs.html">CISRS OTS Training</a></li>
+            <li><a href="getmie-safe.html">Getmie Safe — Working at Height</a></li>
+            <li><a href="getmie-safe.html">Getmie Safe Rescue Training</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#calendar">Training Schedule</a></li>
+            <li><a href="#videos">Videos</a></li>
+            <li><a href="certificate.html">Certificates</a></li>
+            <li><a href="#cta">Enrol</a></li>
+          </ul>
+        </div>
+      </footer>
+      <div className="footer-bottom">
+        <p>© 2026 Radian H.A. Limited Training. All rights reserved.</p>
+        <p style={{color:'rgba(248,250,255,0.2)',fontSize:'0.72rem'}}>CISRS Accredited Scaffold Training Provider</p>
+      </div>
+
+      {modalVideo && <VideoModal video={modalVideo} onClose={()=>setModalVideo(null)}/>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
