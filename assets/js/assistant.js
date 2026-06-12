@@ -105,34 +105,48 @@
   }
 
   function build() {
-    // launcher
+    // launcher — steel field-radio disc
     launcher = document.createElement('button');
     launcher.id = 'rad-ai';
     launcher.setAttribute('aria-label', 'Ask the site office — AI assistant');
     launcher.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-      + '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-3.2-.6L3 21l1.7-4.1a8.4 8.4 0 1 1 16.3-5.4Z"/>'
-      + '<path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-width="2.6"/></svg>'
-      + '<span class="rad-ai-tag">Ask the office</span>';
+      '<div class="rai-btn-disc">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="var(--orange,#e8890a)" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+      // broadcast signal: mic + waves
+      + '<path d="M12 18.5v-13" stroke="rgba(138,164,200,0.8)" stroke-width="2.2"/>'
+      + '<path d="M8 7.5C6.5 9 6.5 12.5 8 14" stroke-width="1.7"/>'
+      + '<path d="M16 7.5C17.5 9 17.5 12.5 16 14" stroke-width="1.7"/>'
+      + '<path d="M5.2 5C2.9 7.3 2.9 13.5 5.2 16" stroke-width="1.5" stroke-opacity="0.55"/>'
+      + '<path d="M18.8 5C21.1 7.3 21.1 13.5 18.8 16" stroke-width="1.5" stroke-opacity="0.55"/>'
+      + '</svg>'
+      + '<span class="rai-onair" aria-hidden="true"></span>'
+      + '</div>'
+      + '<span class="rai-label">SITE OFFICE</span>';
     document.body.appendChild(launcher);
 
-    // panel
+    // panel — dispatch terminal
     panel = document.createElement('div');
     panel.id = 'rad-ai-panel';
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-label', 'Site office assistant chat');
     panel.innerHTML =
       '<div class="rai-head">'
+      + '<span class="rai-tape" aria-hidden="true"></span>'
+      + '<div class="rai-head-inner">'
       + '<span class="rai-dot" aria-hidden="true"></span>'
-      + '<span class="rai-title">SITE OFFICE — ASK RADIAN</span>'
+      + '<div class="rai-head-text">'
+      + '<span class="rai-title">SITE OFFICE</span>'
+      + '<span class="rai-subtitle">AI Dispatch · Radian H.A. Limited</span>'
+      + '</div>'
       + '<button class="rai-close" aria-label="Close chat">✕</button>'
+      + '</div>'
       + '</div>'
       + '<div class="rai-log"></div>'
       + '<div class="rai-foot">'
       + '<input class="rai-input" type="text" maxlength="600" placeholder="Ask about courses, prices, enrolment…" aria-label="Your message"/>'
-      + '<button class="rai-send" aria-label="Send">→</button>'
+      + '<button class="rai-send" aria-label="Send message">TX</button>'
       + '</div>'
-      + '<div class="rai-note">AI assistant — answers come from our site notes; the office confirms anything important.</div>';
+      + '<div class="rai-note">AI assistant — grounded in our site notes only · office confirms anything important</div>';
     document.body.appendChild(panel);
 
     log = panel.querySelector('.rai-log');

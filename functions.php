@@ -52,7 +52,7 @@ add_action( 'after_setup_theme', function () {
 /* ── Enqueue scripts & styles (per design page) ────────────── */
 add_action( 'wp_enqueue_scripts', function () {
     $theme = get_template_directory_uri();
-    $ver   = '3.2.0';
+    $ver   = '3.2.1';
     $page  = radian_current_page();
 
     /* Google Fonts — every page */
