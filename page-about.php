@@ -172,18 +172,23 @@ function App() {
             <div className="about-text reveal-left">
               <p>Radian H.A. Limited has been a trusted British Standard scaffold training provider for over two decades. Our extensive programmes ensure every participant gains the skills needed for a successful, safe career in scaffolding.</p>
               <p>We are committed to building capacity and competence across the scaffolding workforce — delivering a higher standard of work and safety at every level.</p>
-              <div className="about-pillars">
+              <div className="ab-record reveal">
+                <div className="ab-record-head">
+                  <span className="ab-record-title">COMPANY RECORD CARD</span>
+                  <span className="ab-record-no">Card 01 · RHA</span>
+                </div>
                 {[
-                  {icon:'⚙️',text:'20+ years as a British Standard scaffold training provider'},
-                  {icon:'📜',text:'Industry-recognised qualifications, kickstart your career'},
-                  {icon:'📈',text:'Enhance your qualifications and advance your opportunities'},
-                  {icon:'🤝',text:'Committed to higher safety standards across the industry'},
-                ].map((p,i)=>(
-                  <div className="pillar" key={i} style={{transitionDelay:`${i*0.08}s`}}>
-                    <div className="pillar-icon">{p.icon}</div>
-                    <div className="pillar-text">{p.text}</div>
-                  </div>
+                  '20+ years as a British Standard scaffold training provider',
+                  'Industry-recognised qualifications, kickstart your career',
+                  'Enhance your qualifications and advance your opportunities',
+                  'Committed to higher safety standards across the industry',
+                ].map((t,i)=>(
+                  <div className="ab-row" key={i}><span className="ab-tick">✓</span><span className="ab-row-text">{t}</span></div>
                 ))}
+                <div className="ab-record-foot">
+                  <span className="ab-record-note">— on the books for two decades, still climbing.</span>
+                  <span className="ab-record-stamp">CISRS ACCREDITED</span>
+                </div>
               </div>
             </div>
             <div className="reveal-right">

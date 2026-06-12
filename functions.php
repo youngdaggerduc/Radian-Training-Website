@@ -3,6 +3,15 @@
  * Radian Training Theme — functions.php
  */
 
+/* ── Admin: "Radian Training" pages (admins only) ─────────────
+ * events = Training Calendar (site-data.json → events)
+ * certificates = Certificate Registry (certificates.csv)
+ * about = About Page content (site-data.json → instructors/testimonials/accreds)
+ */
+require get_template_directory() . '/inc/admin-events.php';
+require get_template_directory() . '/inc/admin-certificates.php';
+require get_template_directory() . '/inc/admin-about.php';
+
 /* ── Determine which "design page" we are rendering ───────────
  * Returns one of: home | cisrs | getmie | certificate | course | enrol | other
  */
@@ -21,6 +30,7 @@ function radian_current_page() {
             case 'news':         return 'news';
             case 'about':        return 'about';
             case 'start-here':   return 'start';
+            case 'contact':      return 'contact';
         }
     }
     /* single posts + post archives share the noticeboard styling */
@@ -41,7 +51,7 @@ add_action( 'after_setup_theme', function () {
 /* ── Enqueue scripts & styles (per design page) ────────────── */
 add_action( 'wp_enqueue_scripts', function () {
     $theme = get_template_directory_uri();
-    $ver   = '3.0.0';
+    $ver   = '3.1.8';
     $page  = radian_current_page();
 
     /* Google Fonts — every page */
@@ -62,6 +72,7 @@ add_action( 'wp_enqueue_scripts', function () {
         'news'        => 'news.css',
         'about'       => 'home.css',   /* moved-from-home sections use home styles */
         'start'       => 'home.css',
+        'contact'     => 'home.css',   /* reuses ct-* contact styles + co-* page section */
     ];
     $css_file = isset( $css_map[ $page ] ) ? $css_map[ $page ] : 'home.css';
     wp_enqueue_style( 'radian-page', $theme . '/assets/css/' . $css_file, [ 'radian-fonts' ], $ver );
@@ -83,7 +94,7 @@ add_action( 'wp_enqueue_scripts', function () {
         'https://unpkg.com/@babel/standalone@7.29.0/babel.min.js', [], null, $defer );
 
     /* GSAP + motion choreography — every page with animated sections */
-    if ( in_array( $page, [ 'home', 'cisrs', 'getmie', 'about', 'start' ], true ) ) {
+    if ( in_array( $page, [ 'home', 'cisrs', 'getmie', 'about', 'start', 'contact' ], true ) ) {
         wp_enqueue_script( 'gsap',
             'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', [], null, $defer );
         wp_enqueue_script( 'gsap-scrolltrigger',
@@ -180,6 +191,11 @@ function radian_seo_meta() {
             'desc'  => 'Course dates, CISRS scheme updates and company news from Radian H.A. Limited — the site noticeboard.',
             'path'  => '/news/',
         ],
+        'contact' => [
+            'title' => 'Contact Us — Talk to the Radian Site Office',
+            'desc'  => 'Call, WhatsApp or message the Radian H.A. Limited site office — Building 2, Plaisance Park Industrial Estate, Claxton Bay, Trinidad. Mon–Fri 07:00–16:00.',
+            'path'  => '/contact/',
+        ],
     ];
     if ( ! isset( $meta[ $page ] ) ) return;
     $m     = $meta[ $page ];
@@ -210,7 +226,7 @@ function radian_seo_meta() {
         'url'      => home_url( '/' ),
         'logo'     => $img,
         'description' => 'CISRS-accredited scaffolding and working-at-height training provider.',
-        'email'    => 'training@radianhalimited.com',
+        'email'    => 'training@rhatt.com',
     ];
     echo '<script type="application/ld+json">' . wp_json_encode( $org ) . '</script>' . "\n";
 
@@ -294,6 +310,7 @@ add_filter( 'pre_get_document_title', function ( $title ) {
         'news'        => 'News & Updates | Radian H.A. Limited',
         'about'       => 'About Us | Radian H.A. Limited',
         'start'       => 'Start Here | Radian H.A. Limited',
+        'contact'     => 'Contact Us | Radian H.A. Limited',
     ];
     /* keep real post titles on single posts */
     if ( is_singular( 'post' ) ) return $title;
@@ -368,6 +385,9 @@ function radian_cert_lookup() {
             fclose( $fh );
             // Compute expiryStatus from expiryDate so the CSV never needs that column
             $rec['expiryStatus'] = radian_expiry_status( $rec['expiryDate'] ?? '' );
+            // internalLink = staff-only pointer to the stored certificate file —
+            // NEVER expose it in the public lookup response
+            unset( $rec['internalLink'] );
             wp_send_json_success( $rec );
         }
     }
@@ -423,9 +443,84 @@ function radian_contact_submit() {
     wp_send_json_error( [ 'message' => 'Mail failed' ], 500 );
 }
 
-/* ── Expose contact AJAX config on the home page ────────────── */
+/* ── Enrol wizard AJAX — no payment gateway: the request summary is
+ *    emailed to the site admin so staff can follow up manually ──── */
+add_action( 'wp_ajax_nopriv_radian_enrol', 'radian_enrol_submit' );
+add_action( 'wp_ajax_radian_enrol',        'radian_enrol_submit' );
+
+function radian_enrol_submit() {
+    if ( ! check_ajax_referer( 'radian_enrol_nonce', 'nonce', false ) ) {
+        wp_send_json_error( [ 'message' => 'Invalid request' ], 403 );
+    }
+    // honeypot: bots fill the hidden "company" field — pretend success, send nothing
+    if ( ! empty( $_POST['company'] ) ) {
+        wp_send_json_success( [ 'ok' => true ] );
+    }
+
+    $ref       = sanitize_text_field( $_POST['ref'] ?? '' );
+    $title     = sanitize_text_field( $_POST['courseTitle'] ?? '' );
+    $code      = sanitize_text_field( $_POST['courseCode'] ?? '' );
+    $course_id = sanitize_text_field( $_POST['courseId'] ?? '' );
+    $dates     = sanitize_text_field( $_POST['dateRange'] ?? '' );
+    $venue     = sanitize_text_field( $_POST['venue'] ?? '' );
+    $count     = absint( $_POST['count'] ?? 0 );
+    $total     = sanitize_text_field( $_POST['total'] ?? '' );
+    $delegates = json_decode( wp_unslash( $_POST['delegates'] ?? '[]' ), true );
+
+    if ( ! $ref || ! $title || ! $dates || ! $count || ! is_array( $delegates ) || ! $delegates ) {
+        wp_send_json_error( [ 'message' => 'Missing fields' ], 400 );
+    }
+    $delegates = array_slice( $delegates, 0, 50 );
+
+    $lines = [];
+    $i     = 0;
+    foreach ( $delegates as $d ) {
+        if ( ! is_array( $d ) ) continue;
+        $i++;
+        $lines[] = sprintf(
+            '%2d. %s · DOB %s · %s',
+            $i,
+            sanitize_text_field( $d['name'] ?? '' ),
+            sanitize_text_field( $d['dob'] ?? '' ),
+            sanitize_text_field( $d['number'] ?? '' )
+        );
+    }
+
+    $body = "NEW ENROLLMENT REQUEST — {$ref}\n"
+          . "──────────────────────────────────────────────\n\n"
+          . "Course:     {$title}" . ( $code ? " ({$code})" : '' ) . "\n"
+          . ( $course_id ? "Course ID:  {$course_id}\n" : '' )
+          . "Dates:      {$dates}\n"
+          . ( $venue ? "Venue:      {$venue}\n" : '' )
+          . "Delegates:  {$count}\n"
+          . ( $total ? "Total est.: TT\${$total} (VAT inclusive)\n" : '' )
+          . "\nDELEGATES\n" . implode( "\n", $lines ) . "\n\n"
+          . "No payment has been taken — call the first delegate to confirm\n"
+          . "availability and send payment instructions.\n\n"
+          . "— Sent from the website enrol wizard";
+
+    $sent = wp_mail(
+        get_option( 'admin_email' ),
+        '[Radian Training] Enrollment request ' . $ref . ' — ' . ( $code ? $code : $title ) . ' × ' . $count,
+        $body
+    );
+
+    if ( $sent ) {
+        wp_send_json_success( [ 'ok' => true ] );
+    }
+    wp_send_json_error( [ 'message' => 'Mail failed' ], 500 );
+}
+
+/* ── Expose enrol AJAX config on the enrol page ─────────────── */
 add_action( 'wp_head', function () {
-    if ( radian_current_page() !== 'home' ) return;
+    if ( radian_current_page() !== 'enrol' ) return;
+    echo '<script>window.RADIAN_ENROL={ajaxUrl:' . wp_json_encode( admin_url( 'admin-ajax.php' ) )
+         . ',nonce:' . wp_json_encode( wp_create_nonce( 'radian_enrol_nonce' ) ) . '};</script>' . "\n";
+}, 2 );
+
+/* ── Expose contact AJAX config (home section + contact page) ── */
+add_action( 'wp_head', function () {
+    if ( ! in_array( radian_current_page(), [ 'home', 'contact' ], true ) ) return;
     echo '<script>window.RADIAN_CONTACT={ajaxUrl:' . wp_json_encode( admin_url( 'admin-ajax.php' ) )
          . ',nonce:' . wp_json_encode( wp_create_nonce( 'radian_contact_nonce' ) ) . '};</script>' . "\n";
 }, 2 );

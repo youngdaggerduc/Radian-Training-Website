@@ -35,12 +35,16 @@
 <?php
 $rad_page  = function_exists( 'radian_current_page' ) ? radian_current_page() : '';
 $enrol_url = home_url( '/enrol/' );
+/* item: [url, label, active, children?] — children render as a hover dropdown */
 $nav_items = [
     [ home_url( '/cisrs/' ),       'CISRS OTS',    $rad_page === 'cisrs' ],
     [ home_url( '/getmie-safe/' ), 'Getmie Safe',  $rad_page === 'getmie' ],
     [ home_url( '/start-here/' ),  'Start Here',   $rad_page === 'start' ],
     [ home_url( '/certificate/' ), 'Certificates', $rad_page === 'certificate' ],
-    [ home_url( '/about/' ),       'About',        $rad_page === 'about' ],
+    [ home_url( '/about/' ),       'About',        $rad_page === 'about' || $rad_page === 'contact', [
+        [ home_url( '/about/' ),   'About Us',     $rad_page === 'about' ],
+        [ home_url( '/contact/' ), 'Contact Us',   $rad_page === 'contact' ],
+    ] ],
     [ home_url( '/news/' ),        'News',         $rad_page === 'news' ],
 ];
 ?>
@@ -51,8 +55,19 @@ $nav_items = [
     <span class="nav-brand-text">RADIAN H.A. LIMITED</span>
   </a>
   <ul class="nav-links">
-    <?php foreach ( $nav_items as $it ) : ?>
-    <li><a href="<?php echo esc_url( $it[0] ); ?>"<?php if ( $it[2] ) echo ' class="active" aria-current="page"'; ?>><?php echo esc_html( $it[1] ); ?></a></li>
+    <?php foreach ( $nav_items as $it ) : $kids = $it[3] ?? null; ?>
+    <li<?php if ( $kids ) echo ' class="nav-drop"'; ?>>
+      <a href="<?php echo esc_url( $it[0] ); ?>"<?php if ( $it[2] ) echo ' class="active" aria-current="page"'; ?>><?php echo esc_html( $it[1] ); ?><?php if ( $kids ) echo '<span class="nav-caret" aria-hidden="true">▾</span>'; ?></a>
+      <?php if ( $kids ) : ?>
+      <div class="nav-drop-menu">
+        <div class="nav-drop-inner">
+          <?php foreach ( $kids as $k ) : ?>
+          <a href="<?php echo esc_url( $k[0] ); ?>"<?php if ( $k[2] ) echo ' class="active"'; ?>><?php echo esc_html( $k[1] ); ?></a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <?php endif; ?>
+    </li>
     <?php endforeach; ?>
   </ul>
   <button class="nav-cta" onclick="(function(){

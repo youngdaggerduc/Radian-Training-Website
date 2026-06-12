@@ -139,7 +139,7 @@ function downloadICS(ev) {
   const endD = new Date(ev.date); endD.setDate(endD.getDate()+days);
   const end = endD.toISOString().slice(0,10).replace(/-/g,'');
   const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Radian HA Limited//Training//EN','BEGIN:VEVENT',
-    'UID:radian-'+ev.id+'@radianhalimited.com',
+    'UID:radian-'+ev.id+'@rhatt.com',
     'DTSTART;VALUE=DATE:'+start,
     'DTEND;VALUE=DATE:'+end,
     'SUMMARY:'+ev.title+' — Radian Training',
@@ -521,10 +521,10 @@ function ContactSection() {
   };
 
   const INFO = [
-    {icon:'📞', label:'Call us',     value:'+1 (868) 555-0142', href:'tel:+18685550142'},
-    {icon:'💬', label:'WhatsApp',    value:'Chat with the team', href:'https://wa.me/18685550142?text='+encodeURIComponent('Hi Radian, I would like information about your training courses.')},
-    {icon:'✉️', label:'Email',       value:'training@radianhalimited.com', href:'mailto:training@radianhalimited.com'},
-    {icon:'🕗', label:'Site hours',  value:'Mon – Fri · 08:00 – 17:00', href:null},
+    {icon:'📞', label:'Call us',     value:'+1 (868) 280-4598', href:'tel:+18682804598'},
+    {icon:'💬', label:'WhatsApp',    value:'Chat with the team', href:'https://wa.me/18682804598?text='+encodeURIComponent('Hi Radian, I would like information about your training courses.')},
+    {icon:'✉️', label:'Email',       value:'training@rhatt.com', href:'mailto:training@rhatt.com'},
+    {icon:'🕗', label:'Site hours',  value:'Mon – Fri · 07:00 – 16:00', href:null},
   ];
 
   return (
@@ -550,10 +550,14 @@ function ContactSection() {
             <div className="ct-map">
               <iframe
                 title="Radian Training Centre location"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-61.560%2C10.620%2C-61.440%2C10.700&layer=mapnik"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-61.490%2C10.330%2C-61.410%2C10.400&layer=mapnik"
                 loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-              <div className="ct-map-tag">Radian Training Centre · Trinidad &amp; Tobago</div>
+              <div className="ct-map-tag">Building 2, Plaisance Park Industrial Estate, Claxton Bay</div>
             </div>
+            <aside className="ct-sticky reveal" aria-hidden="true">
+              WhatsApp is the fastest way to reach the yard — we answer between toolbox talks. ☕
+              <small>— the Site Office</small>
+            </aside>
           </div>
           <div className="ct-form reveal-right">
             <div className="ct-form-head">Send a message</div>
@@ -837,11 +841,12 @@ function App() {
               <div style={{marginTop:32}}><button className="btn-primary" style={{fontSize:'0.82rem',padding:'12px 28px'}} onClick={()=>window.location.href=U.getmie}>Learn More →</button></div>
             </div>
           </div>
-          <div style={{marginTop:40,padding:'32px 44px',background:'rgba(232,137,10,0.06)',border:'1px solid rgba(232,137,10,0.2)',display:'flex',alignItems:'center',gap:32}} className="reveal">
-            <div style={{fontSize:'2.5rem',flexShrink:0}}>⚠️</div>
+          <div className="rad-notice reveal">
+            <div className="rad-notice-stamp">SAFETY<br/>NOTICE</div>
             <div>
-              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.4rem',letterSpacing:'0.08em',color:'var(--orange)',marginBottom:8}}>RESCUE IS A LIFE-SAVING SKILL</div>
-              <div style={{fontSize:'0.9rem',color:'rgba(248,250,255,0.6)',lineHeight:1.65}}>Our training prepares teams for real emergency scenarios — using the Getmie Safe Rescue System to deliver the fastest, safest possible response when it matters most.</div>
+              <div className="rad-notice-title">RESCUE IS A LIFE-SAVING SKILL</div>
+              <div className="rad-notice-text">Our training prepares teams for real emergency scenarios — using the Getmie Safe Rescue System to deliver the fastest, safest possible response when it matters most.</div>
+              <div className="rad-notice-sign">— pinned by the site office. Read before you climb.</div>
             </div>
           </div>
         </div>

@@ -201,7 +201,9 @@ image-slot { display: block; --image-slot-bg: rgba(255,255,255,0.025); --image-s
 .s3d-card-desc { font-size: 0.86rem; line-height: 1.6; color: rgba(248,250,255,0.7); }
 
 /* horizontal pinned course strip */
-.hstrip { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding: 60px 0; }
+/* solid bg + raised z-index: while GSAP pins this section (position:fixed),
+   content from the section above must never paint over it */
+.hstrip { position: relative; z-index: 2; isolation: isolate; background: var(--navy); min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding: 60px 0; }
 .hstrip-track { display: flex; align-items: stretch; gap: 24px; padding: 0 60px; will-change: transform; }
 .hstrip-intro { flex: 0 0 320px; display: flex; flex-direction: column; justify-content: center; padding-right: 20px; }
 .hstrip-intro .scroll-arrow { margin-top: 28px; display: inline-flex; align-items: center; gap: 12px; color: var(--orange); font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; }
@@ -225,3 +227,43 @@ image-slot { display: block; --image-slot-bg: rgba(255,255,255,0.025); --image-s
   .hstrip .course-card { flex: none; }
 }
 
+
+/* ============================================================================
+   SCOPE OF WORKS — pinned paper sheet replacing the four focus-area cards
+   (same paper language as the About record card / news notices)
+============================================================================ */
+.sow {
+  position: relative;
+  background: repeating-linear-gradient(180deg, transparent 0 30px, rgba(60,90,140,0.10) 30px 31px),
+              linear-gradient(180deg, #f3efe4, #efe9d9);
+  color: #1c2740;
+  padding: 28px 28px 20px;
+  border-radius: 3px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+  transform: rotate(0.7deg);
+  transition: transform 0.35s;
+}
+.sow:hover { transform: rotate(0deg); }
+.sow::before {       /* pushpin */
+  content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #ffd9a0, #e8890a 55%, #9c5c06);
+  box-shadow: 0 5px 9px rgba(0,0,0,0.55);
+  z-index: 2;
+}
+.sow-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; border-bottom: 2px solid #1c2740; padding-bottom: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.sow-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.16em; }
+.sow-no { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #4d566e; }
+.sow-row { display: flex; gap: 14px; align-items: flex-start; padding: 11px 2px 9px; border-bottom: 1px dashed rgba(28,39,64,0.2); }
+.sow-num {
+  flex-shrink: 0; margin-top: 1px;
+  font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.06em;
+  color: #c8372d; border: 2px solid #c8372d; border-radius: 3px;
+  padding: 2px 7px 0;
+  transform: rotate(-3deg);
+  opacity: 0.85; mix-blend-mode: multiply;
+}
+.sow-item-title { display: block; font-size: 0.95rem; font-weight: 700; line-height: 1.4; }
+.sow-item-desc { display: block; font-size: 0.84rem; color: #4d566e; margin-top: 2px; line-height: 1.5; }
+.sow-foot { margin-top: 12px; font-family: 'Caveat', cursive; font-size: 1.2rem; color: #4d566e; text-align: right; }
+@media (prefers-reduced-motion: reduce) { .sow { transform: none; transition: none; } }

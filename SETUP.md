@@ -43,6 +43,10 @@ stylesheet from the slug.
 | Certificates             | `certificate`     | `page-certificate.php`  |
 | Course                   | `course`          | `page-course.php`       |
 | Enrol                    | `enrol`           | `page-enrol.php`        |
+| About Us                 | `about`           | `page-about.php`        |
+| Start Here               | `start-here`      | `page-start-here.php`   |
+| News                     | `news`            | `page-news.php`         |
+| Contact Us               | `contact`         | `page-contact.php`      |
 
 > To set/confirm a slug: open the page, and in the **Permalink** box under the title set the
 > URL slug. (In the block editor it’s in the right sidebar → **Page → URL**.)

@@ -69,7 +69,7 @@ function DateStep({ dates, selected, onSelect }) {
     return (
       <div className="empty-dates">
         <h3>No Upcoming Dates Listed</h3>
-        <p>Please contact our training team to discuss availability:<br/><span style={{color:'var(--orange-light)'}}>training@radianhalimited.com</span></p>
+        <p>Please contact our training team to discuss availability:<br/><span style={{color:'var(--orange-light)'}}>training@rhatt.com</span></p>
       </div>
     );
   }
@@ -188,18 +188,20 @@ function DelegateStep({ count, delegates, onChange, errors }) {
   );
 }
 
-function ConfirmStep({ course, date, count, ref }) {
+function ConfirmStep({ course, date, count, refCode }) {
   return (
     <div className="confirm-panel">
       <div className="confirm-icon-wrap">✓</div>
-      <h2 className="confirm-h">REQUEST<br/><span className="accent">SUBMITTED</span></h2>
+      <h2 className="confirm-h">REQUEST<br/><span className="accent">SENT</span></h2>
       <p className="confirm-p">
-        Your Enrollment request has been sent to the training team. They will reach out shortly with payment instructions, confirmation, and joining details.
+        Your Enrollment request has been emailed to our training team. No payment has been taken —
+        the site office will call the contact number you provided to confirm availability and
+        arrange payment. Keep your reference handy.
       </p>
       <div className="confirm-ref">
         <div className="confirm-ref-item">
           <div className="confirm-ref-label">Reference</div>
-          <div className="confirm-ref-value">{ref}</div>
+          <div className="confirm-ref-value">{refCode}</div>
         </div>
         <div className="confirm-ref-item">
           <div className="confirm-ref-label">Course</div>
@@ -294,6 +296,7 @@ function App() {
   const [delegates, setDelegates] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [submittedRef, setSubmittedRef] = useState(null);
 
   const numDelegates = peopleChoice === 'custom' ? Math.max(6, parseInt(customCount,10) || 6) : peopleChoice;
@@ -336,15 +339,42 @@ function App() {
     return Object.keys(e).length === 0;
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!validateDelegates()) return;
+    if (submitting) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmittedRef(generateRef());
+    setSubmitError('');
+    const ref = generateRef();
+    try {
+      const cfg = window.RADIAN_ENROL || {};
+      if (!cfg.ajaxUrl) throw new Error('config');
+      const body = new URLSearchParams({
+        action: 'radian_enrol',
+        nonce: cfg.nonce || '',
+        ref,
+        courseId,
+        courseTitle: course.title,
+        courseCode: course.code || '',
+        dateRange: selectedDate ? `${selectedDate.startStr} – ${selectedDate.endStr} ${selectedDate.year}` : '',
+        venue: selectedDate ? 'Training Centre, ' + selectedDate.venue : '',
+        count: String(numDelegates),
+        total: total ? total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '',
+        delegates: JSON.stringify(delegates.slice(0, numDelegates).map(d => ({
+          name: d?.name || '', dob: d?.dob || '', number: d?.number || '',
+        }))),
+        company: '',   // honeypot — must stay empty
+      });
+      const res = await fetch(cfg.ajaxUrl, { method: 'POST', body });
+      const j = await res.json();
+      if (!j.success) throw new Error('send');
+      setSubmittedRef(ref);
       setStep(4);
-      setSubmitting(false);
       window.scrollTo({top:0, behavior:'smooth'});
-    }, 1500);
+    } catch (e) {
+      setSubmitError('We couldn’t send your request just now — please try again in a moment, or call the site office on +1 (868) 280-4598.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const stepStatus = (n) => {
@@ -365,7 +395,7 @@ function App() {
 
   return (
     <>
-      <div className="Enroll-header">
+      <div className="enrol-header">
         <div className="breadcrumb">
           <a href={U.home}>Home</a>
           <span className="sep">/</span>
@@ -375,11 +405,11 @@ function App() {
           <span className="sep">/</span>
           <span className="current">Enroll</span>
         </div>
-        <div className="Enroll-course-tag">{course.code} · {course.duration}</div>
-        <div className="Enroll-title-row">
-          <h1 className="Enroll-h1">Enroll ON<br/>{course.title}</h1>
+        <div className="enrol-course-tag">{course.code} · {course.duration}</div>
+        <div className="enrol-title-row">
+          <h1 className="enrol-h1">Enroll ON<br/>{course.title}</h1>
         </div>
-        <div className="Enroll-sub">Follow the steps below to request Enrollment. Our training team will confirm availability and send payment instructions.</div>
+        <div className="enrol-sub">Follow the steps below to request Enrollment. Our training team will confirm availability and send payment instructions.</div>
       </div>
 
       {step < 4 && (
@@ -392,9 +422,9 @@ function App() {
         </div>
       )}
 
-      <div className="Enroll-main">
+      <div className="enrol-main">
         <div>
-          <div className="Enroll-panel" key={step}>
+          <div className="enrol-panel" key={step}>
             {step === 1 && (
               <>
                 <div className="panel-title">Step 1 — Select Your Training Date</div>
@@ -428,6 +458,11 @@ function App() {
                 <div className="panel-title">Step 3 — Delegate Details</div>
                 <div className="panel-sub">Please enter the details for each delegate attending. All fields are required.</div>
                 <DelegateStep count={numDelegates} delegates={delegates} onChange={updateDelegate} errors={errors}/>
+                {submitError && (
+                  <div style={{marginTop:18, padding:'14px 18px', background:'rgba(240,82,82,0.08)', border:'1px solid rgba(240,82,82,0.3)', color:'#ff9c9c', fontSize:'0.88rem', lineHeight:1.6}}>
+                    {submitError}
+                  </div>
+                )}
                 <div className="actions-bar">
                   <button className="btn btn-ghost" onClick={()=>setStep(2)} disabled={submitting}>← Back</button>
                   <button className="btn btn-primary" onClick={submit} disabled={submitting}>
@@ -448,7 +483,7 @@ function App() {
             )}
 
             {step === 4 && submittedRef && (
-              <ConfirmStep course={course} date={selectedDate} count={numDelegates} ref={submittedRef}/>
+              <ConfirmStep course={course} date={selectedDate} count={numDelegates} refCode={submittedRef}/>
             )}
           </div>
         </div>

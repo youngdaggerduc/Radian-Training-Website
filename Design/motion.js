@@ -76,9 +76,63 @@
     // ---- horizontal pinned strips ---------------------------------------
     document.querySelectorAll('[data-hsection]').forEach(setupHScroll);
 
-    // refresh after late assets (fonts / images / 3D canvas) settle
-    setTimeout(() => ScrollTrigger.refresh(), 400);
-    window.addEventListener('load', () => ScrollTrigger.refresh());
+    // ⚠ In this stack, ScrollTrigger.refresh() measures WRONG whenever the
+    // page is scrolled: every pin start comes out short by exactly the scroll
+    // position (verified empirically — html{scroll-behavior:smooth} turns
+    // ScrollTrigger's internal measurement scroll-jumps into async glides).
+    // A refresh taken at scrollY 0 is always correct. So safeRefresh() waits
+    // for scroll-idle, hops to the top, refreshes, hops back — all in one
+    // synchronous task, so nothing repaints in between.
+    ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,DOMContentLoaded' });
+    let lastScrollT = 0;
+    let refreshTimer;
+    window.addEventListener('scroll', () => { lastScrollT = performance.now(); }, { passive: true });
+    const safeRefresh = () => {
+      clearTimeout(refreshTimer);
+      if (performance.now() - lastScrollT < 200) { refreshTimer = setTimeout(safeRefresh, 150); return; }
+      const y = window.pageYOffset;
+      if (y) {
+        const docEl = document.documentElement;
+        const prev = docEl.style.scrollBehavior;
+        docEl.style.scrollBehavior = 'auto';   // make the hops instant + sync
+        window.scrollTo(0, 0);
+        ScrollTrigger.refresh();
+        window.scrollTo(0, y);
+        ScrollTrigger.update();                // re-engage pins before paint
+        docEl.style.scrollBehavior = prev;
+      } else {
+        ScrollTrigger.refresh();
+      }
+    };
+
+    // ScrollTrigger also refreshes from internal listeners attached before our
+    // config() ran (window load / resize). When one of those runs scrolled, it
+    // corrupts the pins — compare each pin against its spacer (ground truth)
+    // and queue a repair when it doesn't match.
+    ScrollTrigger.addEventListener('refresh', () => {
+      const broken = ScrollTrigger.getAll().some(t => {
+        if (!t.pin || !t.trigger) return false;
+        const spacer = t.trigger.parentElement;
+        if (!spacer || String(spacer.className).indexOf('pin-spacer') === -1) return false;
+        const truth = spacer.getBoundingClientRect().top + window.pageYOffset;
+        return Math.abs(t.start - truth) > 4;
+      });
+      if (broken) refreshTimer = setTimeout(safeRefresh, 180);
+    });
+
+    // re-measure after late assets (fonts / images / 3D canvas) settle
+    setTimeout(safeRefresh, 400);
+    window.addEventListener('load', safeRefresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(safeRefresh);
+    }
+    if (window.ResizeObserver) {
+      let roTimer;
+      new ResizeObserver(() => {
+        clearTimeout(roTimer);
+        roTimer = setTimeout(safeRefresh, 150);
+      }).observe(document.body);
+    }
     return true;
   };
 

@@ -246,6 +246,9 @@
     var menu = document.createElement('div');
     menu.id = 'rad-mobile-menu';
     links.forEach(function (a) {
+      // dropdown parents (carry a caret) are represented by their children,
+      // which querySelectorAll already picked up in document order
+      if (a.querySelector('.nav-caret')) return;
       var m = document.createElement('a');
       m.href = a.getAttribute('href');
       m.textContent = a.textContent;
@@ -284,7 +287,7 @@
   function initWhatsApp() {
     var a = document.createElement('a');
     a.id = 'rad-wa';
-    a.href = 'https://wa.me/18685550142?text=' +
+    a.href = 'https://wa.me/18682804598?text=' +
       encodeURIComponent('Hi Radian, I would like information about your training courses.');
     a.target = '_blank';
     a.rel = 'noopener noreferrer';

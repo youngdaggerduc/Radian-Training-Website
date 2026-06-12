@@ -95,6 +95,44 @@ nav#navbar .nav-logo .logo-mark { transition: transform 0.45s cubic-bezier(0.34,
 nav#navbar .nav-logo:hover .logo-mark { transform: translateY(-2px) rotate(-6deg) scale(1.08); }
 nav#navbar .nav-logo:hover { filter: drop-shadow(0 0 14px rgba(232, 137, 10, 0.35)); }
 
+/* ── Nav dropdown (About ▾ → About Us / Contact Us) ───────────────────── */
+nav#navbar .nav-links li.nav-drop { position: relative; }
+nav#navbar .nav-caret { display: inline-block; margin-left: 6px; font-size: 0.62em; opacity: 0.65; transition: transform 0.25s; }
+nav#navbar .nav-drop:hover .nav-caret,
+nav#navbar .nav-drop:focus-within .nav-caret { transform: rotate(180deg); }
+nav#navbar .nav-drop-menu {
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  padding-top: 12px;                         /* hover bridge over the gap */
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.22s, visibility 0.22s;
+  z-index: 60;
+}
+nav#navbar .nav-drop:hover .nav-drop-menu,
+nav#navbar .nav-drop:focus-within .nav-drop-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+nav#navbar .nav-drop-inner {
+  min-width: 172px;
+  background: rgba(13, 26, 46, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 6px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 44px rgba(4, 10, 20, 0.55);
+  transform: translateY(-6px);
+  transition: transform 0.22s;
+}
+nav#navbar .nav-drop:hover .nav-drop-inner,
+nav#navbar .nav-drop:focus-within .nav-drop-inner { transform: translateY(0); }
+nav#navbar .nav-drop-menu a {
+  display: block; padding: 10px 16px; border-radius: 9px;
+  font-size: 0.78rem; letter-spacing: 0.07em;
+  color: rgba(248, 250, 255, 0.72); white-space: nowrap;
+}
+nav#navbar .nav-drop-menu a:hover { background: rgba(255, 255, 255, 0.08); color: var(--white, #f8faff); }
+nav#navbar .nav-drop-menu a.active { background: var(--orange, #e8890a); color: var(--navy, #0a1628); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  nav#navbar .nav-drop-menu, nav#navbar .nav-drop-inner, nav#navbar .nav-caret { transition: none; }
+}
+
 /* ── Buttons — shine sweep + press feedback ───────────────────────────── */
 .nav-cta, .sb-btn, .btn-outline,
 body:not(.rad-home) .btn-primary { position: relative; overflow: hidden; }
@@ -351,6 +389,9 @@ footer.rfx {
   font-size: 0.74rem; color: rgba(248,250,255,0.3);
 }
 .rfx-motto { letter-spacing: 0.08em; font-style: italic; color: rgba(248,250,255,0.22); }
+.rfx-credit { font-size: 0.68rem; color: rgba(248,250,255,0.22); letter-spacing: 0.06em; }
+.rfx-credit a { color: rgba(248,250,255,0.4); text-decoration: none; transition: color 0.2s; }
+.rfx-credit a:hover { color: var(--orange, #e8890a); }
 .rfx-top {
   background: none; border: 1px solid rgba(255,255,255,0.14);
   color: rgba(248,250,255,0.55); cursor: pointer;
@@ -367,3 +408,40 @@ footer.rfx {
   .rfx-inner { padding: 44px 24px 36px; }
   .rfx-bar-inner { padding: 16px 24px; justify-content: center; text-align: center; }
 }
+/* ============================================================================
+   PAPER SAFETY NOTICE — taped paper sheet w/ red rubber stamp.
+   Shared by home (Getmie section) + getmie-safe (rescue track).
+============================================================================ */
+.rad-notice {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 24px;
+  background: repeating-linear-gradient(180deg, transparent 0 30px, rgba(60,90,140,0.10) 30px 31px),
+              linear-gradient(180deg, #f3efe4, #efe9d9);
+  color: #1c2740;
+  margin-top: 40px;
+  padding: 30px 34px 24px;
+  border-radius: 3px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+  transform: rotate(-0.5deg);
+  transition: transform 0.35s;
+}
+.rad-notice:hover { transform: rotate(0deg); }
+.rad-notice::before {       /* tape */
+  content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+  width: 96px; height: 24px; background: rgba(248,250,255,0.32);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+.rad-notice-stamp {
+  flex-shrink: 0; margin-top: 4px;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.18em;
+  text-align: center; line-height: 1.15;
+  color: #c8372d; border: 2.5px solid #c8372d; border-radius: 5px;
+  padding: 7px 13px 5px;
+  transform: rotate(-6deg);
+  opacity: 0.85; mix-blend-mode: multiply;
+}
+.rad-notice-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.1em; margin-bottom: 8px; color: #1c2740; }
+.rad-notice-text { font-size: 0.9rem; color: #303a55; line-height: 1.65; max-width: 640px; }
+.rad-notice-sign { margin-top: 10px; font-family: 'Caveat', cursive; font-size: 1.2rem; color: #4d566e; }
+@media (max-width: 640px) { .rad-notice { flex-direction: column; gap: 16px; padding: 28px 22px 22px; } }
+@media (prefers-reduced-motion: reduce) { .rad-notice { transform: none; transition: none; } }

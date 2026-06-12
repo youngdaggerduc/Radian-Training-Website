@@ -17,7 +17,7 @@
 
   "accreds": [
     {"seal":"★", "title":"CISRS OTS",     "sub":"Approved Training Centre",     "ref":"Centre № OTS-TT-0042", "since":"Since 2006"},
-    {"seal":"✓", "title":"NOCN",          "sub":"Card Scheme Partner",          "ref":"Partner Ref NOCN-8821", "since":"Since 2010"},
+    {"seal":"✓", "title":"Safety & Access", "sub":"Approved Partner",             "ref":"Partner Ref SA-TT-0114", "since":"Since 2012"},
     {"seal":"⛨", "title":"HSE Compliant", "sub":"Safety Management System",     "ref":"Cert № SMS-2024-117",   "since":"Audited annually"},
     {"seal":"§", "title":"Fully Insured", "sub":"Public & Employers Liability", "ref":"Policy TT-PL-99031",    "since":"TT$10M cover"}
   ],

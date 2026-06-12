@@ -272,8 +272,6 @@ body.rhud-bp::after {
 body.rhud-bp .hero,
 body.rhud-bp .page-hero { background: linear-gradient(160deg, #0a2342 0%, #0d2f5a 55%, #0a2748 100%); }
 body.rhud-bp .page-hero h1 { color: transparent; -webkit-text-stroke: 1.5px #9fc6e8; }
-body.rhud-bp .panel,
-body.rhud-bp .credential { background-color: rgba(159,198,232,0.03); border-color: rgba(159,198,232,0.35); }
 body.rhud-bp .training-section.alt,
 body.rhud-bp .cta-section { background: rgba(159,198,232,0.025); }
 

@@ -328,12 +328,13 @@ function App() {
             </div>
           </div>
 
-          {/* Critical rescue callout */}
-          <div className="rescue-banner reveal">
-            <div className="rescue-banner-icon">⚠️</div>
+          {/* Critical rescue callout — paper safety notice (rad-notice in polish.css) */}
+          <div className="rad-notice reveal">
+            <div className="rad-notice-stamp">SAFETY<br/>NOTICE</div>
             <div>
-              <div className="rescue-banner-title">RESCUE IS A LIFE-SAVING SKILL</div>
-              <div className="rescue-banner-text">A successful rescue in minimum time is imperative — every second counts when a worker is suspended after a fall. Our training prepares your team for real emergency scenarios using the Getmie Safe Rescue System.</div>
+              <div className="rad-notice-title">RESCUE IS A LIFE-SAVING SKILL</div>
+              <div className="rad-notice-text">A successful rescue in minimum time is imperative — every second counts when a worker is suspended after a fall. Our training prepares your team for real emergency scenarios using the Getmie Safe Rescue System.</div>
+              <div className="rad-notice-sign">— pinned by the site office. Read before you climb.</div>
             </div>
           </div>
 

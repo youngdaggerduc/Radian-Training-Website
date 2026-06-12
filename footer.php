@@ -17,7 +17,7 @@ $rfx_home = home_url( '/' );
         </a>
         <p class="rfx-tag">CISRS-accredited scaffolding &amp; working-at-height training.
         Building competence, safety and careers across the workforce since 2006.</p>
-        <div class="rfx-accred">CISRS OTS Approved Centre · NOCN Partner · Fully Insured</div>
+        <div class="rfx-accred">CISRS OTS Approved Centre · Safety &amp; Access Partner · Fully Insured</div>
       </div>
 
       <div class="rfx-col">
@@ -35,6 +35,7 @@ $rfx_home = home_url( '/' );
         <div class="rfx-head">Company</div>
         <ul>
           <li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>">About Us</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact Us</a></li>
           <li><a href="<?php echo esc_url( home_url( '/about/' ) . '#team' ); ?>">Our Instructors</a></li>
           <li><a href="<?php echo esc_url( home_url( '/news/' ) ); ?>">News &amp; Updates</a></li>
           <li><a href="<?php echo esc_url( home_url( '/certificate/' ) ); ?>">Verify a Certificate</a></li>
@@ -45,10 +46,10 @@ $rfx_home = home_url( '/' );
       <div class="rfx-col">
         <div class="rfx-head">Site Office</div>
         <ul class="rfx-contact">
-          <li><span>📍</span> Radian Training Centre, Trinidad &amp; Tobago</li>
-          <li><span>📞</span> <a href="tel:+18685550142">+1 (868) 555-0142</a></li>
-          <li><span>✉️</span> <a href="mailto:training@radianhalimited.com">training@radianhalimited.com</a></li>
-          <li><span>🕗</span> Mon – Fri · 08:00 – 17:00</li>
+          <li><span>📍</span> Building 2, Plaisance Park Industrial Estate, Claxton Bay, Trinidad</li>
+          <li><span>📞</span> <a href="tel:+18682804598">+1 (868) 280-4598</a></li>
+          <li><span>✉️</span> <a href="mailto:training@rhatt.com">training@rhatt.com</a></li>
+          <li><span>🕗</span> Mon – Fri · 07:00 – 16:00</li>
         </ul>
         <div class="rfx-social">
           <a href="#" aria-label="Facebook">f</a>
@@ -64,6 +65,7 @@ $rfx_home = home_url( '/' );
     <div class="rfx-bar-inner">
       <span>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> Radian H.A. Limited Training. All rights reserved.</span>
       <span class="rfx-motto">Built like a scaffold — level, braced, inspected.</span>
+      <span class="rfx-credit">Website by <a href="https://piercedoman.com" target="_blank" rel="noopener noreferrer">Pierce Doman</a></span>
       <button class="rfx-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr; To Base</button>
     </div>
   </div>

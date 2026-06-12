@@ -61,7 +61,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60
 .tabs-bar {
   display: flex; gap: 0;
   border-bottom: 1px solid rgba(255,255,255,0.1);
-  position: sticky; top: 76px; z-index: 50;
   background: var(--navy);
   margin-bottom: 56px;
   margin-left: -8px;
@@ -341,15 +340,15 @@ footer { background: #060e1e; padding: 60px; border-top: 1px solid rgba(255,255,
   border-radius: 3px;
   position: relative;
 }
-.sb-card.Enroll { padding-top: 34px !important; }
-.sb-card.Enroll::before {    /* metal clip */
+.sb-card.enrol { padding-top: 34px !important; }
+.sb-card.enrol::before {     /* metal clip */
   content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
   width: 104px; height: 28px;
   background: linear-gradient(180deg, #93a7c2, #56708f 60%, #44587a);
   border-radius: 7px 7px 3px 3px;
   box-shadow: 0 4px 9px rgba(0,0,0,0.5);
 }
-.sb-card.Enroll::after {     /* clip hole */
+.sb-card.enrol::after {      /* clip hole */
   content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
   width: 34px; height: 8px; border-radius: 4px;
   background: #0c1830; box-shadow: inset 0 2px 3px rgba(0,0,0,0.8);

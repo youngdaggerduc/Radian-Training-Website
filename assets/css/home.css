@@ -1549,3 +1549,150 @@ body.rad-start .st-clip .fq-a-pad p { color: var(--ink-dim); padding-left: 46px;
 @media (prefers-reduced-motion: reduce) {
   .st-card, .st-signin, .st-sticky, .st-ticket { transform: none; transition: none; }
 }
+/* ════════════════════════════════════════════════════════════════════════
+   ABOUT — COMPANY RECORD CARD (paper artifact in the story section,
+   replaces the old emoji pillar list; About page only)
+═══════════════════════════════════════════════════════════════════════════ */
+.ab-record {
+  position: relative;
+  margin-top: 32px;
+  background: repeating-linear-gradient(180deg, transparent 0 30px, rgba(60,90,140,0.10) 30px 31px),
+              linear-gradient(180deg, #f3efe4, #efe9d9);
+  color: #1c2740;
+  padding: 28px 28px 20px;
+  border-radius: 3px;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+  transform: rotate(-0.8deg);
+  transition: transform 0.35s;
+}
+.ab-record:hover { transform: rotate(0deg); }
+.ab-record::before {        /* tape */
+  content: ''; position: absolute; top: -13px; left: 50%; transform: translateX(-50%) rotate(-1.5deg);
+  width: 104px; height: 26px; background: rgba(248,250,255,0.32);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+.ab-record-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; border-bottom: 2px solid #1c2740; padding-bottom: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.ab-record-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.18em; }
+.ab-record-no { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #4d566e; }
+.ab-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px 9px; border-bottom: 1px dashed rgba(28,39,64,0.2); }
+.ab-tick {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+  border: 2px solid #1d6e3f; border-radius: 3px; color: #1d6e3f;
+  font-size: 0.78rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  transform: rotate(-3deg);
+}
+.ab-row-text { font-size: 0.92rem; line-height: 1.55; color: #303a55; font-weight: 500; }
+.ab-record-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+.ab-record-note { font-family: 'Caveat', cursive; font-size: 1.25rem; color: #4d566e; }
+.ab-record-stamp {
+  font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.18em;
+  color: #c8372d; border: 2.5px solid #c8372d; border-radius: 4px;
+  padding: 3px 10px 1px;
+  transform: rotate(-4deg);
+  opacity: 0.8; mix-blend-mode: multiply;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-record { transform: none; transition: none; }
+}
+/* ════════════════════════════════════════════════════════════════════════
+   HOME CONTACT — handwritten sticky note under the map
+═══════════════════════════════════════════════════════════════════════════ */
+.ct-sticky {
+  position: relative;
+  margin-top: 20px;
+  background: linear-gradient(180deg, #ffd964, #f7c93e);
+  color: #4a3a08;
+  font-family: 'Caveat', cursive; font-size: 1.3rem; font-weight: 600; line-height: 1.45;
+  padding: 22px 22px 24px;
+  transform: rotate(-1.6deg);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.45);
+  transition: transform 0.35s;
+}
+.ct-sticky:hover { transform: rotate(0deg) translateY(-3px); }
+.ct-sticky::before {       /* tape on top */
+  content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+  width: 86px; height: 24px;
+  background: rgba(248,250,255,0.35);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.ct-sticky small { display: block; margin-top: 8px; font-size: 1rem; opacity: 0.75; }
+@media (prefers-reduced-motion: reduce) { .ct-sticky { transform: none; transition: none; } }
+/* ════════════════════════════════════════════════════════════════════════
+   CONTACT PAGE — "the site office" (slug `contact`, co-*). Reuses the
+   ct-card / ct-map / ct-sticky styles above; the form is a paper
+   "WHILE YOU WERE OUT" message-pad slip.
+═══════════════════════════════════════════════════════════════════════════ */
+.co-section { padding: 50px 0 110px; }
+.co-inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+.co-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 44px; align-items: start; margin-top: 20px; }
+
+.co-slip {
+  position: relative;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(60,90,140,0.12) 34px 35px),
+              linear-gradient(180deg, #f3efe4, #efe9d9);
+  color: #1c2740;
+  border-radius: 3px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  padding: 38px 36px 30px;
+  transform: rotate(0.5deg);
+  transition: transform 0.35s;
+}
+.co-slip:hover { transform: rotate(0deg); }
+.co-slip::before {           /* metal clip — the pad hangs by the office door */
+  content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+  width: 104px; height: 28px;
+  background: linear-gradient(180deg, #93a7c2, #56708f 60%, #44587a);
+  border-radius: 7px 7px 3px 3px;
+  box-shadow: 0 4px 9px rgba(0,0,0,0.5);
+}
+.co-slip::after {            /* clip hole */
+  content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 34px; height: 8px; border-radius: 4px;
+  background: #0c1830; box-shadow: inset 0 2px 3px rgba(0,0,0,0.8);
+}
+.co-slip-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; border-bottom: 2px solid #1c2740; padding-bottom: 9px; margin-bottom: 16px; flex-wrap: wrap; }
+.co-slip-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.2em; color: #c8372d; }
+.co-slip-no { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #4d566e; }
+.co-to { font-family: 'Caveat', cursive; font-size: 1.3rem; color: #4d566e; margin-bottom: 18px; }
+.co-to b { color: #1c2740; }
+
+.co-field { margin-bottom: 16px; }
+.co-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.co-field label { display: block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #4d566e; margin-bottom: 6px; }
+.co-field input, .co-field textarea {
+  width: 100%; padding: 12px 14px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(28,39,64,0.25);
+  border-bottom: 2px solid rgba(28,39,64,0.45);
+  border-radius: 2px;
+  color: #1c2740; font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+  outline: none; transition: all 0.2s; resize: vertical;
+}
+.co-field input:focus, .co-field textarea:focus { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px rgba(232,137,10,0.14); }
+.co-field input::placeholder, .co-field textarea::placeholder { color: rgba(28,39,64,0.32); }
+.co-err { font-family: 'Caveat', cursive; font-size: 1.15rem; color: #c8372d; margin: 2px 0 12px; }
+.co-send { margin-top: 4px; }
+.co-slip-foot { margin-top: 16px; font-family: 'Caveat', cursive; font-size: 1.2rem; color: #4d566e; text-align: right; }
+
+.co-sent { text-align: center; padding: 34px 10px 24px; }
+.co-sent-stamp {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.2em; line-height: 1.12;
+  color: #1d6e3f; border: 3px solid #1d6e3f; border-radius: 6px;
+  padding: 10px 24px 8px;
+  transform: rotate(-6deg);
+  opacity: 0.85; mix-blend-mode: multiply;
+  animation: coStamp 0.4s cubic-bezier(.34,1.56,.64,1) 0.1s both;
+}
+@keyframes coStamp { from { opacity: 0; transform: rotate(-6deg) scale(1.8); } to { opacity: 0.85; transform: rotate(-6deg) scale(1); } }
+.co-sent-note { margin-top: 20px; font-family: 'Caveat', cursive; font-size: 1.4rem; color: #4d566e; line-height: 1.5; }
+
+@media (max-width: 980px) {
+  .co-grid { grid-template-columns: 1fr; gap: 52px; }
+  .co-inner { padding: 0 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .co-slip { transform: none; transition: none; }
+  .co-sent-stamp { animation: none; }
+}

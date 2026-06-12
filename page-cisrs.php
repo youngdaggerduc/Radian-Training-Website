@@ -282,14 +282,21 @@ function App() {
 
           <div className="reveal">
             <div className="section-label">Four Focus Areas</div>
-            <div className="areas-list" style={{marginTop:32}}>
+            <div className="sow" style={{marginTop:32}}>
+              <div className="sow-head">
+                <span className="sow-title">SCOPE OF WORKS — CISRS OTS</span>
+                <span className="sow-no">Sheet RHA-SOW-01</span>
+              </div>
               {FOCUS_AREAS.map(a => (
-                <div className="area-card" key={a.num}>
-                  <div className="area-card-num">{a.num}</div>
-                  <div className="area-card-title">{a.title}</div>
-                  <div className="area-card-desc">{a.desc}</div>
+                <div className="sow-row" key={a.num}>
+                  <span className="sow-num">{a.num}</span>
+                  <span>
+                    <span className="sow-item-title">{a.title}</span>
+                    <span className="sow-item-desc">{a.desc}</span>
+                  </span>
                 </div>
               ))}
+              <div className="sow-foot">— every level assessed to the same CISRS standard.</div>
             </div>
           </div>
         </div>
@@ -332,7 +339,7 @@ function App() {
                   <div className="course-price">TT${c.price}</div>
                   <div className="course-price-vat">VAT inclusive</div>
                 </div>
-                <button className="course-Enroll" onClick={(e) => { e.stopPropagation(); window.location.href=courseUrl(c.id); }}>
+                <button className="course-enrol" onClick={(e) => { e.stopPropagation(); window.location.href=courseUrl(c.id); }}>
                   Details →
                 </button>
               </div>

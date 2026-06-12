@@ -59,7 +59,7 @@ function downloadBrief(course, courseId) {
     + block('Curriculum', list(course.curriculum))
     + block('Certification', course.certifications ? (Array.isArray(course.certifications) ? list(course.certifications) : '<p>' + esc(course.certifications) + '</p>') : '')
     + block('PPE', course.ppe ? (Array.isArray(course.ppe) ? list(course.ppe) : '<p>' + esc(course.ppe) + '</p>') : '')
-    + '<div class="foot"><span>training@radianhalimited.com · +1 (868) 555-0142</span><span>CISRS OTS Approved Training Centre · Trinidad &amp; Tobago</span></div>'
+    + '<div class="foot"><span>training@rhatt.com · +1 (868) 280-4598</span><span>CISRS OTS Approved Training Centre · Trinidad &amp; Tobago</span></div>'
     + '</body></html>');
   w.document.close();
   w.onload = () => { w.focus(); w.print(); };
@@ -67,7 +67,7 @@ function downloadBrief(course, courseId) {
 const { useState, useEffect, useMemo } = React;
 const U = window.RADIAN_URLS || {};
 const courseUrl = (id) => U.course + '?id=' + id;
-const EnrollUrl  = (id) => U.Enroll + '?id=' + id;
+const enrolUrl  = (id) => U.enrol + '?id=' + id;   /* RADIAN_URLS key is 'enrol' (identifier spelling) */
 
 function getCourseId() {
   const params = new URLSearchParams(window.location.search);
@@ -286,11 +286,11 @@ function App() {
 
           {/* SIDEBAR */}
           <div className="sidebar">
-            <div className="sb-card Enroll">
+            <div className="sb-card enrol">
               <div className="sb-card-title">Enroll Now</div>
               <div className="sb-price-large">TT${course.price}</div>
               <div className="sb-price-vat">VAT inclusive</div>
-              <button className="sb-btn" onClick={()=>window.location.href=EnrollUrl(courseId)}>
+              <button className="sb-btn" onClick={()=>window.location.href=enrolUrl(courseId)}>
                 <span>Enroll on Course</span><span>→</span>
               </button>
               <button className="sb-btn outline" onClick={()=>window.location.href=U.home+'#calendar'}>View Dates</button>
@@ -326,7 +326,7 @@ function App() {
               <div style={{fontSize:'0.85rem', color:'rgba(248,250,255,0.6)', lineHeight:1.7, marginBottom:14}}>
                 Questions about this course or group Enrollments?
               </div>
-              <div style={{fontSize:'0.82rem', color:'var(--orange-light)', marginBottom:6}}>📧 training@radianhalimited.com</div>
+              <div style={{fontSize:'0.82rem', color:'var(--orange-light)', marginBottom:6}}>📧 training@rhatt.com</div>
               <div style={{fontSize:'0.82rem', color:'rgba(248,250,255,0.6)'}}>📞 Contact us for details</div>
             </div>
           </div>
