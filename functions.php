@@ -11,6 +11,7 @@
 require get_template_directory() . '/inc/admin-events.php';
 require get_template_directory() . '/inc/admin-certificates.php';
 require get_template_directory() . '/inc/admin-about.php';
+require get_template_directory() . '/inc/ai-assistant.php';
 
 /* ── Determine which "design page" we are rendering ───────────
  * Returns one of: home | cisrs | getmie | certificate | course | enrol | other
@@ -51,7 +52,7 @@ add_action( 'after_setup_theme', function () {
 /* ── Enqueue scripts & styles (per design page) ────────────── */
 add_action( 'wp_enqueue_scripts', function () {
     $theme = get_template_directory_uri();
-    $ver   = '3.1.8';
+    $ver   = '3.2.0';
     $page  = radian_current_page();
 
     /* Google Fonts — every page */
@@ -119,6 +120,12 @@ add_action( 'wp_enqueue_scripts', function () {
     if ( $page !== 'other' ) {
         wp_enqueue_style( 'radian-site-hud', $theme . '/assets/css/site-hud.css', [ 'radian-page' ], $ver );
         wp_enqueue_script( 'radian-site-hud', $theme . '/assets/js/site-hud.js', [], $ver, true );
+    }
+
+    /* "Ask the Site Office" AI chat — only when enabled + keyed (inc/ai-assistant.php) */
+    if ( $page !== 'other' && function_exists( 'radian_ai_ready' ) && radian_ai_ready() ) {
+        wp_enqueue_style( 'radian-assistant', $theme . '/assets/css/assistant.css', [ 'radian-polish' ], $ver );
+        wp_enqueue_script( 'radian-assistant', $theme . '/assets/js/assistant.js', [], $ver, true );
     }
 
     /* Intro loader — front page only (deferred: must execute after THREE/GSAP) */
@@ -510,6 +517,13 @@ function radian_enrol_submit() {
     }
     wp_send_json_error( [ 'message' => 'Mail failed' ], 500 );
 }
+
+/* ── Expose AI assistant config (design pages, only when ready) ── */
+add_action( 'wp_head', function () {
+    if ( radian_current_page() === 'other' || ! function_exists( 'radian_ai_ready' ) || ! radian_ai_ready() ) return;
+    echo '<script>window.RADIAN_AI={ajaxUrl:' . wp_json_encode( admin_url( 'admin-ajax.php' ) )
+         . ',nonce:' . wp_json_encode( wp_create_nonce( 'radian_ai_nonce' ) ) . '};</script>' . "\n";
+}, 2 );
 
 /* ── Expose enrol AJAX config on the enrol page ─────────────── */
 add_action( 'wp_head', function () {
