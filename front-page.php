@@ -649,7 +649,7 @@ function App() {
     return ()=>made.forEach(st=>st.kill());
   },[]);
 
-  const [count20,ref20]=useCounter(20);
+  const [count25,ref25]=useCounter(25);
   const [count1500,ref1500]=useCounter(1500);
 
   const courses=[
@@ -702,7 +702,7 @@ function App() {
               TRAINING
             </h1>
             <p className="hero-sub">
-              Over 20 years of industry-leading scaffolding training — building competence,
+              25 years of industry-leading scaffolding training — building competence,
               safety, and careers across the scaffolding workforce.
             </p>
             <div className="hero-actions">
@@ -725,7 +725,7 @@ function App() {
         </div>
         <div className="hero-stats-strip">
           <div className="hero-stat">
-            <div className="hero-stat-num" ref={ref20}>{count20}+</div>
+            <div className="hero-stat-num" ref={ref25}>{count25}</div>
             <div className="hero-stat-label">Years of Training<br/>Experience</div>
           </div>
           <div className="hero-stat">
@@ -748,7 +748,7 @@ function App() {
         <div className="marquee-track">
           {[
             '🏆 CISRS OTS ACCREDITED',
-            '20+ YEARS EXPERIENCE',
+            '25 YEARS EXPERIENCE',
             '🛡️ BRITISH STANDARD COMPLIANT',
             '1,500+ PARTICIPANTS TRAINED',
             '🎓 INDUSTRY RECOGNISED',
@@ -757,7 +757,7 @@ function App() {
             '⚠️ SAFETY FIRST',
             // duplicate for seamless loop
             '🏆 CISRS OTS ACCREDITED',
-            '20+ YEARS EXPERIENCE',
+            '25 YEARS EXPERIENCE',
             '🛡️ BRITISH STANDARD COMPLIANT',
             '1,500+ PARTICIPANTS TRAINED',
             '🎓 INDUSTRY RECOGNISED',
@@ -856,13 +856,13 @@ function App() {
       <div className="marquee-band dark">
         <div className="marquee-track">
           {[
-            {n:'20+',l:'YEARS EXPERIENCE'},
+            {n:'25',l:'YEARS EXPERIENCE'},
             {n:'1,500+',l:'DELEGATES TRAINED'},
             {n:'6',l:'CISRS COURSES'},
             {n:'4',l:'GETMIE PROGRAMMES'},
             {n:'100%',l:'SAFETY FOCUSED'},
             {n:'5YR',l:'CERTIFICATE VALIDITY'},
-            {n:'20+',l:'YEARS EXPERIENCE'},
+            {n:'25',l:'YEARS EXPERIENCE'},
             {n:'1,500+',l:'DELEGATES TRAINED'},
             {n:'6',l:'CISRS COURSES'},
             {n:'4',l:'GETMIE PROGRAMMES'},

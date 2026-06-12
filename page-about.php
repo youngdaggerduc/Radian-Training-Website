@@ -163,14 +163,14 @@ function App() {
   useEffect(() => { const t = setTimeout(startReveals, 60); return () => clearTimeout(t); }, []);
   return (
     <>
-      <PageHero label="Who We Are" line1="ABOUT" dim="RADIAN" sub="Twenty years of building competence, safety and careers across the scaffolding workforce — meet the company, the people and the credentials behind the training."/>
+      <PageHero label="Who We Are" line1="ABOUT" dim="RADIAN" sub="25 years of building competence, safety and careers across the scaffolding workforce — the first British Standard scaffold training provider in Trinidad & Tobago and the wider Caribbean."/>
 <section id="story">
         <div className="section">
           <div className="section-label reveal">Our Story</div>
           <h2 className="section-title reveal" data-crane="1">BUILDING THE<br/><span className="dim">SCAFFOLDING</span><br/>WORKFORCE</h2>
           <div className="about-grid">
             <div className="about-text reveal-left">
-              <p>Radian H.A. Limited has been a trusted British Standard scaffold training provider for over two decades. Our extensive programmes ensure every participant gains the skills needed for a successful, safe career in scaffolding.</p>
+              <p>Radian H.A. Limited has been the first and leading British Standard scaffold training provider in Trinidad & Tobago and the wider Caribbean for 25 years, since 2001. Our extensive programmes ensure every participant gains the skills needed for a successful, safe career in scaffolding.</p>
               <p>We are committed to building capacity and competence across the scaffolding workforce — delivering a higher standard of work and safety at every level.</p>
               <div className="ab-record reveal">
                 <div className="ab-record-head">
@@ -178,7 +178,7 @@ function App() {
                   <span className="ab-record-no">Card 01 · RHA</span>
                 </div>
                 {[
-                  '20+ years as a British Standard scaffold training provider',
+                  '25 years as the first British Standard scaffold training provider in the Caribbean',
                   'Industry-recognised qualifications, kickstart your career',
                   'Enhance your qualifications and advance your opportunities',
                   'Committed to higher safety standards across the industry',
@@ -201,7 +201,7 @@ function App() {
               </div>
               <div className="big-stat-cards">
                 <div className="stat-card">
-                  <div className="stat-card-num">20+</div>
+                  <div className="stat-card-num">25</div>
                   <div className="stat-card-label">Years of Training Experience</div>
                 </div>
                 <div className="stat-card">

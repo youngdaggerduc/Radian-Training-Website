@@ -52,7 +52,7 @@ add_action( 'after_setup_theme', function () {
 /* ── Enqueue scripts & styles (per design page) ────────────── */
 add_action( 'wp_enqueue_scripts', function () {
     $theme = get_template_directory_uri();
-    $ver   = '3.2.2';
+    $ver   = '3.2.3';
     $page  = radian_current_page();
 
     /* Google Fonts — every page */
@@ -155,7 +155,7 @@ function radian_seo_meta() {
     $meta = [
         'home' => [
             'title' => 'Radian H.A. Limited — CISRS-Accredited Scaffolding Training',
-            'desc'  => 'CISRS-accredited scaffolding and working-at-height training in Trinidad & Tobago. 20+ years of industry-recognised qualifications: operative, inspection, supervision and rescue courses.',
+            'desc'  => 'CISRS-accredited scaffolding and working-at-height training in Trinidad & Tobago. 25 years of industry-recognised qualifications: operative, inspection, supervision and rescue courses.',
             'path'  => '/',
         ],
         'cisrs' => [
@@ -185,7 +185,7 @@ function radian_seo_meta() {
         ],
         'about' => [
             'title' => 'About Radian — The Team & Credentials Behind the Training',
-            'desc'  => 'Meet Radian H.A. Limited: 20+ years of CISRS-accredited scaffolding training, our instructors, delegate success stories and our accreditations.',
+            'desc'  => 'Meet Radian H.A. Limited: 25 years of CISRS-accredited scaffolding training, our instructors, delegate success stories and our accreditations.',
             'path'  => '/about/',
         ],
         'start' => [
@@ -268,7 +268,7 @@ function radian_seo_meta() {
             [ 'Do I need experience before CISRS Level 1?', 'No. Level 1 is the entry point — you need basic fitness, a head for heights and steel-toe boots. Everything else, including PPE and tools, is provided and taught from day one.' ],
             [ 'What should I bring on the day?', 'Photo ID and steel-toe boots. We supply helmets, harnesses, gloves, all tools and all scaffolding materials. Wear work clothes you can move in.' ],
             [ 'Is the training practical or classroom-based?', 'Both — roughly 70% of your time is hands-on in the training yard, with theory sessions and a full written and practical assessment to finish.' ],
-            [ 'How long does my certification last?', 'Most CISRS OTS certifications are valid for three years. We recommend booking your refresher before expiry — and any Radian certificate can be checked on our Verify a Certificate page.' ],
+            [ 'How long does my certification last?', 'Most CISRS OTS certifications are valid for five years. Working at Height certs are valid for 36 months; Rescue certs for 12 months. Book your refresher before expiry — and any Radian certificate can be verified instantly on our Verify a Certificate page.' ],
             [ 'What happens if I fail the assessment?', 'You get detailed feedback from your instructor and one resit is included in your course fee. Our instructors work with you until the standard is met.' ],
             [ 'Which course do I need — scaffolding or working at height?', 'If you erect, alter or strike scaffolds, you need the CISRS route. If you work on or around scaffolds and are exposed to fall risk, Getmie Safe Working at Height covers you.' ],
             [ 'Can you train our whole crew?', 'Yes. We run group and corporate bookings, and can schedule dedicated sessions for crews. Contact the site office for group rates and availability.' ],

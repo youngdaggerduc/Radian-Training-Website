@@ -205,9 +205,9 @@ function radian_certs_admin_page() {
             foreach ( [ 'startDate', 'endDate', 'expiryDate' ] as $d ) {
                 $rec[ $d ] = radian_cert_date_from_input( $rec[ $d ] );
             }
-            /* blank expiry → end date + 3 years − 1 day (matches existing records) */
+            /* blank expiry → end date + 5 years − 1 day (CISRS certification validity) */
             if ( ! $rec['expiryDate'] && $rec['endDate'] ) {
-                $ts = strtotime( $rec['endDate'] . ' +3 years -1 day' );
+                $ts = strtotime( $rec['endDate'] . ' +5 years -1 day' );
                 if ( $ts ) $rec['expiryDate'] = gmdate( 'j M Y', $ts );
             }
 
@@ -358,7 +358,7 @@ function radian_certs_admin_page() {
               <label>Start <input name="c_startDate" type="date" value="<?php echo esc_attr( radian_cert_date_to_input( $form['startDate'] ) ); ?>" required/></label>
               &nbsp; <label>End <input name="c_endDate" type="date" value="<?php echo esc_attr( radian_cert_date_to_input( $form['endDate'] ) ); ?>" required/></label>
               &nbsp; <label>Expires <input name="c_expiryDate" type="date" value="<?php echo esc_attr( radian_cert_date_to_input( $form['expiryDate'] ) ); ?>"/></label>
-              <p class="description">Leave <em>Expires</em> blank to auto-set 3 years from the end date.</p>
+              <p class="description">Leave <em>Expires</em> blank to auto-set 5 years from the end date (CISRS). For Working at Height enter manually (3 years); Rescue (1 year).</p>
             </td>
           </tr>
           <tr>

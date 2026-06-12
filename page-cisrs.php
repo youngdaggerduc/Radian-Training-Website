@@ -18,7 +18,7 @@
           <div class="ph-stat-label">Skill Levels</div>
         </div>
         <div class="ph-stat">
-          <div class="ph-stat-num" data-count="20" data-suffix="+">20+</div>
+          <div class="ph-stat-num" data-count="25">25</div>
           <div class="ph-stat-label">Years Experience</div>
         </div>
         <div class="ph-stat">
