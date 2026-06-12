@@ -270,10 +270,31 @@ footer { background: #060e1e; padding: 60px; border-top: 1px solid rgba(255,255,
   .getmie-grid { grid-template-columns: 1fr; }
   .videos-grid { grid-template-columns: 1fr 1fr; }
   footer { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
-  .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; }
+  .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
   .cisrs-header { grid-template-columns: 1fr; gap: 32px; }
   .trust-band { flex-wrap: wrap; padding: 0 24px; }
   .cal-layout { grid-template-columns: 1fr; }
+  /* hero layout: stack content above the 3D canvas */
+  .hero-layout { padding-left: 24px; padding-right: 24px; }
+  .hero-stats-strip { flex-wrap: wrap; }
+  .hero-stat { flex: 1 1 40%; min-width: 0; padding: 18px 20px; }
+  /* training section inner padding */
+  .training-inner { padding: 0 24px; }
+}
+@media (max-width: 500px) {
+  /* hero title: scale down to fit + prevent mid-word break */
+  .hero-title { font-size: clamp(2rem, 9.5vw, 3rem) !important; word-break: keep-all; overflow-wrap: normal; }
+  .hero-title .accent, .hero-title .outline { white-space: nowrap; }
+  /* hero stats: 2×2 grid */
+  .hero-stat { flex: 1 1 45%; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .hero-stat:last-child, .hero-stat:nth-child(3) { border-bottom: none; }
+  /* single-column course cards */
+  .courses-grid { grid-template-columns: 1fr; }
+  /* section padding */
+  .training-section .training-inner { padding: 0 16px; }
+  .training-section h2.section-title { font-size: clamp(2.4rem, 10vw, 4rem); }
+  /* videos: single col */
+  .videos-grid { grid-template-columns: 1fr; }
 }
 
 /* ════════════════════════════════════════════════ */
@@ -868,6 +889,34 @@ html.rl-lock, html.rl-lock body { overflow: hidden !important; }
   .em-actions { flex-direction: column; }
   .em-stamp { display: none; }
   .cal-kbd-hint { display: none; }
+}
+/* ── mobile calendar: hide sidebar, tighten chip row, readable day cells ── */
+@media (max-width: 600px) {
+  .calendar-section { padding: 80px 0 60px; }
+  .calendar-inner { padding: 0 16px; }
+  .cal-layout { grid-template-columns: 1fr; gap: 0; margin-top: 32px; }
+  .cal-sidebar { display: none; }   /* month list hides → tap a day for the permit */
+  .cal-header { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+  .cal-month-label { font-size: 1.6rem; }
+  .cal-controls { gap: 6px; }
+  .cal-today-btn { height: 34px; padding: 0 12px; font-size: 0.66rem; }
+  .cal-nav-btn { width: 34px; height: 34px; font-size: 1.1rem; }
+  .cal-filters { gap: 7px; padding: 12px 16px 2px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .cal-filters::-webkit-scrollbar { display: none; }
+  .cal-chip { font-size: 0.64rem; padding: 6px 10px; flex-shrink: 0; }
+  .cal-dow-cell { padding: 8px 0; font-size: 0.58rem; letter-spacing: 0.06em; }
+  .cal-day { min-height: 58px; padding: 6px 4px; }
+  .cal-day-num { font-size: 0.8rem; }
+  .cal-day-pill { font-size: 0.52rem; padding: 2px 4px; }
+  .cal-day-events { gap: 2px; }
+  .cal-rail { margin: 0 16px; }
+  /* permit modal on small screens */
+  .event-modal-overlay { padding: 12px; align-items: flex-end; }
+  .event-modal { max-width: 100%; border-radius: 8px 8px 0 0; }
+  .event-modal-top { padding: 16px 18px 12px; }
+  .event-modal-body { padding: 12px 18px 20px; }
+  .em-row { flex-direction: column; gap: 2px; }
+  .em-meter { width: 100%; }
 }
 /* ════════════════════════════════════════════════════════════════════════
    CONTACT — "talk to the site office"

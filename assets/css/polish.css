@@ -330,6 +330,11 @@ html.rad-mm-lock, html.rad-mm-lock body { overflow: hidden !important; }
 }
 @keyframes radWaPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.65); opacity: 0; } }
 @media (max-width: 900px) { #rad-wa { left: 14px; bottom: 14px; width: 48px; height: 48px; } }
+@media (max-width: 500px) {
+  /* on very small phones pull WhatsApp higher so it clears the mobile browser bar */
+  #rad-wa { left: 12px; bottom: 20px; width: 46px; height: 46px; }
+  #rad-wa svg { width: 24px; height: 24px; }
+}
 @media print { #rad-wa { display: none; } }
 @media (prefers-reduced-motion: reduce) { #rad-wa::after { animation: none; } }
 /* ── Shared footer: the site information board (footer.php, rfx-*) ────── */
@@ -406,7 +411,31 @@ footer.rfx {
 @media (max-width: 640px) {
   .rfx-grid { grid-template-columns: 1fr; }
   .rfx-inner { padding: 44px 24px 36px; }
-  .rfx-bar-inner { padding: 16px 24px; justify-content: center; text-align: center; }
+  .rfx-bar-inner { padding: 16px 24px; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+  .rfx-credit { font-size: 0.7rem; }
+  /* footer accred line: wrap gracefully */
+  .rfx-accred { text-align: center; line-height: 1.6; }
+  /* social icons: larger tap targets */
+  .rfx-social a { width: 44px; height: 44px; font-size: 0.8rem; }
+}
+
+/* ── mobile nav dropdown: tap-friendly on touch ─────────────────────────── */
+@media (hover: none) {
+  /* touch devices can't hover — make dropdown open on focus/active instead */
+  nav#navbar .nav-drop-menu { transition: none; }
+  nav#navbar .nav-drop > a { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ── footer bar: ↑ To Base button full-width on tiny screens ─────────────── */
+@media (max-width: 400px) {
+  .rfx-top { width: 100%; justify-content: center; }
+}
+
+/* ── page hero sections: tighter on phones ───────────────────────────────── */
+@media (max-width: 500px) {
+  .page-hero { padding: 120px 20px 44px !important; }
+  .page-hero h1 { font-size: clamp(2.6rem, 11vw, 4rem) !important; }
+  .hero-emblem { width: 76px; height: 76px; margin-bottom: 20px; }
 }
 /* ============================================================================
    PAPER SAFETY NOTICE — taped paper sheet w/ red rubber stamp.

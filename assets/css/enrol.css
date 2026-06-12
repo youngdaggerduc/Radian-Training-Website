@@ -216,4 +216,21 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60
   .people-grid { grid-template-columns: 1fr 1fr; }
   .field-grid { grid-template-columns: 1fr; }
 }
+@media (max-width: 500px) {
+  .enrol-header { padding: 100px 16px 16px; }
+  .enrol-h1 { font-size: clamp(1.8rem, 9vw, 2.4rem); }
+  .enrol-main { padding: 20px 16px 50px; }
+  .enrol-panel { padding: 20px 16px; }
+  .panel-title { font-size: 1.1rem; }
+  .people-grid { grid-template-columns: 1fr; }
+  .people-plus { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .dates-grid { grid-template-columns: 1fr; }
+  .actions-bar { flex-direction: column; gap: 10px; }
+  .actions-bar .btn { width: 100%; justify-content: center; }
+  .confirm-panel { padding: 28px 20px; }
+  .confirm-ref { grid-template-columns: 1fr; }
+  .summary-body { padding: 18px 20px; }
+  .summary-header { padding: 18px 20px; }
+  .summary-total { padding: 16px 20px; }
+}
 

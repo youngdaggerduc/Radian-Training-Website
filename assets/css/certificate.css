@@ -370,6 +370,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60
   .folder-sticker { display: none; }
   .folder-body { padding: 20px 12px 24px; }
   .slip { padding: 28px 20px 30px; }
+  /* fix: slip title was overflowing on narrow screens */
+  .slip-title { font-size: 0.95rem; letter-spacing: 0.1em; word-break: break-word; }
+  .slip-head { flex-direction: column; gap: 6px; }
   .form-row { grid-template-columns: 1fr; }
   .pc-inner { padding: 28px 22px 26px; }
   .pc-grid { grid-template-columns: 1fr 1fr; }
@@ -380,6 +383,11 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 60
   .pc-sig { min-width: 0; }
   .pc-verify-note { text-align: center; }
   .modal-header, .modal-body { padding-left: 22px; padding-right: 22px; }
+  .id-type-grid { grid-template-columns: 1fr; }
+  .result-actions { flex-direction: column; }
+  .result-actions .btn-sm { width: 100%; justify-content: center; }
+  /* pull-riffle: smaller on phones */
+  .pull-stack { width: 120px; height: 76px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

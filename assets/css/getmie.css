@@ -232,4 +232,14 @@ image-slot { display: block; --image-slot-bg: rgba(255,255,255,0.025); --image-s
 .s3d-card-desc { font-size: 0.85rem; line-height: 1.6; color: rgba(248,250,255,0.7); }
 .gsap-on .reveal { transition: none; }
 @media (max-width: 900px) { .hero-3d { min-height: 320px; } .s3d-card { left: 50%; transform: translateX(-50%) translateY(16px) scale(0.97); } .s3d-card.show { transform: translateX(-50%) translateY(0) scale(1); } }
+@media (max-width: 500px) {
+  .page-hero-stats { gap: 20px; }
+  .ph-stat-num { font-size: 2rem; }
+  .programme-inner { padding: 0 16px; }
+  .programme-track { padding: 60px 0 40px; }
+  .course-row { flex-direction: column; gap: 0; }
+  .course-row-right { flex-direction: row; align-items: center; justify-content: space-between; padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.07); }
+  .crp-num { font-size: 1.4rem; }
+  .course-row-cta { padding: 10px 18px; }
+}
 

@@ -168,6 +168,20 @@ footer { background: #060e1e; padding: 60px; border-top: 1px solid rgba(255,255,
   footer { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; }
 }
+@media (max-width: 500px) {
+  .page-hero-stats { gap: 24px; }
+  .ph-stat-num { font-size: 2.2rem; }
+  /* horizontal strip stacks on small phones */
+  .hstrip-track { padding: 20px 16px; }
+  .hstrip .course-card { flex: none; width: 100%; }
+  /* course modal */
+  .modal { width: calc(100vw - 16px); }
+  .modal-top, .modal-body { padding: 20px; }
+  /* video frame */
+  .vf-placeholder-text { font-size: 0.7rem; }
+  /* sow paper sheet */
+  .sow { margin-top: 24px; }
+}
 
 /* IMAGE SLOTS */
 image-slot { display: block; --image-slot-bg: rgba(255,255,255,0.025); --image-slot-border: 1px dashed rgba(232,137,10,0.3); --image-slot-color: rgba(248,250,255,0.4); }

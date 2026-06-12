@@ -176,6 +176,8 @@
 #rhud-status b { color: var(--orange-light, #ffb547); font-weight: 700; }
 #rhud-status .rhud-clock { color: rgba(138,164,200,0.8); }
 @media (max-width: 900px) { #rhud-status { display: none; } }
+/* on phones, also hide the blueprint-mode toggle corner bolts etc to save space */
+@media (max-width: 500px) { .rhud-bolt, .rhud-coupler-extra { display: none; } }
 
 /* ── 5 · WELD-SPARK CLICKS ────────────────────────────────────────────── */
 .rhud-spark {
