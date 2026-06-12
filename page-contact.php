@@ -125,9 +125,9 @@ function App() {
               <div className="ct-map">
                 <iframe
                   title="Radian Training Centre location"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=-61.490%2C10.330%2C-61.410%2C10.400&layer=mapnik"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=-61.478%2C10.374%2C-61.446%2C10.398&layer=mapnik&marker=10.384%2C-61.460"
                   loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-                <div className="ct-map-tag">Building 2, Plaisance Park Industrial Estate, Claxton Bay</div>
+                <div className="ct-map-tag">Building 2, Phoenix Park Industrial Estate, Claxton Bay</div>
               </div>
               <aside className="ct-sticky" aria-hidden="true">
                 Walk-ins welcome Mon – Fri, 07:00 – 16:00 — ask at the gate for the duty instructor. 👷
