@@ -8,3 +8,4 @@ Thumbs.db
 *.log
 # admin-page rotating backups
 assets/data/*.bak
+RECOMMENDATIONS.md
